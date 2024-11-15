@@ -1,0 +1,24 @@
+{
+  "originHash" : "fc5f6ba013232d3d7e9292cd4b6735b2e84898e55c66afb7092c7111fc072c2b",
+  "pins" : [
+    {
+      "identity" : "oauthenticator",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ChimeHQ/OAuthenticator.git",
+      "state" : {
+        "branch" : "swift6",
+        "revision" : "892dbb0da966a1a2506ae07486eca42a1bcf7e30"
+      }
+    },
+    {
+      "identity" : "valet",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/square/Valet",
+      "state" : {
+        "revision" : "05c9e514fbd352a6866877ca31326b4e0b7d6d01",
+        "version" : "5.0.0"
+      }
+    }
+  ],
+  "version" : 3
+}
