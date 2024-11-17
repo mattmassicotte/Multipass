@@ -88,23 +88,35 @@ struct ContentView: View {
 		}
 	}
 	
+	struct BlueskyLoginCredentials: Codable {
+		let userName: String
+		let password: String
+	}
+	
 	private func doOtherThing() async throws {
 		let responseProvider = URLSession.defaultProvider
 		
+		let bundleId = Bundle.main.bundleIdentifier!
+		let groupId = SharedGroupIdentifier(appIDPrefix: MTPAppIdentifierPrefix, nonEmptyGroup: bundleId)!
+		let valet = Valet.sharedGroupValet(with: groupId, accessibility: .whenUnlocked)
+		
+		let data = try valet.object(forKey: "Bluesky Auth")
+		let login = try JSONDecoder().decode(BlueskyAPI.Credentials.self, from: data)
+		
 		let client = BlueskyAPI.Client(
 			host: "bsky.social",
-			handle: username,
-			appPassword: appPassword,
+			handle: login.identifier,
+			appPassword: login.password,
 			provider: responseProvider
 		)
 		
-		let login = BlueskyAPI.Credentials(identifier: username, password: appPassword)
+		
 		let response = try await client.createSession(with: login)
 		
 		let timeline = try await client.timeline(token: response.accessJwt)
 		
 		for post in timeline.feed {
-			print(post.post.record.text)
+			print(post)
 		}
 	}
 }

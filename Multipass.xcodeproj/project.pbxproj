@@ -54,6 +54,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Modules/BlueskyAPI/Client.swift,
+				Modules/BlueskyAPI/Types.swift,
 			);
 			target = C92217A22CE8D949006C34BC /* BlueskyAPI */;
 		};
@@ -61,6 +62,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Modules/BlueskyAPI/Client.swift,
+				Modules/BlueskyAPI/Types.swift,
 				Modules/MastodonAPI/Client.swift,
 				Modules/MastodonAPI/Marker.swift,
 				Modules/MastodonAPI/Status.swift,
