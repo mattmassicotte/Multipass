@@ -12,7 +12,7 @@ struct ContentView: View {
 			Button("Do The Thing") {
 				Task<Void, Never> {
 					do {
-						try await doOtherThing()
+						try await doThing()
 					} catch {
 						print("hmmm", error)
 					}
@@ -84,7 +84,7 @@ struct ContentView: View {
 		let statusArray = try await client.timeline()
 		
 		for status in statusArray {
-			print(status.id, status.account.username, status.content)
+			print(status.content)
 		}
 	}
 	

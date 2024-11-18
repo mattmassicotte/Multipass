@@ -1,10 +1,9 @@
 import Testing
 import Foundation
 
-@testable import MastodonAPI
+import MastodonAPI
 
 struct MastodonAPITests {
-
 	@Test func markerDecode() async throws {
 		let data = """
 {"home":{"last_read_id":"112327167530043732","version":425,"updated_at":"2024-04-24T16:38:07.000Z"},"notifications":{"last_read_id":"339514663","version":12806,"updated_at":"2024-11-15T18:16:35.000Z"}}

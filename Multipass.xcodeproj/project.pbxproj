@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		C922179A2CE7C9A2006C34BC /* libMastodonAPI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C922178F2CE7C985006C34BC /* libMastodonAPI.a */; platformFilters = (macos, ); };
 		C92217B12CE93161006C34BC /* libBlueskyAPI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C92217A32CE8D949006C34BC /* libBlueskyAPI.a */; platformFilters = (macos, ); };
+		C92217C72CEA90FB006C34BC /* libMastodonContentExtraction.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C92217B82CEA8DD3006C34BC /* libMastodonContentExtraction.a */; platformFilters = (macos, ); };
+		C92217CA2CEA9276006C34BC /* libMastodonContentExtraction.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C92217B82CEA8DD3006C34BC /* libMastodonContentExtraction.a */; platformFilters = (macos, ); };
+		C92217D12CEA9309006C34BC /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C92217D02CEA9309006C34BC /* SwiftSoup */; };
+		C92217D32CEA930F006C34BC /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = C92217D22CEA930F006C34BC /* SwiftSoup */; };
 		C95FC5A02CE5122D0093AB32 /* OAuthenticator in Frameworks */ = {isa = PBXBuildFile; productRef = C95FC59F2CE5122D0093AB32 /* OAuthenticator */; };
 		C95FC5B32CE536B70093AB32 /* Valet in Frameworks */ = {isa = PBXBuildFile; productRef = C95FC5B22CE536B70093AB32 /* Valet */; };
 		C95FC5D02CE542800093AB32 /* libUtility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C95FC5BC2CE540980093AB32 /* libUtility.a */; platformFilters = (macos, ); };
@@ -34,6 +38,7 @@
 /* Begin PBXFileReference section */
 		C922178F2CE7C985006C34BC /* libMastodonAPI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMastodonAPI.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C92217A32CE8D949006C34BC /* libBlueskyAPI.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBlueskyAPI.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C92217B82CEA8DD3006C34BC /* libMastodonContentExtraction.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMastodonContentExtraction.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95FC5702CE50FF30093AB32 /* Multipass.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Multipass.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95FC5812CE50FF40093AB32 /* MultipassTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultipassTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95FC58B2CE50FF40093AB32 /* MultipassUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultipassUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +63,13 @@
 			);
 			target = C92217A22CE8D949006C34BC /* BlueskyAPI */;
 		};
+		C92217C92CEA9126006C34BC /* Exceptions for "Multipass" folder in "MastodonContentExtraction" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Modules/MastodonContentExtraction/PostExtractor.swift,
+			);
+			target = C92217B72CEA8DD3006C34BC /* MastodonContentExtraction */;
+		};
 		C95FC5C72CE540D30093AB32 /* Exceptions for "Multipass" folder in "Multipass" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -66,6 +78,7 @@
 				Modules/MastodonAPI/Client.swift,
 				Modules/MastodonAPI/Marker.swift,
 				Modules/MastodonAPI/Status.swift,
+				Modules/MastodonContentExtraction/PostExtractor.swift,
 				Modules/Utility/Constants.m,
 				"Modules/Utility/UserDefaults+Shared.swift",
 				Modules/Utility/Utility.xcconfig,
@@ -95,6 +108,7 @@
 				C95FC5C92CE540D50093AB32 /* Exceptions for "Multipass" folder in "Utility" target */,
 				C92217992CE7C995006C34BC /* Exceptions for "Multipass" folder in "MastodonAPI" target */,
 				C92217B02CE93158006C34BC /* Exceptions for "Multipass" folder in "BlueskyAPI" target */,
+				C92217C92CEA9126006C34BC /* Exceptions for "Multipass" folder in "MastodonContentExtraction" target */,
 			);
 			path = Multipass;
 			sourceTree = "<group>";
@@ -131,15 +145,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C92217B62CEA8DD3006C34BC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C95FC56D2CE50FF30093AB32 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C92217C72CEA90FB006C34BC /* libMastodonContentExtraction.a in Frameworks */,
 				C92217B12CE93161006C34BC /* libBlueskyAPI.a in Frameworks */,
 				C922179A2CE7C9A2006C34BC /* libMastodonAPI.a in Frameworks */,
 				C95FC5D02CE542800093AB32 /* libUtility.a in Frameworks */,
 				C95FC5A02CE5122D0093AB32 /* OAuthenticator in Frameworks */,
 				C95FC5B32CE536B70093AB32 /* Valet in Frameworks */,
+				C92217D12CEA9309006C34BC /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,6 +170,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C92217CA2CEA9276006C34BC /* libMastodonContentExtraction.a in Frameworks */,
+				C92217D32CEA930F006C34BC /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,6 +214,7 @@
 				C95FC5BC2CE540980093AB32 /* libUtility.a */,
 				C922178F2CE7C985006C34BC /* libMastodonAPI.a */,
 				C92217A32CE8D949006C34BC /* libBlueskyAPI.a */,
+				C92217B82CEA8DD3006C34BC /* libMastodonContentExtraction.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -211,6 +237,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		C922179F2CE8D949006C34BC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		C92217B42CEA8DD3006C34BC /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -268,6 +301,26 @@
 			productReference = C92217A32CE8D949006C34BC /* libBlueskyAPI.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		C92217B72CEA8DD3006C34BC /* MastodonContentExtraction */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C92217BE2CEA8DD3006C34BC /* Build configuration list for PBXNativeTarget "MastodonContentExtraction" */;
+			buildPhases = (
+				C92217B42CEA8DD3006C34BC /* Headers */,
+				C92217B52CEA8DD3006C34BC /* Sources */,
+				C92217B62CEA8DD3006C34BC /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				C92217CF2CEA9300006C34BC /* PBXTargetDependency */,
+			);
+			name = MastodonContentExtraction;
+			packageProductDependencies = (
+			);
+			productName = MastodonContentExtraction;
+			productReference = C92217B82CEA8DD3006C34BC /* libMastodonContentExtraction.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		C95FC56F2CE50FF30093AB32 /* Multipass */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C95FC5952CE50FF40093AB32 /* Build configuration list for PBXNativeTarget "Multipass" */;
@@ -287,6 +340,7 @@
 			packageProductDependencies = (
 				C95FC59F2CE5122D0093AB32 /* OAuthenticator */,
 				C95FC5B22CE536B70093AB32 /* Valet */,
+				C92217D02CEA9309006C34BC /* SwiftSoup */,
 			);
 			productName = Multipass;
 			productReference = C95FC5702CE50FF30093AB32 /* Multipass.app */;
@@ -310,6 +364,7 @@
 			);
 			name = MultipassTests;
 			packageProductDependencies = (
+				C92217D22CEA930F006C34BC /* SwiftSoup */,
 			);
 			productName = MultipassTests;
 			productReference = C95FC5812CE50FF40093AB32 /* MultipassTests.xctest */;
@@ -373,6 +428,9 @@
 					C92217A22CE8D949006C34BC = {
 						CreatedOnToolsVersion = 16.2;
 					};
+					C92217B72CEA8DD3006C34BC = {
+						CreatedOnToolsVersion = 16.2;
+					};
 					C95FC56F2CE50FF30093AB32 = {
 						CreatedOnToolsVersion = 16.2;
 						LastSwiftMigration = 1620;
@@ -402,6 +460,7 @@
 			packageReferences = (
 				C95FC59E2CE5122D0093AB32 /* XCRemoteSwiftPackageReference "OAuthenticator" */,
 				C95FC5B12CE536B70093AB32 /* XCRemoteSwiftPackageReference "Valet" */,
+				C92217CB2CEA92F3006C34BC /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C95FC5712CE50FF30093AB32 /* Products */;
@@ -414,6 +473,7 @@
 				C95FC5BB2CE540980093AB32 /* Utility */,
 				C922178E2CE7C985006C34BC /* MastodonAPI */,
 				C92217A22CE8D949006C34BC /* BlueskyAPI */,
+				C92217B72CEA8DD3006C34BC /* MastodonContentExtraction */,
 			);
 		};
 /* End PBXProject section */
@@ -457,6 +517,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C92217B52CEA8DD3006C34BC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C95FC56C2CE50FF30093AB32 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -488,6 +555,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		C92217CF2CEA9300006C34BC /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = C92217CE2CEA9300006C34BC /* SwiftSoup */;
+		};
 		C95FC5832CE50FF40093AB32 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C95FC56F2CE50FF30093AB32 /* Multipass */;
@@ -543,6 +614,30 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 77X93NZ3G2;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		C92217BF2CEA8DD3006C34BC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				MACOSX_DEPLOYMENT_TARGET = 15.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C92217C02CEA8DD3006C34BC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
 				EXECUTABLE_PREFIX = lib;
 				MACOSX_DEPLOYMENT_TARGET = 15.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -875,6 +970,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		C92217BE2CEA8DD3006C34BC /* Build configuration list for PBXNativeTarget "MastodonContentExtraction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C92217BF2CEA8DD3006C34BC /* Debug */,
+				C92217C02CEA8DD3006C34BC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C95FC56B2CE50FF30093AB32 /* Build configuration list for PBXProject "Multipass" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -923,6 +1027,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C92217CB2CEA92F3006C34BC /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.6;
+			};
+		};
 		C95FC59E2CE5122D0093AB32 /* XCRemoteSwiftPackageReference "OAuthenticator" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ChimeHQ/OAuthenticator.git";
@@ -942,6 +1054,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C92217CE2CEA9300006C34BC /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C92217CB2CEA92F3006C34BC /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+		C92217D02CEA9309006C34BC /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C92217CB2CEA92F3006C34BC /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+		C92217D22CEA930F006C34BC /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C92217CB2CEA92F3006C34BC /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
 		C95FC59F2CE5122D0093AB32 /* OAuthenticator */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = C95FC59E2CE5122D0093AB32 /* XCRemoteSwiftPackageReference "OAuthenticator" */;
