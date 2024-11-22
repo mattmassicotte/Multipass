@@ -24,6 +24,14 @@ public struct Post: Hashable, Sendable {
 	public let date: Date
 	public let author: String
 	public let identifier: String
+	
+	public init(content: String, source: DataSource, date: Date, author: String, identifier: String) {
+		self.content = content
+		self.source = source
+		self.date = date
+		self.author = author
+		self.identifier = identifier
+	}
 }
 
 extension Post: Identifiable {

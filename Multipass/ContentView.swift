@@ -2,50 +2,15 @@ import SwiftUI
 
 import struct BlueskyAPI.Credentials
 import CompositeSocialService
-import OAuthenticator
-import Utility
 import Valet
-
-struct PostView: View {
-	let post: Post
-	
-	var body: some View {
-		HStack {
-			switch post.source {
-			case .mastodon:
-				Image("mastodon.clean.fill")
-			case .bluesky:
-				Image("bluesky")
-			}
-			
-			Text(post.content)
-		}
-	}
-}
-
-extension Valet {
-	static func mainApp() -> Valet {
-		let bundleId = Bundle.main.bundleIdentifier!
-		let groupId = SharedGroupIdentifier(appIDPrefix: MTPAppIdentifierPrefix, nonEmptyGroup: bundleId)!
-		
-		return Valet.sharedGroupValet(with: groupId, accessibility: .whenUnlocked)
-	}
-}
-
-extension SecretStore {
-	static func valetStore(using valet: Valet) -> SecretStore {
-		SecretStore(
-			read: { try valet.object(forKey: $0) },
-			write: { try valet.setObject($0, forKey: $1) }
-		)
-	}
-}
 
 @MainActor
 @Observable
 final class ViewModel {
 	@ObservationIgnored
 	private var client: CompositeClient
+	@ObservationIgnored
+	private var services: [any SocialService] = []
 	
 	private(set) var posts: [Post] = []
 
@@ -65,6 +30,10 @@ final class ViewModel {
 			secretStore: secretStore,
 			services: [mastodonService, blueskyService]
 		)
+	}
+	
+	func checkActiveServices() async {
+		
 	}
 	
 	func refresh() async {
