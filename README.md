@@ -6,6 +6,15 @@ Multipass can merge Bluesky and Mastodon feeds into a unified timeline. It shoul
 > [!WARNING]
 > This basically doesn't work. I needed something to test an OAuth flow and I just thought it would be fun. I just cannot stress enough what a poor state this is currently in.
 
+### Building
+
+**Note**: requires Xcode 16 and I may have broken the iOS builds...
+
+- clone the repo
+- `cp User.xcconfig.template User.xcconfig`
+- update `User.xcconfig` with your personal information
+- build/run with Xcode
+
 ## Acknowledgements 
 
 This project uses symbols from [social-symbols](https://github.com/jeremieb/social-symbols). It rocks.
