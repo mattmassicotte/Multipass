@@ -114,11 +114,6 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		C92217A42CE8D949006C34BC /* BlueskyAPI */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = BlueskyAPI;
-			sourceTree = "<group>";
-		};
 		C95FC5722CE50FF30093AB32 /* Multipass */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
@@ -226,7 +221,6 @@
 				C95FC5722CE50FF30093AB32 /* Multipass */,
 				C95FC5842CE50FF40093AB32 /* MultipassTests */,
 				C95FC58E2CE50FF40093AB32 /* MultipassUITests */,
-				C92217A42CE8D949006C34BC /* BlueskyAPI */,
 				C95FC5CF2CE542800093AB32 /* Frameworks */,
 				C95FC5712CE50FF30093AB32 /* Products */,
 			);
@@ -325,9 +319,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				C92217A42CE8D949006C34BC /* BlueskyAPI */,
 			);
 			name = BlueskyAPI;
 			packageProductDependencies = (
@@ -740,7 +731,7 @@
 		C95FC5932CE50FF40093AB32 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReferenceAnchor = C95FC5B42CE5399C0093AB32 /* Configurations */;
-			baseConfigurationReferenceRelativePath = Project.xcconfig;
+			baseConfigurationReferenceRelativePath = "Project-Debug.xcconfig";
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -1018,11 +1009,8 @@
 			baseConfigurationReferenceRelativePath = Modules/Utility/Utility.xcconfig;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				EXECUTABLE_PREFIX = lib;
 				MACOSX_DEPLOYMENT_TARGET = 15.1;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
 			};
 			name = Debug;
 		};
@@ -1032,11 +1020,8 @@
 			baseConfigurationReferenceRelativePath = Modules/Utility/Utility.xcconfig;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				EXECUTABLE_PREFIX = lib;
 				MACOSX_DEPLOYMENT_TARGET = 15.1;
-				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SKIP_INSTALL = YES;
 			};
 			name = Release;
 		};
