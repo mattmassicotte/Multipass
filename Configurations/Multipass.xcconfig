@@ -1,0 +1,6 @@
+LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks
+LD_RUNPATH_SEARCH_PATHS[sdk=macosx*] = $(inherited) @executable_path/../Frameworks
+SKIP_INSTALL = NO
+SUPPORTED_PLATFORMS = macosx iphonesimulator iphoneos appletvsimulator appletvos xrsimulator xros
+TARGETED_DEVICE_FAMILY = 1,2,3,4,6,7
+

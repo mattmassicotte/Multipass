@@ -3,8 +3,6 @@ import Foundation
 import BlueskyAPI
 import MastodonAPI
 import OAuthenticator
-import Valet
-import Utility
 
 public enum DataSource: Hashable, Sendable {
 	case mastodon

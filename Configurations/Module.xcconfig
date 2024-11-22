@@ -4,4 +4,3 @@ PRODUCT_NAME = $(TARGET_NAME)
 SKIP_INSTALL = YES
 SUPPORTED_PLATFORMS = macosx iphonesimulator iphoneos appletvsimulator appletvos xrsimulator xros
 TARGETED_DEVICE_FAMILY = 1,2,3,4,6,7
-
