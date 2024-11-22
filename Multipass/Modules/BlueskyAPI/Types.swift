@@ -155,7 +155,7 @@ public struct Post: Decodable, Hashable, Sendable {
 public struct Reply: Decodable, Hashable, Sendable {
 	public struct ReplyObject: Decodable, Hashable, Sendable {
 		public let uri: ATProtoURI
-		public let cid: ATProtoCID
+		public let cid: ATProtoCID?
 	}
 	
 	public let root: ReplyObject
