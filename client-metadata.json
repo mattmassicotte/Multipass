@@ -1,0 +1,25 @@
+{
+    "client_id": "https://github.com/mattmassicotte/Multipass/client-metadata.json",
+    "application_type": "native",
+    "grant_types": [
+        "authorization_code"
+    ],
+    "scope": "atproto transition:generic",
+    "response_types": "code",
+    "redirect_uris": "MultipassApp://atproto/oauth",
+    "token_endpoint_auth_method": "private_key_jwt",
+    "token_endpoint_auth_signing_alg": "ES256",
+    "dpop_bound_access_tokens": true,
+    "jwks": [
+        {
+            "kty": "RSA",
+            "e": "AQAB",
+            "use": "sig",
+            "kid": "wyGV0ZtEV3EfO1ZTsDYbppWItWvTqZSSoRPxR4fqt0Y",
+            "alg": "RS256",
+            "n": "pbvb6qsY-njzSXQLpV7zmKcgRFMbmgsxiPpvL4C5yioJImd46UI2GIfb6XTkw4BRNI-jKZgZU5hoYGz5TXMGYb8Joq4VUCmYDUqG1osXr41g9yJ21bMaZr4eGNh1pX59gva_jh7DmiRfd7RS6njVRt7DjYkJ1XE_O2ewK0tb4d3Fk2Uxn6Ra4B6uGz3G2rWvzollUe_GXF3q_GnhwBtWppuWsqmPnDWwCuT8m9Prc238_P6UO_JxzZjAPeq6NUi-EGmV3f5noBPWIxDBZ_9r-mY9it2cd2idAC8JdPVQnugh-ay_IMdRUzG0hIqwmqycC1lgzuXBmJ6fugxdRWe8aQ"
+        }
+    ],
+    "client_name": "Multipass",
+    "client_uri": "https://github.com/mattmassicotte/Multipass"
+}
