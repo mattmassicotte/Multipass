@@ -16,8 +16,16 @@ extension Valet {
 extension SecretStore {
 	static func valetStore(using valet: Valet) -> SecretStore {
 		SecretStore(
-			read: { try valet.object(forKey: $0) },
-			write: { try valet.setObject($0, forKey: $1) }
+			read: {
+				do {
+					return try valet.object(forKey: $0)
+				} catch KeychainError.itemNotFound {
+					return nil
+				}
+			},
+			write: {
+				try valet.setObject($0, forKey: $1)
+			}
 		)
 	}
 }

@@ -1,13 +1,39 @@
 {
-  "originHash" : "d1648e5839297366a1e756a18e30fcda911ec1223887f6de7ce472ecafb2b168",
+  "originHash" : "d84b68eb2774d0f185bca9661d0a55661313e77fd8ebb5b0c7864a2c9c915183",
   "pins" : [
+    {
+      "identity" : "cryptoswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
+      "state" : {
+        "revision" : "678d442c6f7828def400a70ae15968aef67ef52d",
+        "version" : "1.8.3"
+      }
+    },
+    {
+      "identity" : "jose-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/beatt83/jose-swift",
+      "state" : {
+        "revision" : "57fe5a03c83feaf73a84b23c02e641f86482e313",
+        "version" : "4.0.2"
+      }
+    },
     {
       "identity" : "oauthenticator",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ChimeHQ/OAuthenticator.git",
       "state" : {
-        "branch" : "swift6",
-        "revision" : "892dbb0da966a1a2506ae07486eca42a1bcf7e30"
+        "revision" : "7a8ce42e258f9f38f65db0caa7776e3dffbc9ecf"
+      }
+    },
+    {
+      "identity" : "secp256k1.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/GigaBitcoin/secp256k1.swift.git",
+      "state" : {
+        "revision" : "4c77c7384768acf1093d66ccaacf298d322b10b7",
+        "version" : "0.15.0"
       }
     },
     {

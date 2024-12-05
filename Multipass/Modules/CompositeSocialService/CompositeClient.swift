@@ -53,12 +53,10 @@ public protocol SocialService: Sendable {
 }
 
 public struct CompositeClient {
-	private let responseProvider: URLResponseProvider
 	private let secretStore: SecretStore
 	private let services: [SocialService]
 	
-	public init(responseProvider: @escaping URLResponseProvider, secretStore: SecretStore, services: [SocialService]) {
-		self.responseProvider = responseProvider
+	public init(secretStore: SecretStore, services: [SocialService]) {
 		self.secretStore = secretStore
 		self.services = services
 	}

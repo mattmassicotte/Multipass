@@ -1,7 +1,9 @@
 import SwiftUI
 
 import struct BlueskyAPI.Credentials
+import CryptoKit
 import CompositeSocialService
+import OAuthenticator
 import Valet
 
 @MainActor
@@ -11,29 +13,31 @@ final class ViewModel {
 	private var client: CompositeClient
 	@ObservationIgnored
 	private var services: [any SocialService] = []
+	@ObservationIgnored
+	private let secretStore = SecretStore.valetStore(using: Valet.mainApp())
 	
 	private(set) var posts: [Post] = []
 
 	init() {
 		let responseProvider = URLSession.defaultProvider
-		let valet = Valet.mainApp()
-		let secretStore = SecretStore.valetStore(using: valet)
-		
-		let data = try? valet.object(forKey: "Bluesky Auth")
-		let bskyCredentials = try? data.map { try JSONDecoder().decode(BlueskyAPI.Credentials.self, from: $0) }
-		
-		let mastodonService = MastodonService(with: responseProvider, host: "mastodon.social", secretStore: secretStore)
-		let blueskyService = BlueskyService(with: responseProvider, credentials: bskyCredentials!, secretStore: secretStore)
-		
+
+		let mastodonService = MastodonService(
+			with: responseProvider,
+			host: "mastodon.social",
+			secretStore: secretStore
+		) 
+		let blueskyService = BlueskyService(
+			with: responseProvider,
+			authServer: "bsky.social",
+			clientMetadataEndpoint: "https://downloads.chimehq.com/com.chimehq.Multipass/client-metadata.json",
+			account: "yourhandle.com",
+			secretStore: secretStore
+		)
+
 		self.client = CompositeClient(
-			responseProvider: responseProvider,
 			secretStore: secretStore,
 			services: [mastodonService, blueskyService]
 		)
-	}
-	
-	func checkActiveServices() async {
-		
 	}
 	
 	func refresh() async {

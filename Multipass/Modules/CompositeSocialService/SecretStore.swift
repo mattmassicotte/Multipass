@@ -13,4 +13,8 @@ public struct SecretStore: Sendable {
 		self.read = read
 		self.write = write
 	}
+
+//	public func readOrCreate(key: String, default: () throws -> Data) throws -> Data {
+//
+//	}
 }

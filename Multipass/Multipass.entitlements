@@ -14,7 +14,7 @@
 	<true/>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.chimehq.MultipassTest</string>
+		<string>$(AppIdentifierPrefix)com.chimehq.Multipass</string>
 	</array>
 </dict>
 </plist>

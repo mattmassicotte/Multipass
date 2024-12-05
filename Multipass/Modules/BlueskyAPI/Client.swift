@@ -5,20 +5,18 @@ enum ClientError: Error {
 }
 
 
-public struct Client: Sendable {
+public actor Client: Sendable {
 	public typealias ResponseProvider = @Sendable (URLRequest) async throws -> (Data, URLResponse)
 	
 	private let provider: ResponseProvider
 	public let host: String
-	public let handle: String
 	private let decoder = JSONDecoder()
 	private let iso8061DecimalDecoder: DateFormatter
 	private let iso8061OffsetFormatter: DateFormatter
 	
-	public init(host: String, handle: String, appPassword: String, provider: @escaping ResponseProvider) {
+	public init(host: String, provider: @escaping ResponseProvider) {
 		self.provider = provider
 		self.host = host
-		self.handle = handle
 		
 		self.iso8061DecimalDecoder = DateFormatter()
 		
@@ -41,7 +39,7 @@ public struct Client: Sendable {
 		return components
 	}
 	
-	private func decodeDate(_ decoder: any Decoder) throws -> Date {
+	private nonisolated func decodeDate(_ decoder: any Decoder) throws -> Date {
 		let container = try decoder.singleValueContainer()
 		let string = try container.decode(String.self)
 		
@@ -113,7 +111,7 @@ extension Client {
 		return try decoder.decode(CreateSessionResponse.self, from: data)
 	}
 	
-	public func timeline(token: String) async throws -> TimelineResponse {
+	public func timeline() async throws -> TimelineResponse {
 		var components = baseComponents
 		
 		components.path = "/xrpc/app.bsky.feed.getTimeline"
@@ -125,7 +123,6 @@ extension Client {
 		var request = URLRequest(url: url)
 		
 		request.httpMethod = "GET"
-		request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 		
 		let (data, _) = try await provider(request)
 		
