@@ -74,6 +74,7 @@ struct FeedView: View {
 		List(model.posts) { post in
 			PostView(post: post)
 		}
+		.listStyle(PlainListStyle())
 		.onChange(of: accountStore.accounts, initial: true, { _, newValue in
 			model.updateAccounts(newValue)
 		})

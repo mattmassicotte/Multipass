@@ -1,6 +1,7 @@
 import SwiftUI
 
 import CompositeSocialService
+import UIUtility
 
 struct AccountAddView: View {
 	@Environment(AccountStore.self) var accountStore
@@ -27,16 +28,16 @@ struct AccountAddView: View {
 			Form {
 				Text("Service: \(source.rawValue)")
 				TextField("Host Server", text: $details.host)
+					.platform_textInputAutocapitalization(.never)
 				TextField("Account", text: $details.user)
+					.platform_textInputAutocapitalization(.never)
+					.autocorrectionDisabled(true)
 			}
 			Button("Add") {
 				addAccount()
 			}.disabled(adding)
 		}
 		.padding()
-#if !os(macOS)
-		.navigationBarTitle("Add Account")
-#endif
 	}
 
 	private func addAccount() {

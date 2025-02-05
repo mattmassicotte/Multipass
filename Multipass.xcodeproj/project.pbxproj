@@ -21,6 +21,7 @@
 		C9AB8D4B2D53C63700B1462F /* ATResolve in Frameworks */ = {isa = PBXBuildFile; productRef = C9AB8D4A2D53C63700B1462F /* ATResolve */; };
 		C9AB8DAF2D53CAA100B1462F /* ATResolve in Frameworks */ = {isa = PBXBuildFile; productRef = C9AB8DAE2D53CAA100B1462F /* ATResolve */; };
 		C9AB8DB22D53CBD900B1462F /* ATResolve in Frameworks */ = {isa = PBXBuildFile; productRef = C9AB8DB12D53CBD900B1462F /* ATResolve */; };
+		C9AB8E262D53EC1600B1462F /* libUIUtility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AB8E152D53EB8700B1462F /* libUIUtility.a */; };
 		C9DA69572CF9059E00CB0AAA /* jose-swift in Frameworks */ = {isa = PBXBuildFile; productRef = C9DA69562CF9059E00CB0AAA /* jose-swift */; };
 /* End PBXBuildFile section */
 
@@ -67,6 +68,13 @@
 			remoteGlobalIDString = C92217B72CEA8DD3006C34BC;
 			remoteInfo = MastodonContentExtraction;
 		};
+		C9AB8E242D53EBE600B1462F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C95FC5682CE50FF30093AB32 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9AB8E142D53EB8700B1462F;
+			remoteInfo = UIUtility;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +87,7 @@
 		C95FC5812CE50FF40093AB32 /* MultipassTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultipassTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95FC58B2CE50FF40093AB32 /* MultipassUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MultipassUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C95FC5BC2CE540980093AB32 /* libUtility.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUtility.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C9AB8E152D53EB8700B1462F /* libUIUtility.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUIUtility.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -147,6 +156,7 @@
 				Modules/Settings/AccountAddView.swift,
 				Modules/Settings/AccountSettingsView.swift,
 				Modules/Settings/SettingsView.swift,
+				Modules/UIUtility/Platform.swift,
 				Modules/Utility/Constants.m,
 				"Modules/Utility/UserDefaults+Shared.swift",
 				Modules/Utility/Utility.xcconfig,
@@ -161,6 +171,13 @@
 			);
 			target = C95FC5BB2CE540980093AB32 /* Utility */;
 		};
+		C9AB8E282D53ECC100B1462F /* Exceptions for "Multipass" folder in "UIUtility" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Modules/UIUtility/Platform.swift,
+			);
+			target = C9AB8E142D53EB8700B1462F /* UIUtility */;
+		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -174,6 +191,7 @@
 				C92217C92CEA9126006C34BC /* Exceptions for "Multipass" folder in "MastodonContentExtraction" target */,
 				C92217E52CED1CB4006C34BC /* Exceptions for "Multipass" folder in "CompositeSocialService" target */,
 				C91D81A32D01F080007D1E82 /* Exceptions for "Multipass" folder in "Settings" target */,
+				C9AB8E282D53ECC100B1462F /* Exceptions for "Multipass" folder in "UIUtility" target */,
 			);
 			path = Multipass;
 			sourceTree = "<group>";
@@ -237,6 +255,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9AB8E262D53EC1600B1462F /* libUIUtility.a in Frameworks */,
 				C91D81A12D01F06E007D1E82 /* libSettings.a in Frameworks */,
 				C9DA69572CF9059E00CB0AAA /* jose-swift in Frameworks */,
 				C963AAB22CF0EF960046E33B /* libCompositeSocialService.a in Frameworks */,
@@ -274,6 +293,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C9AB8E132D53EB8700B1462F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -301,6 +327,7 @@
 				C92217B82CEA8DD3006C34BC /* libMastodonContentExtraction.a */,
 				C92217D82CED1C80006C34BC /* libCompositeSocialService.a */,
 				C91D81922D01EFFF007D1E82 /* libSettings.a */,
+				C9AB8E152D53EB8700B1462F /* libUIUtility.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -357,6 +384,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C9AB8E112D53EB8700B1462F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -371,6 +405,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C9AB8E252D53EBE600B1462F /* PBXTargetDependency */,
 				C91D81AC2D020BB0007D1E82 /* PBXTargetDependency */,
 			);
 			name = Settings;
@@ -558,6 +593,25 @@
 			productReference = C95FC5BC2CE540980093AB32 /* libUtility.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		C9AB8E142D53EB8700B1462F /* UIUtility */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C9AB8E1B2D53EB8700B1462F /* Build configuration list for PBXNativeTarget "UIUtility" */;
+			buildPhases = (
+				C9AB8E112D53EB8700B1462F /* Headers */,
+				C9AB8E122D53EB8700B1462F /* Sources */,
+				C9AB8E132D53EB8700B1462F /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UIUtility;
+			packageProductDependencies = (
+			);
+			productName = UIUtility;
+			productReference = C9AB8E152D53EB8700B1462F /* libUIUtility.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -598,6 +652,9 @@
 					C95FC5BB2CE540980093AB32 = {
 						CreatedOnToolsVersion = 16.2;
 					};
+					C9AB8E142D53EB8700B1462F = {
+						CreatedOnToolsVersion = 16.2;
+					};
 				};
 			};
 			buildConfigurationList = C95FC56B2CE50FF30093AB32 /* Build configuration list for PBXProject "Multipass" */;
@@ -630,6 +687,7 @@
 				C92217B72CEA8DD3006C34BC /* MastodonContentExtraction */,
 				C92217D72CED1C80006C34BC /* CompositeSocialService */,
 				C91D81912D01EFFF007D1E82 /* Settings */,
+				C9AB8E142D53EB8700B1462F /* UIUtility */,
 			);
 		};
 /* End PBXProject section */
@@ -722,6 +780,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C9AB8E122D53EB8700B1462F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -766,6 +831,11 @@
 		C9AB8D532D53CA2300B1462F /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = C9AB8D522D53CA2300B1462F /* ATResolve */;
+		};
+		C9AB8E252D53EBE600B1462F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9AB8E142D53EB8700B1462F /* UIUtility */;
+			targetProxy = C9AB8E242D53EBE600B1462F /* PBXContainerItemProxy */;
 		};
 		C9DA69762D00D6A000CB0AAA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -992,6 +1062,8 @@
 		};
 		C95FC5962CE50FF40093AB32 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = C95FC5B42CE5399C0093AB32 /* Configurations */;
+			baseConfigurationReferenceRelativePath = Multipass.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1011,19 +1083,18 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chimehq.Multipass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		C95FC5972CE50FF40093AB32 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = C95FC5B42CE5399C0093AB32 /* Configurations */;
+			baseConfigurationReferenceRelativePath = Multipass.xcconfig;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1043,8 +1114,6 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.chimehq.Multipass;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1147,6 +1216,28 @@
 			};
 			name = Release;
 		};
+		C9AB8E1C2D53EB8700B1462F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = C95FC5B42CE5399C0093AB32 /* Configurations */;
+			baseConfigurationReferenceRelativePath = Module.xcconfig;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		C9AB8E1D2D53EB8700B1462F /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = C95FC5B42CE5399C0093AB32 /* Configurations */;
+			baseConfigurationReferenceRelativePath = Module.xcconfig;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1236,6 +1327,15 @@
 			buildConfigurations = (
 				C95FC5C32CE540980093AB32 /* Debug */,
 				C95FC5C42CE540980093AB32 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9AB8E1B2D53EB8700B1462F /* Build configuration list for PBXNativeTarget "UIUtility" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C9AB8E1C2D53EB8700B1462F /* Debug */,
+				C9AB8E1D2D53EB8700B1462F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

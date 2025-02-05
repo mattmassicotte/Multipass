@@ -20,16 +20,38 @@ final class AppState {
 
 @main
 struct MultipassApp: App {
-	@State var appState = AppState()
+	@State private var appState = AppState()
+	@State private var settingsVisible = false
 	
 	var body: some Scene {
 		WindowGroup {
+#if os(macOS)
 			VStack {
 				FeedView(secretStore: appState.secretStore)
 			}
 			.padding()
+#else
+			NavigationStack {
+				VStack {
+					FeedView(secretStore: appState.secretStore)
+				}
+				.toolbar {
+					Button {
+						settingsVisible = true
+					} label: {
+						Image(systemName: "gear")
+					}
+					
+				}
+			}
+			.sheet(isPresented: $settingsVisible) {
+				SettingsView()
+					.environment(appState.accountStore)
+			}
+#endif
 		}
 		.environment(appState.accountStore)
+
 
 #if os(macOS)
 		Settings {
