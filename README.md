@@ -1,10 +1,18 @@
 # Multipass
 Yes she knows it's a multipass
 
-Multipass can merge Bluesky and Mastodon feeds into a unified timeline. It should support macOS and iOS. Barely.
+Multipass can merge Bluesky and Mastodon feeds into a unified timeline. It should support macOS and iOS.
 
 > [!WARNING]
-> This basically doesn't work. I needed something to test an OAuth flow and I just thought it would be fun. I just cannot stress enough what a poor state this is currently in.
+> This app is in juuust barely functional. I just cannot stress enough what a poor state this is currently in.
+
+## Usage
+
+You can add and remove accounts and they will be persisted in the Keychain. Mastodon is straightforward. To add a Bluesky account, you need to know your PDS endpoint, which isn't easy to figure out.
+
+- Find your DID
+- `curl -s "https://plc.directory/did:plc:<YOUR_DID_GOES_HERE>"`
+- fish out the `serviceEndpoint` field
 
 ### Building
 
