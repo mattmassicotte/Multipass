@@ -31,7 +31,7 @@ final class ViewModel {
 	
 	func refresh() async {
 		do {
-			self.posts = try await client.timeline().sorted()
+			self.posts = try await client.timeline().sorted(by: { $0 > $1 })
 		} catch {
 			print("dammm", error)
 		}
