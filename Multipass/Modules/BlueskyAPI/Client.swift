@@ -2,6 +2,7 @@ import Foundation
 
 enum ClientError: Error {
 	case malformedURL(URLComponents)
+	case requestFailed
 }
 
 
@@ -124,9 +125,16 @@ extension Client {
 		
 		request.httpMethod = "GET"
 		
-		let (data, _) = try await provider(request)
+		let (data, response) = try await provider(request)
 		
-		print(String(decoding: data, as: UTF8.self))
+		guard
+			let httpResponse = response as? HTTPURLResponse,
+			httpResponse.statusCode >= 200 && httpResponse.statusCode < 300
+		else {
+			print("response:", response)
+			print(String(decoding: data, as: UTF8.self))
+			throw ClientError.requestFailed
+		}
 		
 		return try decoder.decode(TimelineResponse.self, from: data)
 	}

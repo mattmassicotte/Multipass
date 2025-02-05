@@ -4,6 +4,11 @@ import MastodonAPI
 import MastodonContentExtraction
 import OAuthenticator
 
+public struct MastodonAccountDetails: Codable, Hashable, Sendable {
+	public let host: String
+	public let account: String
+}
+
 public struct MastodonService: SocialService {
 	private static let appRegistrationKey = "Mastodon App Registration"
 
@@ -40,6 +45,39 @@ public struct MastodonService: SocialService {
 
 			return MastodonAPI.Client(host: params.host, provider: authenticator.responseProvider)
 		}
+	}
+
+	public init(with provider: @escaping URLResponseProvider, host: String, secretStore: SecretStore) async throws {
+		let params = Mastodon.UserTokenParameters(
+			host: host,
+			clientName: "Multipass",
+			redirectURI: "MultipassApp://mastodon/oauth",
+			scopes: ["read", "write", "follow", "push"]
+		)
+
+		let loginStore = secretStore.loginStore(for: "Mastodon OAuth: \(host)")
+
+		// this should be done on account creation
+		let registration = try await Self.registerApplication(parameters: params, store: secretStore, provider: provider)
+
+		let appCreds = AppCredentials(
+			clientId: registration.clientID,
+			clientPassword: registration.clientSecret,
+			scopes: params.scopes,
+			callbackURL: URL(string: params.redirectURI)!
+		)
+
+		let config = Authenticator.Configuration(
+			appCredentials: appCreds,
+			loginStorage: loginStore,
+			tokenHandling: Mastodon.tokenHandling(with: params)
+		)
+
+		let authenticator = Authenticator(config: config, urlLoader: provider)
+
+		let client = MastodonAPI.Client(host: params.host, provider: authenticator.responseProvider)
+
+		self.clientTask = Task { client }
 	}
 
 	private static func registerApplication(

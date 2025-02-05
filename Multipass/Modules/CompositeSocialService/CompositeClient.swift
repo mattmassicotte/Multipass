@@ -4,7 +4,7 @@ import BlueskyAPI
 import MastodonAPI
 import OAuthenticator
 
-public enum DataSource: Hashable, Sendable {
+public enum DataSource: String, Hashable, Sendable, Codable, CaseIterable {
 	case mastodon
 	case bluesky
 }
@@ -54,7 +54,7 @@ public protocol SocialService: Sendable {
 
 public struct CompositeClient {
 	private let secretStore: SecretStore
-	private let services: [SocialService]
+	public let services: [SocialService]
 	
 	public init(secretStore: SecretStore, services: [SocialService]) {
 		self.secretStore = secretStore
@@ -64,10 +64,15 @@ public struct CompositeClient {
 
 extension CompositeClient: SocialService {
 	public func timeline() async throws -> [Post] {
-		try await withThrowingTaskGroup(of: [Post].self) { group in
+		return try await withThrowingTaskGroup(of: [Post].self) { group in
 			for service in services {
 				group.addTask {
-					try await service.timeline()
+					do {
+						return try await service.timeline()
+					} catch {
+						print("failed to load timeline: \(service), \(error)")
+						return []
+					}
 				}
 			}
 			
