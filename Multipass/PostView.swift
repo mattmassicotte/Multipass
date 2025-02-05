@@ -14,7 +14,11 @@ struct PostView: View {
 				Image("bluesky")
 			}
 			
-			Text(post.content)
+			VStack(alignment: .leading) {
+				Text(post.author)
+					.fontWeight(.bold)
+				Text(post.content)
+			}
 		}
     }
 }
