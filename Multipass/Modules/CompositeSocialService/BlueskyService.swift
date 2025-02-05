@@ -1,6 +1,7 @@
 import CryptoKit
 import Foundation
 
+import ATResolve
 import BlueskyAPI
 import OAuthenticator
 
@@ -8,6 +9,10 @@ public struct BlueskyAccountDetails: Codable, Hashable, Sendable {
 	/// This is the user's PDS
 	public let host: String
 	public let account: String
+}
+
+enum BlueskyServiceError: Error {
+	case pdsResolutionFailed(String)
 }
 
 public actor BlueskyService: SocialService {
@@ -60,8 +65,17 @@ public actor BlueskyService: SocialService {
 	}
 
 	private static func resolve(handle: String) async throws -> String {
-		// have to resolve this dynamically somehow
-		throw AuthenticatorError.tokenInvalid
+		let resolver = ATResolver()
+		
+		let details = try await resolver.resolveHandle(handle)
+		
+		guard let pds = details?.serviceEndpoint else {
+			print("failed to resolve PDS for \(handle)")
+
+			throw BlueskyServiceError.pdsResolutionFailed(handle)
+		}
+		
+		return String(pds.dropFirst("https://".count))
 	}
 
 	private static func loadDPoPKey(with store: SecretStore) async throws -> DPoPKey {

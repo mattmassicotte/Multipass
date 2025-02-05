@@ -5,28 +5,29 @@ import CompositeSocialService
 struct AccountAddView: View {
 	@Environment(AccountStore.self) var accountStore
 	@Environment(\.dismiss) private var dismiss
-	@State private var details = AccountDetails(host: "host.social", user: "me")
+	@State private var details: AccountDetails
 	@State private var adding = false
 	let source: DataSource
-
-	private var pdsBinding: Binding<String> {
-		Binding<String> {
-			details.values["PDS"] ?? ""
-		} set: { value in
-			details.values["PDS"] = value
-		}
-
-	}
 	
+	init(source: DataSource) {
+		self.source = source
+		
+		let defaultHost = switch source {
+		case .mastodon:
+			"mastodon.social"
+		case .bluesky:
+			"bsky.social"
+		}
+		
+		self._details = State(initialValue: AccountDetails(host: defaultHost, user: "me"))
+	}
+
 	var body: some View {
 		VStack {
 			Form {
 				Text("Service: \(source.rawValue)")
 				TextField("Host Server", text: $details.host)
 				TextField("Account", text: $details.user)
-				if source == .bluesky {
-					TextField("PDS", text: pdsBinding)
-				}
 			}
 			Button("Add") {
 				addAccount()
