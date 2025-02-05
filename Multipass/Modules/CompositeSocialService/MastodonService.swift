@@ -108,14 +108,14 @@ public struct MastodonService: SocialService {
 		let processor = MastodonContentExtraction.PostExtractor()
 		
 		return try statusArray.map {
-			let text = try processor.process($0.content)
+			let details = try processor.process($0.effectiveContent)
 			
 			return Post(
-				content: text.content,
+				content: details.content,
 				source: .mastodon,
 				date: $0.createdAt,
-				author: "me",
-				identifier: UUID().description
+				author: $0.account.username,
+				identifier: $0.id
 			)
 		}
 	}
