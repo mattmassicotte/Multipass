@@ -10,11 +10,7 @@ Multipass can merge Bluesky and Mastodon feeds into a unified timeline. It shoul
 
 ## Usage
 
-You can add and remove accounts and they will be persisted in the Keychain. Mastodon is straightforward. To add a Bluesky account, you need to know your PDS endpoint, which isn't easy to figure out.
-
-- Find your DID
-- `curl -s "https://plc.directory/did:plc:<YOUR_DID_GOES_HERE>"`
-- fish out the `serviceEndpoint` field
+You can add and remove accounts and they will be persisted in the Keychain. You do this from settings.
 
 ### Building
 
