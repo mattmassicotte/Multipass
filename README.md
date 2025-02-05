@@ -4,7 +4,7 @@ Yes she knows it's a multipass
 Multipass can merge Bluesky and Mastodon feeds into a unified timeline. It should support macOS and iOS.
 
 > [!WARNING]
-> This app is in juuust barely functional. I just cannot stress enough what a poor state this is currently in.
+> This app is juuust barely functional. I just cannot stress enough what a poor state this is currently in.
 
 ## Usage
 
