@@ -6,7 +6,12 @@ Multipass can merge Bluesky and Mastodon feeds into a unified timeline. It shoul
 > [!WARNING]
 > This app is juuust barely functional. I just cannot stress enough what a poor state this is currently in.
 
-<img width="696" alt="Screenshot 2025-02-05 at 11 53 08 AM" src="https://github.com/user-attachments/assets/2599f862-2486-42f3-865a-765eb2ff24ad" />
+<p align="center">
+  <img src="assets/timeline-macos.png" width="420" title="Timeline screenshot for macOS">
+</p>
+<p align="center">
+  <img src="assets/timeline-ios.png" width="200" title="Timeline screenshot for iOS">
+</p>
 
 ## Usage
 
