@@ -1,6 +1,5 @@
 import SwiftUI
 
-import struct BlueskyAPI.Credentials
 import CompositeSocialService
 import OAuthenticator
 
@@ -37,7 +36,7 @@ final class ViewModel {
 		}
 	}
 	
-	func updateAccounts(_ accounts: [Account]) {
+	func updateAccounts(_ accounts: [UserAccount]) {
 		let services = accounts.map { (account) -> any SocialService in
 			switch account.source {
 			case .mastodon:
@@ -50,7 +49,6 @@ final class ViewModel {
 				BlueskyService(
 					with: responseProvider,
 					authServer: account.details.host,
-					pds: account.details.values["PDS"],
 					account: account.details.user,
 					secretStore: secretStore
 				)
@@ -64,7 +62,7 @@ final class ViewModel {
 
 struct FeedView: View {
 	@State private var model: ViewModel
-	@Environment(AccountStore.self) private var accountStore
+	@Environment(UserAccountStore.self) private var accountStore
 	
 	init(secretStore: SecretStore) {
 		self._model = State(wrappedValue: ViewModel(secretStore: secretStore))

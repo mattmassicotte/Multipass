@@ -1,7 +1,6 @@
 import Foundation
 
 import MastodonAPI
-import MastodonContentExtraction
 import OAuthenticator
 
 public struct MastodonAccountDetails: Codable, Hashable, Sendable {
@@ -13,6 +12,8 @@ public struct MastodonService: SocialService {
 	private static let appRegistrationKey = "Mastodon App Registration"
 
 	let clientTask: Task<MastodonAPI.Client, any Error>
+	let host: String
+	private let provider: URLResponseProvider
 	
 	public init(with provider: @escaping URLResponseProvider, host: String, secretStore: SecretStore) {
 		let params = Mastodon.UserTokenParameters(
@@ -22,6 +23,8 @@ public struct MastodonService: SocialService {
 			scopes: ["read", "write", "follow", "push"]
 		)
 
+		self.host = host
+		self.provider = provider
 		self.clientTask = Task {
 			let loginStore = secretStore.loginStore(for: "Mastodon OAuth")
 
@@ -45,39 +48,6 @@ public struct MastodonService: SocialService {
 
 			return MastodonAPI.Client(host: params.host, provider: authenticator.responseProvider)
 		}
-	}
-
-	public init(with provider: @escaping URLResponseProvider, host: String, secretStore: SecretStore) async throws {
-		let params = Mastodon.UserTokenParameters(
-			host: host,
-			clientName: "Multipass",
-			redirectURI: "MultipassApp://mastodon/oauth",
-			scopes: ["read", "write", "follow", "push"]
-		)
-
-		let loginStore = secretStore.loginStore(for: "Mastodon OAuth: \(host)")
-
-		// this should be done on account creation
-		let registration = try await Self.registerApplication(parameters: params, store: secretStore, provider: provider)
-
-		let appCreds = AppCredentials(
-			clientId: registration.clientID,
-			clientPassword: registration.clientSecret,
-			scopes: params.scopes,
-			callbackURL: URL(string: params.redirectURI)!
-		)
-
-		let config = Authenticator.Configuration(
-			appCredentials: appCreds,
-			loginStorage: loginStore,
-			tokenHandling: Mastodon.tokenHandling(with: params)
-		)
-
-		let authenticator = Authenticator(config: config, urlLoader: provider)
-
-		let client = MastodonAPI.Client(host: params.host, provider: authenticator.responseProvider)
-
-		self.clientTask = Task { client }
 	}
 
 	private static func registerApplication(
@@ -105,17 +75,22 @@ public struct MastodonService: SocialService {
 	public func timeline() async throws -> [Post] {
 		let statusArray = try await clientTask.value.timeline()
 		
-		let processor = MastodonContentExtraction.PostExtractor()
-		
-		return try statusArray.map {
-			let details = try processor.process($0.effectiveContent)
+		return statusArray.map { status in
+			let content = status.reblog?.content ?? status.content
+			
+			let author = Author(
+				name: status.account.displayName,
+				handle: status.account.resolvedUsername(with: host),
+				avatarURL: URL(string: status.account.avatarStatic)
+			)
 			
 			return Post(
-				content: details.content,
+				content: content,
 				source: .mastodon,
-				date: $0.createdAt,
-				author: $0.account.username,
-				identifier: $0.id
+				date: status.createdAt,
+				author: author,
+				identifier: status.id,
+				url: URL(string: status.uri)
 			)
 		}
 	}

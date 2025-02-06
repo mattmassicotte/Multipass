@@ -15,8 +15,11 @@ struct PostView: View {
 			}
 			
 			VStack(alignment: .leading) {
-				Text(post.author)
-					.fontWeight(.bold)
+				HStack {
+					Text(post.author.name)
+						.fontWeight(.bold)
+					Text(post.author.handle)
+				}
 				Text(post.content)
 			}
 		}
@@ -24,5 +27,5 @@ struct PostView: View {
 }
 
 #Preview {
-	PostView(post: Post(content: "hello", source: .mastodon, date: .now, author: "Me", identifier: "abc123"))
+	PostView(post: Post.placeholder)
 }

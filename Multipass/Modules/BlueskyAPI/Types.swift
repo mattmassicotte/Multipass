@@ -105,6 +105,10 @@ public struct Author: Decodable, Hashable, Sendable {
 	public let handle: String
 	public let displayName: String
 	public let avatar: String?
+	
+	public var avatarURL: URL? {
+		avatar.flatMap { URL(string: $0) }
+	}
 }
 
 public struct Post: Decodable, Hashable, Sendable {
@@ -150,6 +154,16 @@ public struct Post: Decodable, Hashable, Sendable {
 	public let indexedAt: Date
 	public let viewer: Viewer
 	public let labels: [Label]?
+	
+	public var url: URL? {
+		guard let rkey = uri.components(separatedBy: "/").last else {
+			return nil
+		}
+		
+		let handle = author.handle
+		
+		return URL(string: "https://bsky.app/profile/\(handle)/post/\(rkey)")
+	}
 }
 
 public struct Reply: Decodable, Hashable, Sendable {

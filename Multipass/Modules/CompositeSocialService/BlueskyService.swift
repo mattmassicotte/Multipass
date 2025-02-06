@@ -102,12 +102,19 @@ public actor BlueskyService: SocialService {
 		return response.feed.map { entry in
 			switch entry.post.record {
 			case let .post(post):
+				let author = Author(
+					name: entry.post.author.displayName,
+					handle: entry.post.author.handle,
+					avatarURL: entry.post.author.avatarURL
+				)
+				
 				return Post(
 					content: post.text,
 					source: .bluesky,
 					date: entry.post.indexedAt,
-					author: entry.post.author.handle,
-					identifier: UUID().description
+					author: author,
+					identifier: entry.post.cid,
+					url: entry.post.url
 				)
 			}
 		}

@@ -3,7 +3,7 @@ import SwiftUI
 import CompositeSocialService
 
 struct AccountSettingsView: View {
-	@Environment(AccountStore.self) var accountStore
+	@Environment(UserAccountStore.self) var accountStore
 	@State private var addingMastodon = false
 	@State private var addingBluesky = false
 

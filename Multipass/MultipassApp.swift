@@ -11,10 +11,10 @@ final class AppState {
 	let secretStore = SecretStore.valetStore(using: Valet.mainApp())
 	
 	@ObservationIgnored
-	let accountStore: AccountStore
+	let accountStore: UserAccountStore
 	
 	init() {
-		self.accountStore = AccountStore(secretStore: secretStore)
+		self.accountStore = UserAccountStore(secretStore: secretStore)
 	}
 }
 

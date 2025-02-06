@@ -4,9 +4,9 @@ import CompositeSocialService
 import UIUtility
 
 struct AccountAddView: View {
-	@Environment(AccountStore.self) var accountStore
+	@Environment(UserAccountStore.self) var accountStore
 	@Environment(\.dismiss) private var dismiss
-	@State private var details: AccountDetails
+	@State private var details: UserAccountDetails
 	@State private var adding = false
 	let source: DataSource
 	
@@ -20,7 +20,7 @@ struct AccountAddView: View {
 			"bsky.social"
 		}
 		
-		self._details = State(initialValue: AccountDetails(host: defaultHost, user: "me"))
+		self._details = State(initialValue: UserAccountDetails(host: defaultHost, user: "me"))
 	}
 
 	var body: some View {
@@ -43,7 +43,7 @@ struct AccountAddView: View {
 	private func addAccount() {
 		self.adding = true
 
-		let account = Account(source: source, details: details)
+		let account = UserAccount(source: source, details: details)
 
 		Task<Void, Never> {
 			do {

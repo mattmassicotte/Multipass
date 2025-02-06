@@ -1,50 +1,6 @@
 import Foundation
 
-import BlueskyAPI
-import MastodonAPI
 import OAuthenticator
-
-public enum DataSource: String, Hashable, Sendable, Codable, CaseIterable {
-	case mastodon
-	case bluesky
-}
-
-extension DataSource: CustomStringConvertible {
-	public var description: String {
-		switch self {
-		case .mastodon: "Mastodon"
-		case .bluesky: "Bluesky"
-		}
-	}
-}
-
-public struct Post: Hashable, Sendable {
-	public let content: String
-	public let source: DataSource
-	public let date: Date
-	public let author: String
-	public let identifier: String
-	
-	public init(content: String, source: DataSource, date: Date, author: String, identifier: String) {
-		self.content = content
-		self.source = source
-		self.date = date
-		self.author = author
-		self.identifier = identifier
-	}
-}
-
-extension Post: Identifiable {
-	public var id: String {
-		"\(source)-\(identifier)"
-	}
-}
-
-extension Post: Comparable {
-	public static func < (lhs: Post, rhs: Post) -> Bool {
-		lhs.date < rhs.date
-	}
-}
 
 public typealias URLResponseProvider = OAuthenticator.URLResponseProvider
 
