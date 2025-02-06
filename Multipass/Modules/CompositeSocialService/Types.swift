@@ -29,21 +29,47 @@ public struct Author: Hashable, Sendable {
 	public static let placeholder = Author(name: "placeholder", handle: "placeholder")
 }
 
+public enum Attachment: Hashable, Sendable {
+	public struct Image: Hashable, Sendable {
+		public let url: URL
+		public let size: CGSize?
+		public let focus: CGPoint?
+	}
+	
+	public struct ImageCollection: Hashable, Sendable {
+		public let preview: Image?
+		public let full: Image
+		public let description: String?
+		
+		public init(preview: Image?, full: Image, description: String?) {
+			self.preview = preview
+			self.full = full
+			self.description = description
+		}
+	}
+	
+	case images([ImageCollection])
+}
+
 public struct Post: Hashable, Sendable {
 	public let content: String
 	public let source: DataSource
 	public let date: Date
 	public let author: Author
+	public let repostingAuthor: Author?
 	public let identifier: String
 	public let url: URL?
+	public let attachments: [Attachment]
 	
-	public init(content: String, source: DataSource, date: Date, author: Author, identifier: String, url: URL?) {
+	public init(content: String, source: DataSource, date: Date, author: Author, repostingAuthor: Author?, identifier: String, url: URL?, attachments: [Attachment]) {
 		self.content = content
 		self.source = source
 		self.date = date
 		self.author = author
+		self.repostingAuthor = repostingAuthor
 		self.identifier = identifier
 		self.url = url
+		self.attachments = attachments
 	}
 	
 	public static let placeholder = Post(
@@ -51,8 +77,10 @@ public struct Post: Hashable, Sendable {
 		source: .mastodon,
 		date: .now,
 		author: Author.placeholder,
+		repostingAuthor: nil,
 		identifier: "abc123",
-		url: URL(string: "https://example.com")!
+		url: URL(string: "https://example.com")!,
+		attachments: []
 	)
 }
 

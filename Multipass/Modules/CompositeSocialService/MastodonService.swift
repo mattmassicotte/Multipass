@@ -89,8 +89,10 @@ public struct MastodonService: SocialService {
 				source: .mastodon,
 				date: status.createdAt,
 				author: author,
+				repostingAuthor: nil,
 				identifier: status.id,
-				url: URL(string: status.uri)
+				url: URL(string: status.uri),
+				attachments: []
 			)
 		}
 	}

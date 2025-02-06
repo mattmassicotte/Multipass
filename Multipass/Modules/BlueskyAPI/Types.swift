@@ -78,7 +78,6 @@ public enum Feature: Decodable, Hashable, Sendable {
 					debugDescription: "unhandled feature type \(value)"
 				)
 			)
-
 		}
 	}
 }
@@ -98,6 +97,7 @@ public struct PostRecord: Decodable, Hashable, Sendable {
 	public let langs: [String]?
 	public let text: String
 	public let facets: [Facet]?
+	public let embed: Embed?
 }
 
 public struct Author: Decodable, Hashable, Sendable {
@@ -109,6 +109,129 @@ public struct Author: Decodable, Hashable, Sendable {
 	public var avatarURL: URL? {
 		avatar.flatMap { URL(string: $0) }
 	}
+}
+
+public enum Embed: Decodable, Hashable, Sendable {
+	public struct Video: Decodable, Hashable, Sendable {
+		
+	}
+	
+	public struct VideoView: Decodable, Hashable, Sendable {
+		
+	}
+	
+	public struct AspectRatio: Decodable, Hashable, Sendable {
+		public let height: Int
+		public let width: Int
+		
+		public init(height: Int, width: Int) {
+			self.height = height
+			self.width = width
+		}
+	}
+	
+	public struct ImageEntry: Decodable, Hashable, Sendable {
+		public struct Image: Decodable, Hashable, Sendable {
+			public let mimeType: String
+			public let size: Int
+		}
+		
+		public let alt: String
+		public let aspectRatio: AspectRatio
+		public let langs: [String]?
+		public let text: String?
+		public let image: Image
+	}
+
+	public struct Images: Decodable, Hashable, Sendable {
+		public let images: [ImageEntry]
+	}
+	
+	public struct ImageViewEntry: Decodable, Hashable, Sendable {
+		public struct Image: Decodable, Hashable, Sendable {
+			public let thumb: String
+			public let fullsize: String
+			public let alt: String
+			public let aspectRatio: AspectRatio
+		}
+		
+		public let images: [Image]
+	}
+	
+	public struct ExternalView: Decodable, Hashable, Sendable {
+	}
+	
+	public struct Record: Decodable, Hashable, Sendable {
+		
+	}
+	
+	public struct RecordWithMedia: Decodable, Hashable, Sendable {
+		
+	}
+	
+	public struct RecordWithMediaView: Decodable, Hashable, Sendable {
+		public let record: Record
+		public let media: Embed
+	}
+	
+	public struct RecordView: Decodable, Hashable, Sendable {
+	}
+	
+	public struct External: Decodable, Hashable, Sendable {
+	}
+	
+	case video(Video)
+	case videoView(VideoView)
+	case images(Images)
+	case imagesView(ImageViewEntry)
+	case external(External)
+	case externalView(ExternalView)
+	case recordWithMedia(RecordWithMedia)
+	indirect case recordWithMediaView(RecordWithMediaView)
+	case record(Record)
+	case recordView(RecordView)
+	
+	private enum CodingKeys: String, CodingKey {
+		case type = "$type"
+	}
+	
+	public init(from decoder: any Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		
+		let value = try container.decode(String.self, forKey: .type)
+		
+		switch value {
+		case "app.bsky.embed.video":
+			self = .video(try Video(from: decoder))
+		case "app.bsky.embed.video#view":
+			self = .videoView(try VideoView(from: decoder))
+		case "app.bsky.embed.images":
+			self = .images(try Images(from: decoder))
+		case "app.bsky.embed.images#view":
+			self = .imagesView(try ImageViewEntry(from: decoder))
+		case "app.bsky.embed.external":
+			self = .external(try External(from: decoder))
+		case "app.bsky.embed.external#view":
+			self = .externalView(try ExternalView(from: decoder))
+		case "app.bsky.embed.recordWithMedia":
+			self = .recordWithMedia(try RecordWithMedia(from: decoder))
+		case "app.bsky.embed.recordWithMedia#view":
+			self = .recordWithMediaView(try RecordWithMediaView(from: decoder))
+		case "app.bsky.embed.record":
+			self = .record(try Record(from: decoder))
+		case "app.bsky.embed.record#view":
+			self = .recordView(try RecordView(from: decoder))
+		default:
+			throw DecodingError.dataCorrupted(
+				DecodingError.Context(
+					codingPath: decoder.codingPath,
+					debugDescription: "unhandled embed type \(value)"
+				)
+			)
+
+		}
+	}
+
 }
 
 public struct Post: Decodable, Hashable, Sendable {
@@ -154,6 +277,7 @@ public struct Post: Decodable, Hashable, Sendable {
 	public let indexedAt: Date
 	public let viewer: Viewer
 	public let labels: [Label]?
+	public let embed: Embed?
 	
 	public var url: URL? {
 		guard let rkey = uri.components(separatedBy: "/").last else {
@@ -177,4 +301,14 @@ public struct Reply: Decodable, Hashable, Sendable {
 	public let grandparentAuthor: Author?
 }
 
-
+public struct TimelineResponse: Decodable, Hashable, Sendable {
+	public struct FeedEntry: Decodable, Hashable, Sendable {
+		public let post: Post
+		public let reply: Reply?
+		public let reason: FeedReason?
+		public let feedContext: String?
+	}
+	
+	public let cursor: String
+	public let feed: [FeedEntry]
+}
