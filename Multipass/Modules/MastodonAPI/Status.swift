@@ -40,6 +40,48 @@ public struct ReblogStatus: Decodable, Hashable, Sendable, Identifiable {
 	}
 }
 
+public struct MediaAttachment: Decodable, Hashable, Sendable, Identifiable {
+	public enum MediaType: String, Decodable, Hashable, Sendable {
+		case unknown
+		case image
+		case gifv
+		case video
+		case audio
+	}
+	
+	public struct Meta: Decodable, Hashable, Sendable {
+		
+	}
+	
+	public let id: String
+	public let type: MediaType
+	public let rawURL: String
+	public let rawPreviewURL: String?
+	public let rawRemoteURL: String?
+	public let meta: Meta
+	public let description: String?
+	public let blurhash: String
+	
+	enum CodingKeys: String, CodingKey {
+		case id
+		case type
+		case rawURL = "url"
+		case rawPreviewURL = "preview_url"
+		case rawRemoteURL = "remote_url"
+		case meta
+		case description
+		case blurhash
+	}
+	
+	public var url: URL? {
+		URL(string: rawURL)
+	}
+	
+	public var previewURL: URL? {
+		rawPreviewURL.flatMap { URL(string: $0) }
+	}
+}
+
 public struct Status: Decodable, Hashable, Sendable, Identifiable {
 	public let id: String
 	public let uri: String
@@ -50,6 +92,7 @@ public struct Status: Decodable, Hashable, Sendable, Identifiable {
 	public let reblogs: Int
 	public let favorites: Int
 	public let reblog: ReblogStatus?
+	public let mediaAttachments: [MediaAttachment]
 	
 	enum CodingKeys: String, CodingKey {
 		case id
@@ -61,6 +104,7 @@ public struct Status: Decodable, Hashable, Sendable, Identifiable {
 		case reblogs = "reblogs_count"
 		case favorites = "favourites_count"
 		case reblog
+		case mediaAttachments = "media_attachments"
 	}
 	
 	public var content: String {

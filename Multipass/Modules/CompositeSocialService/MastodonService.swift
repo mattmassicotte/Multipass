@@ -84,15 +84,38 @@ public struct MastodonService: SocialService {
 				avatarURL: URL(string: status.account.avatarStatic)
 			)
 			
+			let rebloggedAuthor = status.reblog.map {
+				Author(
+					name: $0.account.displayName,
+					handle: $0.account.resolvedUsername(with: host),
+					avatarURL: URL(string: $0.account.avatarStatic)
+				)
+			}
+			
+			let imageCollections = status.mediaAttachments.compactMap { mediaAttachment -> Attachment.ImageCollection? in
+				guard mediaAttachment.type == .image else { return nil }
+				guard let url = mediaAttachment.url else { return nil }
+				
+				return Attachment.ImageCollection(
+					preview: mediaAttachment.previewURL.flatMap { .init(url: $0, size: nil, focus: nil) },
+					full: .init(url: url, size: nil, focus: nil),
+					description: mediaAttachment.description
+				)
+			}
+			
+			let attachments = [
+				Attachment.images(imageCollections)
+			]
+			
 			return Post(
 				content: content,
 				source: .mastodon,
 				date: status.createdAt,
 				author: author,
-				repostingAuthor: nil,
+				repostingAuthor: rebloggedAuthor,
 				identifier: status.id,
 				url: URL(string: status.uri),
-				attachments: []
+				attachments: attachments
 			)
 		}
 	}
