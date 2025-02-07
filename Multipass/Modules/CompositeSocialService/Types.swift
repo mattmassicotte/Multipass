@@ -48,7 +48,22 @@ public enum Attachment: Hashable, Sendable {
 		}
 	}
 	
+	public struct Link: Hashable, Sendable {
+		public let preview: ImageSpecifier?
+		public let description: String?
+		public let title: String?
+		public let url: URL
+		
+		public init(preview: ImageSpecifier?, description: String?, title: String?, url: URL) {
+			self.preview = preview
+			self.description = description
+			self.title = title
+			self.url = url
+		}
+	}
+	
 	case images([Image])
+	case link(Link)
 }
 
 public struct Post: Hashable, Sendable {

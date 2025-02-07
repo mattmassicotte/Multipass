@@ -20,6 +20,19 @@ struct PostAttachmentView: View {
 					.frame(width: 226)
 					.border(Color.gray)
 				}
+			case let .link(link):
+				VStack {
+					AsyncImage(url: link.preview?.url) { image in
+						image
+							.resizable()
+							.aspectRatio(contentMode: .fill)
+					} placeholder: {
+						Image(systemName: "photo.fill")
+					}
+					.frame(width: 226)
+					.border(Color.gray)
+					Text(link.title ?? "no title")
+				}
 			}
 		}
 	}

@@ -159,6 +159,22 @@ public enum Embed: Decodable, Hashable, Sendable {
 	}
 	
 	public struct ExternalView: Decodable, Hashable, Sendable {
+		public struct External: Decodable, Hashable, Sendable {
+			public let uri: String
+			public let title: String
+			public let description: String
+			public let thumb: String?
+			
+			public var url: URL? {
+				URL(string: uri)
+			}
+			
+			public var thumbURL: URL? {
+				thumb.flatMap { URL(string: $0) }
+			}
+		}
+		
+		public let external: External
 	}
 	
 	public struct Record: Decodable, Hashable, Sendable {

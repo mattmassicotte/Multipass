@@ -57,4 +57,24 @@ struct BlueskyAPITests {
 		
 		#expect(value.by.did == "did:plc:lw5dadzkguntwgkj2jxmulxk")
 	}
+	
+	@Test
+	func attachedLinkDecode() throws {
+		let json = """
+{"post":{"uri":"at://did:plc:a2xro4bckdu24pdxtevo7mmr/app.bsky.feed.post/3lhlr5a4shz2u","cid":"bafyreigzph7cpvkexofp4oixzbl4uwdblowzsb6ai66cdxggvqmblxxqci","author":{"did":"did:plc:a2xro4bckdu24pdxtevo7mmr","handle":"createwithswift.bsky.social","displayName":"Create with Swift","avatar":"https://cdn.bsky.app/img/avatar/plain/did:plc:a2xro4bckdu24pdxtevo7mmr/bafkreiedleudiwqwpb3xkzneajtuqovvsimnv4t2jxwpignefaijbhwtue@jpeg","viewer":{"muted":false,"blockedBy":false,"following":"at://did:plc:klsh7edzj3jmxucibyjqstb3/app.bsky.graph.follow/3lhdu77jt3d22","followedBy":"at://did:plc:a2xro4bckdu24pdxtevo7mmr/app.bsky.graph.follow/3lboriudggv23"},"labels":[],"createdAt":"2024-11-22T10:53:21.552Z"},"record":{"$type":"app.bsky.feed.post","createdAt":"2025-02-07T14:00:00.990Z","embed":{"$type":"app.bsky.embed.external","external":{"description":"Design thoughtfully for every app state, transforming potential user frustration into a seamless, engaging experience.","thumb":{"$type":"blob","ref":{"$link":"bafkreidro6ak2yxfghlmpejb5j7c2xexj24ddqfggbrrheiuzdqogjuljy"},"mimeType":"image/png","size":422102},"title":"Designing for Application States: Creating Seamless User Experiences","uri":"https://www.createwithswift.com/designing-for-application-states-creating-seamless-user-experiences/"}},"text":"A great user experience isn’t just about what users see—it’s about what they feel in every state. \\nFrom onboarding to errors, each moment matters. Don’t leave users guessing—design for every state. \\nFind out more with Giselle Katics:"},"embed":{"$type":"app.bsky.embed.external#view","external":{"uri":"https://www.createwithswift.com/designing-for-application-states-creating-seamless-user-experiences/","title":"Designing for Application States: Creating Seamless User Experiences","description":"Design thoughtfully for every app state, transforming potential user frustration into a seamless, engaging experience.","thumb":"https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:a2xro4bckdu24pdxtevo7mmr/bafkreidro6ak2yxfghlmpejb5j7c2xexj24ddqfggbrrheiuzdqogjuljy@jpeg"}},"replyCount":0,"repostCount":0,"likeCount":0,"quoteCount":0,"indexedAt":"2025-02-07T14:00:03.165Z","viewer":{"threadMuted":false,"embeddingDisabled":false},"labels":[]}}
+"""
+		
+		let decoder = BlueskyJSONDecoder()
+		let entry = try decoder.decoder.decode(TimelineResponse.FeedEntry.self, from: Data(json.utf8))
+		
+		guard case let .externalView(externalView) = entry.post.embed else {
+			Issue.record("incorrect embed type")
+			return
+		}
+		
+		#expect(externalView.external.uri == "https://www.createwithswift.com/designing-for-application-states-creating-seamless-user-experiences/")
+		#expect(externalView.external.title == "Designing for Application States: Creating Seamless User Experiences")
+		#expect(externalView.external.description == "Design thoughtfully for every app state, transforming potential user frustration into a seamless, engaging experience.")
+		#expect(externalView.external.thumb == "https://cdn.bsky.app/img/feed_thumbnail/plain/did:plc:a2xro4bckdu24pdxtevo7mmr/bafkreidro6ak2yxfghlmpejb5j7c2xexj24ddqfggbrrheiuzdqogjuljy@jpeg")
+	}
 }

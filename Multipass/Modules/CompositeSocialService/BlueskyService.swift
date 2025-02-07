@@ -192,6 +192,24 @@ extension Embed {
 			return Attachment.images(images)
 		case let .recordWithMediaView(entry):
 			return entry.media.toAttachment()
+		case let .externalView(externalView):
+			guard let url = externalView.external.url else {
+				print("dropping external view with invalid url")
+				return nil
+			}
+			
+			let preview = externalView.external.thumbURL.flatMap {
+				Attachment.ImageSpecifier(url: $0, size: nil, focus: nil)
+			}
+			
+			let link = Attachment.Link(
+				preview: preview,
+				description: externalView.external.description,
+				title: externalView.external.title,
+				url: url
+			)
+			
+			return Attachment.link(link)
 		default:
 			return nil
 		}
