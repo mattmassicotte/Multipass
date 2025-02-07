@@ -69,13 +69,22 @@ public actor BlueskyService: SocialService {
 		
 		let details = try await resolver.resolveHandle(handle)
 		
-		guard let pds = details?.serviceEndpoint else {
+		guard let pdsURL = details?.personalDataServerURL else {
 			print("failed to resolve PDS for \(handle)")
 
 			throw BlueskyServiceError.pdsResolutionFailed(handle)
 		}
 		
-		return String(pds.dropFirst("https://".count))
+		guard
+			let components = URLComponents(url: pdsURL, resolvingAgainstBaseURL: false),
+			let host = components.host
+		else {
+			print("failed to get pds url components \(handle)")
+
+			throw BlueskyServiceError.pdsResolutionFailed(handle)
+		}
+		
+		return host
 	}
 
 	private static func loadDPoPKey(with store: SecretStore) async throws -> DPoPKey {
