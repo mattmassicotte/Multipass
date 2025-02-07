@@ -1,5 +1,7 @@
 import SwiftUI
 
+import CompositeSocialService
+
 public struct ServiceAccount: Sendable {
 	public let source: DataSource
 	public let handle: String

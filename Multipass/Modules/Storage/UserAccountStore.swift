@@ -1,5 +1,7 @@
 import SwiftUI
 
+import CompositeSocialService 
+
 /// This might need to be further customized at some point
 public struct UserAccountDetails: Codable, Hashable, Sendable {
 	public var host: String

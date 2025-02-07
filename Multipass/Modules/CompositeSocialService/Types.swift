@@ -30,25 +30,25 @@ public struct Author: Hashable, Sendable {
 }
 
 public enum Attachment: Hashable, Sendable {
-	public struct Image: Hashable, Sendable {
+	public struct ImageSpecifier: Hashable, Sendable {
 		public let url: URL
 		public let size: CGSize?
 		public let focus: CGPoint?
 	}
 	
-	public struct ImageCollection: Hashable, Sendable {
-		public let preview: Image?
-		public let full: Image
+	public struct Image: Hashable, Sendable {
+		public let preview: ImageSpecifier?
+		public let full: ImageSpecifier
 		public let description: String?
 		
-		public init(preview: Image?, full: Image, description: String?) {
+		public init(preview: ImageSpecifier?, full: ImageSpecifier, description: String?) {
 			self.preview = preview
 			self.full = full
 			self.description = description
 		}
 	}
 	
-	case images([ImageCollection])
+	case images([Image])
 }
 
 public struct Post: Hashable, Sendable {

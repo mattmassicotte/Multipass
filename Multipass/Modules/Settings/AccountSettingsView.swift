@@ -1,6 +1,7 @@
 import SwiftUI
 
 import CompositeSocialService
+import Storage
 
 struct AccountSettingsView: View {
 	@Environment(UserAccountStore.self) var accountStore

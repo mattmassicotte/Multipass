@@ -153,19 +153,19 @@ extension Embed {
 		switch self {
 		case let .imagesView(entry):
 			let images = entry.images.map { atImage in
-				let fullsize = Attachment.Image(
+				let fullsize = Attachment.ImageSpecifier(
 					url: URL(string: atImage.fullsize)!,
 					size: CGSize(width: atImage.aspectRatio.width, height: atImage.aspectRatio.height),
 					focus: nil
 				)
 				
-				let preview = Attachment.Image(
+				let preview = Attachment.ImageSpecifier(
 					url: URL(string: atImage.thumb)!,
 					size: nil,
 					focus: nil
 				)
 				
-				return Attachment.ImageCollection(
+				return Attachment.Image(
 					preview: preview,
 					full: fullsize,
 					description: atImage.alt

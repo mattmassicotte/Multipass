@@ -2,6 +2,7 @@ import SwiftUI
 
 import CompositeSocialService
 import OAuthenticator
+import Storage
 
 @MainActor
 @Observable

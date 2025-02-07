@@ -92,11 +92,11 @@ public struct MastodonService: SocialService {
 				)
 			}
 			
-			let imageCollections = status.mediaAttachments.compactMap { mediaAttachment -> Attachment.ImageCollection? in
+			let imageCollections = status.mediaAttachments.compactMap { mediaAttachment -> Attachment.Image? in
 				guard mediaAttachment.type == .image else { return nil }
 				guard let url = mediaAttachment.url else { return nil }
 				
-				return Attachment.ImageCollection(
+				return Attachment.Image(
 					preview: mediaAttachment.previewURL.flatMap { .init(url: $0, size: nil, focus: nil) },
 					full: .init(url: url, size: nil, focus: nil),
 					description: mediaAttachment.description
