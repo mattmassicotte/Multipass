@@ -135,7 +135,7 @@ public actor BlueskyService: SocialService {
 				return Post(
 					content: post.text,
 					source: .bluesky,
-					date: entry.post.indexedAt,
+					date: entry.date,
 					author: author,
 					repostingAuthor: postingAuthor,
 					identifier: entry.post.cid,
@@ -154,6 +154,14 @@ extension TimelineResponse.FeedEntry {
 		}
 		
 		return nil
+	}
+	
+	var date: Date {
+		if case let .feedReasonRepost(value) = reason {
+			return value.indexedAt
+		}
+		
+		return post.indexedAt
 	}
 }
 
