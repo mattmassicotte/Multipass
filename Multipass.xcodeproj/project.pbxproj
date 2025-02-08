@@ -171,6 +171,7 @@
 				Modules/Storage/UserAccountStore.swift,
 				Modules/Timeline/AvatarView.swift,
 				Modules/Timeline/FeedView.swift,
+				Modules/Timeline/PostAttachmentView.swift,
 				Modules/Timeline/PostStatusView.swift,
 				Modules/Timeline/PostView.swift,
 				Modules/UIUtility/Platform.swift,
@@ -208,6 +209,7 @@
 			membershipExceptions = (
 				Modules/Timeline/AvatarView.swift,
 				Modules/Timeline/FeedView.swift,
+				Modules/Timeline/PostAttachmentView.swift,
 				Modules/Timeline/PostStatusView.swift,
 				Modules/Timeline/PostView.swift,
 			);
