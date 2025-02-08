@@ -169,6 +169,7 @@
 				Modules/Settings/SettingsView.swift,
 				Modules/Storage/AccountStore.swift,
 				Modules/Storage/UserAccountStore.swift,
+				Modules/Timeline/AvatarView.swift,
 				Modules/Timeline/FeedView.swift,
 				Modules/Timeline/PostStatusView.swift,
 				Modules/Timeline/PostView.swift,
@@ -205,6 +206,7 @@
 		C9CDBBE32D577C520000E010 /* Exceptions for "Multipass" folder in "Timeline" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Modules/Timeline/AvatarView.swift,
 				Modules/Timeline/FeedView.swift,
 				Modules/Timeline/PostStatusView.swift,
 				Modules/Timeline/PostView.swift,

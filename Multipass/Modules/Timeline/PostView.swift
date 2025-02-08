@@ -42,7 +42,8 @@ struct PostView: View {
 	let post: Post
 	
     var body: some View {
-		HStack {
+		HStack(alignment: .top) {
+			AvatarView(url: post.author.avatarURL)
 			VStack(alignment: .leading) {
 				HStack {
 					Group {
@@ -57,6 +58,7 @@ struct PostView: View {
 					Text(post.author.handle)
 				}
 				Text(post.content ?? "")
+					.padding(EdgeInsets(top: 4.0, leading: 2.0, bottom: 4.0, trailing: 1.0))
 				PostAttachmentView(attachments: post.attachments)
 				PostStatusView(source: post.source, status: post.status)
 			}
