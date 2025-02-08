@@ -67,7 +67,7 @@ public enum Attachment: Hashable, Sendable {
 }
 
 public struct Post: Hashable, Sendable {
-	public let content: String
+	public let content: String?
 	public let source: DataSource
 	public let date: Date
 	public let author: Author
@@ -76,7 +76,7 @@ public struct Post: Hashable, Sendable {
 	public let url: URL?
 	public let attachments: [Attachment]
 	
-	public init(content: String, source: DataSource, date: Date, author: Author, repostingAuthor: Author?, identifier: String, url: URL?, attachments: [Attachment]) {
+	public init(content: String?, source: DataSource, date: Date, author: Author, repostingAuthor: Author?, identifier: String, url: URL?, attachments: [Attachment]) {
 		self.content = content
 		self.source = source
 		self.date = date

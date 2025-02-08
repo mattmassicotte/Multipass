@@ -22,6 +22,8 @@
 		C9AB8E262D53EC1600B1462F /* libUIUtility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AB8E152D53EB8700B1462F /* libUIUtility.a */; };
 		C9AB8EFF2D56296500B1462F /* ATResolve in Frameworks */ = {isa = PBXBuildFile; productRef = C9AB8EFE2D56296500B1462F /* ATResolve */; };
 		C9AB8F042D562A0C00B1462F /* libStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AB8EE82D5628C300B1462F /* libStorage.a */; };
+		C9CCAD1F2D5693AD0025654D /* ATAT in Frameworks */ = {isa = PBXBuildFile; productRef = C9CCAD1E2D5693AD0025654D /* ATAT */; };
+		C9CDBBCA2D5779500000E010 /* ATAT in Frameworks */ = {isa = PBXBuildFile; productRef = C9CDBBC92D5779500000E010 /* ATAT */; };
 		C9DA69572CF9059E00CB0AAA /* jose-swift in Frameworks */ = {isa = PBXBuildFile; productRef = C9DA69562CF9059E00CB0AAA /* jose-swift */; };
 /* End PBXBuildFile section */
 
@@ -120,8 +122,6 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Modules/BlueskyAPI/Client.swift,
-				Modules/BlueskyAPI/FeedReason.swift,
-				Modules/BlueskyAPI/Types.swift,
 			);
 			target = C92217A22CE8D949006C34BC /* BlueskyAPI */;
 		};
@@ -129,6 +129,7 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Modules/CompositeSocialService/BlueskyService.swift,
+				"Modules/CompositeSocialService/BskyPost+Post.swift",
 				Modules/CompositeSocialService/CompositeClient.swift,
 				"Modules/CompositeSocialService/DPoPSigner+JSONWebToken.swift",
 				Modules/CompositeSocialService/MastodonService.swift,
@@ -142,9 +143,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Modules/BlueskyAPI/Client.swift,
-				Modules/BlueskyAPI/FeedReason.swift,
-				Modules/BlueskyAPI/Types.swift,
 				Modules/CompositeSocialService/BlueskyService.swift,
+				"Modules/CompositeSocialService/BskyPost+Post.swift",
 				Modules/CompositeSocialService/CompositeClient.swift,
 				"Modules/CompositeSocialService/DPoPSigner+JSONWebToken.swift",
 				Modules/CompositeSocialService/MastodonService.swift,
@@ -259,7 +259,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9CDBBCA2D5779500000E010 /* ATAT in Frameworks */,
 				C9AB8F042D562A0C00B1462F /* libStorage.a in Frameworks */,
+				C9CCAD1F2D5693AD0025654D /* ATAT in Frameworks */,
 				C9AB8E262D53EC1600B1462F /* libUIUtility.a in Frameworks */,
 				C91D81A12D01F06E007D1E82 /* libSettings.a in Frameworks */,
 				C9DA69572CF9059E00CB0AAA /* jose-swift in Frameworks */,
@@ -459,6 +461,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C9CCAD1D2D5693A40025654D /* PBXTargetDependency */,
 			);
 			name = BlueskyAPI;
 			packageProductDependencies = (
@@ -514,6 +517,8 @@
 				C92217D02CEA9309006C34BC /* SwiftSoup */,
 				C9DA69562CF9059E00CB0AAA /* jose-swift */,
 				C9AB8D4A2D53C63700B1462F /* ATResolve */,
+				C9CCAD1E2D5693AD0025654D /* ATAT */,
+				C9CDBBC92D5779500000E010 /* ATAT */,
 			);
 			productName = Multipass;
 			productReference = C95FC5702CE50FF30093AB32 /* Multipass.app */;
@@ -686,6 +691,7 @@
 				C92217CB2CEA92F3006C34BC /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 				C9DA69552CF9059E00CB0AAA /* XCRemoteSwiftPackageReference "jose-swift" */,
 				C9AB8D492D53C63700B1462F /* XCRemoteSwiftPackageReference "ATResolve" */,
+				C9CDBBC82D5779500000E010 /* XCRemoteSwiftPackageReference "ATAT" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C95FC5712CE50FF30093AB32 /* Products */;
@@ -859,6 +865,10 @@
 			isa = PBXTargetDependency;
 			target = C9AB8EE72D5628C300B1462F /* Storage */;
 			targetProxy = C9AB8F052D562B4D00B1462F /* PBXContainerItemProxy */;
+		};
+		C9CCAD1D2D5693A40025654D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = C9CCAD1C2D5693A40025654D /* ATAT */;
 		};
 		C9DA69762D00D6A000CB0AAA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1384,6 +1394,14 @@
 				kind = branch;
 			};
 		};
+		C9CDBBC82D5779500000E010 /* XCRemoteSwiftPackageReference "ATAT" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattmassicotte/ATAT";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		C9DA69552CF9059E00CB0AAA /* XCRemoteSwiftPackageReference "jose-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/beatt83/jose-swift";
@@ -1453,6 +1471,19 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9AB8D492D53C63700B1462F /* XCRemoteSwiftPackageReference "ATResolve" */;
 			productName = ATResolve;
+		};
+		C9CCAD1C2D5693A40025654D /* ATAT */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ATAT;
+		};
+		C9CCAD1E2D5693AD0025654D /* ATAT */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ATAT;
+		};
+		C9CDBBC92D5779500000E010 /* ATAT */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C9CDBBC82D5779500000E010 /* XCRemoteSwiftPackageReference "ATAT" */;
+			productName = ATAT;
 		};
 		C9DA69562CF9059E00CB0AAA /* jose-swift */ = {
 			isa = XCSwiftPackageProductDependency;

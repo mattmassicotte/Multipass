@@ -109,109 +109,110 @@ public actor BlueskyService: SocialService {
 		let response = try await clientTask.value.timeline()
 
 		return response.feed.compactMap { entry in
-			if entry.reply != nil {
-				return nil
-			}
-			
-			switch entry.post.record {
-			case let .post(post):
-				let author = Author(
-					name: entry.post.author.displayName,
-					handle: entry.post.author.handle,
-					avatarURL: entry.post.author.avatarURL
-				)
-				
-				let postingAuthor = entry.repostingAuthor.map {
-					Author(
-						name: $0.displayName,
-						handle: $0.handle,
-						avatarURL: $0.avatarURL
-					)
-				}
-				
-				let attachment = entry.post.embed?.toAttachment()
-				let attachments = [attachment].compactMap { $0 }
-				
-				return Post(
-					content: post.text,
-					source: .bluesky,
-					date: entry.date,
-					author: author,
-					repostingAuthor: postingAuthor,
-					identifier: entry.post.cid,
-					url: entry.post.url,
-					attachments: attachments
-				)
-			}
+			Post(entry)
+//			if entry.reply != nil {
+//				return nil
+//			}
+//			
+//			switch entry.post.record {
+//			case let .post(post):
+//				let author = Author(
+//					name: entry.post.author.displayName,
+//					handle: entry.post.author.handle,
+//					avatarURL: entry.post.author.avatarURL
+//				)
+//				
+//				let postingAuthor = entry.repostingAuthor.map {
+//					Author(
+//						name: $0.displayName,
+//						handle: $0.handle,
+//						avatarURL: $0.avatarURL
+//					)
+//				}
+//				
+//				let attachment = entry.post.embed?.toAttachment()
+//				let attachments = [attachment].compactMap { $0 }
+//				
+//				return Post(
+//					content: post.text,
+//					source: .bluesky,
+//					date: entry.date,
+//					author: author,
+//					repostingAuthor: postingAuthor,
+//					identifier: entry.post.cid,
+//					url: entry.post.url,
+//					attachments: attachments
+//				)
+//			}
 		}
 	}
 }
 
-extension TimelineResponse.FeedEntry {
-	var repostingAuthor: FeedReasonRepost.Profile? {
-		if case let .feedReasonRepost(value) = reason {
-			return value.by
-		}
-		
-		return nil
-	}
-	
-	var date: Date {
-		if case let .feedReasonRepost(value) = reason {
-			return value.indexedAt
-		}
-		
-		return post.indexedAt
-	}
-}
-
-extension Embed {
-	func toAttachment() -> Attachment? {
-		switch self {
-		case let .imagesView(entry):
-			let images = entry.images.map { atImage in
-				let fullsize = Attachment.ImageSpecifier(
-					url: URL(string: atImage.fullsize)!,
-					size: CGSize(width: atImage.aspectRatio.width, height: atImage.aspectRatio.height),
-					focus: nil
-				)
-				
-				let preview = Attachment.ImageSpecifier(
-					url: URL(string: atImage.thumb)!,
-					size: nil,
-					focus: nil
-				)
-				
-				return Attachment.Image(
-					preview: preview,
-					full: fullsize,
-					description: atImage.alt
-				)
-			}
-			
-			return Attachment.images(images)
-		case let .recordWithMediaView(entry):
-			return entry.media.toAttachment()
-		case let .externalView(externalView):
-			guard let url = externalView.external.url else {
-				print("dropping external view with invalid url")
-				return nil
-			}
-			
-			let preview = externalView.external.thumbURL.flatMap {
-				Attachment.ImageSpecifier(url: $0, size: nil, focus: nil)
-			}
-			
-			let link = Attachment.Link(
-				preview: preview,
-				description: externalView.external.description,
-				title: externalView.external.title,
-				url: url
-			)
-			
-			return Attachment.link(link)
-		default:
-			return nil
-		}
-	}
-}
+//extension TimelineResponse.FeedEntry {
+//	var repostingAuthor: FeedReasonRepost.Profile? {
+//		if case let .feedReasonRepost(value) = reason {
+//			return value.by
+//		}
+//		
+//		return nil
+//	}
+//	
+//	var date: Date {
+//		if case let .feedReasonRepost(value) = reason {
+//			return value.indexedAt
+//		}
+//		
+//		return post.indexedAt
+//	}
+//}
+//
+//extension Embed {
+//	func toAttachment() -> Attachment? {
+//		switch self {
+//		case let .imagesView(entry):
+//			let images = entry.images.map { atImage in
+//				let fullsize = Attachment.ImageSpecifier(
+//					url: URL(string: atImage.fullsize)!,
+//					size: CGSize(width: atImage.aspectRatio.width, height: atImage.aspectRatio.height),
+//					focus: nil
+//				)
+//				
+//				let preview = Attachment.ImageSpecifier(
+//					url: URL(string: atImage.thumb)!,
+//					size: nil,
+//					focus: nil
+//				)
+//				
+//				return Attachment.Image(
+//					preview: preview,
+//					full: fullsize,
+//					description: atImage.alt
+//				)
+//			}
+//			
+//			return Attachment.images(images)
+//		case let .recordWithMediaView(entry):
+//			return entry.media.toAttachment()
+//		case let .externalView(externalView):
+//			guard let url = externalView.external.url else {
+//				print("dropping external view with invalid url")
+//				return nil
+//			}
+//			
+//			let preview = externalView.external.thumbURL.flatMap {
+//				Attachment.ImageSpecifier(url: $0, size: nil, focus: nil)
+//			}
+//			
+//			let link = Attachment.Link(
+//				preview: preview,
+//				description: externalView.external.description,
+//				title: externalView.external.title,
+//				url: url
+//			)
+//			
+//			return Attachment.link(link)
+//		default:
+//			return nil
+//		}
+//	}
+//}

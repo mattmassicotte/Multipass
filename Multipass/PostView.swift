@@ -63,7 +63,7 @@ struct PostView: View {
 					}.fontWeight(.bold)
 					Text(post.author.handle)
 				}
-				Text(post.content)
+				Text(post.content ?? "")
 				PostAttachmentView(attachments: post.attachments)
 			}
 		}

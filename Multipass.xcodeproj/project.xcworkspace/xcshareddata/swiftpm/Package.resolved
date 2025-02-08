@@ -1,6 +1,15 @@
 {
-  "originHash" : "a53b7a71a9fbe2897dc56f48d6f8786248b8b89800708c906b5821e52a90b786",
+  "originHash" : "c7751244e5ec7dabb6ffd701992721b1aa7f252b4f3b99e782ccad0c017f8794",
   "pins" : [
+    {
+      "identity" : "atat",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattmassicotte/ATAT",
+      "state" : {
+        "branch" : "main",
+        "revision" : "6b9a4bb249677e12f61e692e044f0f805a277f98"
+      }
+    },
     {
       "identity" : "atresolve",
       "kind" : "remoteSourceControl",

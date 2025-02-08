@@ -1,43 +1,9 @@
 import Foundation
+import ATAT
 
 enum ClientError: Error {
 	case malformedURL(URLComponents)
 	case requestFailed
-}
-
-public struct BlueskyJSONDecoder: Sendable {
-	public let decoder = JSONDecoder()
-	private let iso8061DecimalDecoder: DateFormatter
-	private let iso8061OffsetFormatter: DateFormatter
-
-	public init() {
-		self.iso8061DecimalDecoder = DateFormatter()
-		
-		// 2024-11-15T18:16:35.907Z
-		iso8061DecimalDecoder.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-		
-		self.iso8061OffsetFormatter = DateFormatter()
-		
-		// 2024-11-17T12:23:53+00:00
-		iso8061OffsetFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-		
-		decoder.dateDecodingStrategy = .custom(decodeDate)
-	}
-	
-	private func decodeDate(_ decoder: any Decoder) throws -> Date {
-		let container = try decoder.singleValueContainer()
-		let string = try container.decode(String.self)
-		
-		if let date = iso8061DecimalDecoder.date(from: string) {
-			return date
-		}
-		
-		if let date = iso8061OffsetFormatter.date(from: string) {
-			return date
-		}
-		
-		throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Undecodable date \(string)"))
-	}
 }
 
 public actor Client: Sendable {
@@ -45,25 +11,11 @@ public actor Client: Sendable {
 	
 	private let provider: ResponseProvider
 	public let host: String
-	private let decoder = JSONDecoder()
-	private let iso8061DecimalDecoder: DateFormatter
-	private let iso8061OffsetFormatter: DateFormatter
+	private let decoder = ATJSONDecoder()
 	
 	public init(host: String, provider: @escaping ResponseProvider) {
 		self.provider = provider
 		self.host = host
-		
-		self.iso8061DecimalDecoder = DateFormatter()
-		
-		// 2024-11-15T18:16:35.907Z
-		iso8061DecimalDecoder.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-		
-		self.iso8061OffsetFormatter = DateFormatter()
-		
-		// 2024-11-17T12:23:53+00:00
-		iso8061OffsetFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-		
-		decoder.dateDecodingStrategy = .custom(decodeDate)
 	}
 	
 	private var baseComponents: URLComponents {
@@ -72,21 +24,6 @@ public actor Client: Sendable {
 		components.host = host
 		
 		return components
-	}
-	
-	private nonisolated func decodeDate(_ decoder: any Decoder) throws -> Date {
-		let container = try decoder.singleValueContainer()
-		let string = try container.decode(String.self)
-		
-		if let date = iso8061DecimalDecoder.date(from: string) {
-			return date
-		}
-		
-		if let date = iso8061OffsetFormatter.date(from: string) {
-			return date
-		}
-		
-		throw DecodingError.dataCorrupted(.init(codingPath: decoder.codingPath, debugDescription: "Undecodable date \(string)"))
 	}
 }
 
@@ -100,13 +37,17 @@ public struct Credentials: Hashable, Codable, Sendable {
 	}
 }
 
+public enum AccountStatus: String, Decodable, Hashable, Sendable {
+	case takenDown = "takendown"
+	case suspended
+	case deactivated
+}
 
 public struct CreateSessionResponse: Decodable, Hashable, Sendable {
 	public let accessJwt: String
 	public let refreshJwt: String
 	public let handle: String
 	public let did: ATProtoDID
-//	public let didDoc: ATProtoDIDDoc
 	public let email: String
 	public let emailConfirmed: Bool
 	public let emailAuthFactor: Bool
@@ -135,7 +76,7 @@ extension Client {
 		return try decoder.decode(CreateSessionResponse.self, from: data)
 	}
 	
-	public func timeline() async throws -> TimelineResponse {
+	public func timeline() async throws -> Bsky.Feed.GetFeedResponse {
 		var components = baseComponents
 		
 		components.path = "/xrpc/app.bsky.feed.getTimeline"
@@ -161,6 +102,6 @@ extension Client {
 		
 		print(String(decoding: data, as: UTF8.self))
 		
-		return try decoder.decode(TimelineResponse.self, from: data)
+		return try decoder.decode(Bsky.Feed.GetFeedResponse.self, from: data)
 	}
 }
