@@ -65,6 +65,7 @@ struct PostView: View {
 				}
 				Text(post.content ?? "")
 				PostAttachmentView(attachments: post.attachments)
+				PostStatusView(status: post.status)
 			}
 		}
     }

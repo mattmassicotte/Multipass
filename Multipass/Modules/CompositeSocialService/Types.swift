@@ -66,6 +66,22 @@ public enum Attachment: Hashable, Sendable {
 	case link(Link)
 }
 
+public struct PostStatus: Hashable, Sendable {
+	public let likeCount: Int
+	public let liked: Bool
+	public let repostCount: Int
+	public let reposted: Bool
+	
+	public init(likeCount: Int, liked: Bool, repostCount: Int, reposted: Bool) {
+		self.likeCount = likeCount
+		self.liked = liked
+		self.repostCount = repostCount
+		self.reposted = reposted
+	}
+	
+	public static let placeholder = PostStatus(likeCount: 5, liked: false, repostCount: 150, reposted: true)
+}
+
 public struct Post: Hashable, Sendable {
 	public let content: String?
 	public let source: DataSource
@@ -75,8 +91,19 @@ public struct Post: Hashable, Sendable {
 	public let identifier: String
 	public let url: URL?
 	public let attachments: [Attachment]
+	public let status: PostStatus
 	
-	public init(content: String?, source: DataSource, date: Date, author: Author, repostingAuthor: Author?, identifier: String, url: URL?, attachments: [Attachment]) {
+	public init(
+		content: String?,
+		source: DataSource,
+		date: Date,
+		author: Author,
+		repostingAuthor: Author?,
+		identifier: String,
+		url: URL?,
+		attachments: [Attachment],
+		status: PostStatus
+	) {
 		self.content = content
 		self.source = source
 		self.date = date
@@ -85,6 +112,7 @@ public struct Post: Hashable, Sendable {
 		self.identifier = identifier
 		self.url = url
 		self.attachments = attachments
+		self.status = status
 	}
 	
 	public static let placeholder = Post(
@@ -95,7 +123,8 @@ public struct Post: Hashable, Sendable {
 		repostingAuthor: nil,
 		identifier: "abc123",
 		url: URL(string: "https://example.com")!,
-		attachments: []
+		attachments: [],
+		status: .placeholder
 	)
 }
 

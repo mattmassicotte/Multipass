@@ -3,6 +3,7 @@ import SwiftUI
 import CompositeSocialService
 import Settings
 import Storage
+import Timeline
 import Valet
 
 @MainActor

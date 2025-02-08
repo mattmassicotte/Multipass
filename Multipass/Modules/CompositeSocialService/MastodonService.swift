@@ -115,7 +115,13 @@ public struct MastodonService: SocialService {
 				repostingAuthor: rebloggedAuthor,
 				identifier: status.id,
 				url: URL(string: status.uri),
-				attachments: attachments
+				attachments: attachments,
+				status: PostStatus(
+					likeCount: status.favorites,
+					liked: false,
+					repostCount: status.reblogs,
+					reposted: false
+				)
 			)
 		}
 	}
