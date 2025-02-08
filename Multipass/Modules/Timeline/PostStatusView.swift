@@ -3,6 +3,7 @@ import SwiftUI
 import CompositeSocialService
 
 public struct PostStatusView: View {
+	public let source: DataSource
 	public let status: PostStatus
 	
 	var likeImageName: String {
@@ -15,6 +16,7 @@ public struct PostStatusView: View {
 	
     public var body: some View {
 		HStack {
+			Image(source.imageName)
 			Image(systemName: likeImageName)
 			Text("\(status.likeCount)")
 			Image(systemName: repostImageName)
@@ -24,5 +26,5 @@ public struct PostStatusView: View {
 }
 
 #Preview {
-	PostStatusView(status: PostStatus(likeCount: 0, liked: false, repostCount: 0, reposted: false))
+	PostStatusView(source: .mastodon, status: PostStatus(likeCount: 0, liked: false, repostCount: 0, reposted: false))
 }

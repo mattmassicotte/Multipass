@@ -43,13 +43,6 @@ struct PostView: View {
 	
     var body: some View {
 		HStack {
-			switch post.source {
-			case .mastodon:
-				Image("mastodon.clean.fill")
-			case .bluesky:
-				Image("bluesky")
-			}
-			
 			VStack(alignment: .leading) {
 				HStack {
 					Group {
@@ -65,7 +58,7 @@ struct PostView: View {
 				}
 				Text(post.content ?? "")
 				PostAttachmentView(attachments: post.attachments)
-				PostStatusView(status: post.status)
+				PostStatusView(source: post.source, status: post.status)
 			}
 		}
     }
