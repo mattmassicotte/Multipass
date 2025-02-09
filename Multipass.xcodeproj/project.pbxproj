@@ -37,6 +37,13 @@
 			remoteGlobalIDString = C92217D72CED1C80006C34BC;
 			remoteInfo = CompositeSocialService;
 		};
+		C9416F042D58B84F009079D3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C95FC5682CE50FF30093AB32 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C9AB8EE72D5628C300B1462F;
+			remoteInfo = Storage;
+		};
 		C95FC5822CE50FF40093AB32 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C95FC5682CE50FF30093AB32 /* Project object */;
@@ -686,6 +693,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C9416F052D58B84F009079D3 /* PBXTargetDependency */,
 				C9CDBBDF2D577C0E0000E010 /* PBXTargetDependency */,
 			);
 			name = Timeline;
@@ -890,6 +898,11 @@
 			isa = PBXTargetDependency;
 			target = C92217D72CED1C80006C34BC /* CompositeSocialService */;
 			targetProxy = C91D81AB2D020BB0007D1E82 /* PBXContainerItemProxy */;
+		};
+		C9416F052D58B84F009079D3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C9AB8EE72D5628C300B1462F /* Storage */;
+			targetProxy = C9416F042D58B84F009079D3 /* PBXContainerItemProxy */;
 		};
 		C95FC5832CE50FF40093AB32 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
