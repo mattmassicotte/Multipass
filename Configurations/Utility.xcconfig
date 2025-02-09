@@ -1,5 +1,5 @@
 #include "Configurations/Module.xcconfig"
 
-SWIFT_OBJC_BRIDGING_HEADER = Multipass/Modules/Utility/Utility-Bridging-Header.h
+SWIFT_OBJC_BRIDGING_HEADER = Modules/Utility/Utility-Bridging-Header.h
 
 GCC_PREPROCESSOR_DEFINITIONS = $(inherited) APP_GROUP=$(APP_GROUP) APP_IDENTIFIER_PREFIX=$(DEVELOPMENT_TEAM)

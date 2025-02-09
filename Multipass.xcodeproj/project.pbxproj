@@ -116,128 +116,49 @@
 		C9CDBBCF2D577BC60000E010 /* libTimeline.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libTimeline.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		C91D81A32D01F080007D1E82 /* Exceptions for "Multipass" folder in "Settings" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Modules/Settings/AccountAddView.swift,
-				Modules/Settings/AccountSettingsView.swift,
-				Modules/Settings/SettingsView.swift,
-			);
-			target = C91D81912D01EFFF007D1E82 /* Settings */;
-		};
-		C92217992CE7C995006C34BC /* Exceptions for "Multipass" folder in "MastodonAPI" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Modules/MastodonAPI/Client.swift,
-				Modules/MastodonAPI/Marker.swift,
-				Modules/MastodonAPI/Status.swift,
-			);
-			target = C922178E2CE7C985006C34BC /* MastodonAPI */;
-		};
-		C92217B02CE93158006C34BC /* Exceptions for "Multipass" folder in "BlueskyAPI" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Modules/BlueskyAPI/Client.swift,
-			);
-			target = C92217A22CE8D949006C34BC /* BlueskyAPI */;
-		};
-		C92217E52CED1CB4006C34BC /* Exceptions for "Multipass" folder in "CompositeSocialService" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Modules/CompositeSocialService/BlueskyService.swift,
-				"Modules/CompositeSocialService/BskyPost+Post.swift",
-				Modules/CompositeSocialService/CompositeClient.swift,
-				"Modules/CompositeSocialService/DPoPSigner+JSONWebToken.swift",
-				Modules/CompositeSocialService/MastodonService.swift,
-				Modules/CompositeSocialService/SecretStore.swift,
-				"Modules/CompositeSocialService/SecretStore+Login.swift",
-				Modules/CompositeSocialService/Types.swift,
-			);
-			target = C92217D72CED1C80006C34BC /* CompositeSocialService */;
-		};
-		C95FC5C72CE540D30093AB32 /* Exceptions for "Multipass" folder in "Multipass" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Modules/BlueskyAPI/Client.swift,
-				Modules/CompositeSocialService/BlueskyService.swift,
-				"Modules/CompositeSocialService/BskyPost+Post.swift",
-				Modules/CompositeSocialService/CompositeClient.swift,
-				"Modules/CompositeSocialService/DPoPSigner+JSONWebToken.swift",
-				Modules/CompositeSocialService/MastodonService.swift,
-				Modules/CompositeSocialService/SecretStore.swift,
-				"Modules/CompositeSocialService/SecretStore+Login.swift",
-				Modules/CompositeSocialService/Types.swift,
-				Modules/MastodonAPI/Client.swift,
-				Modules/MastodonAPI/Marker.swift,
-				Modules/MastodonAPI/Status.swift,
-				Modules/Settings/AccountAddView.swift,
-				Modules/Settings/AccountSettingsView.swift,
-				Modules/Settings/SettingsView.swift,
-				Modules/Storage/AccountStore.swift,
-				Modules/Storage/UserAccountStore.swift,
-				Modules/Timeline/AvatarView.swift,
-				Modules/Timeline/FeedView.swift,
-				Modules/Timeline/PostAttachmentView.swift,
-				Modules/Timeline/PostStatusView.swift,
-				Modules/Timeline/PostView.swift,
-				Modules/UIUtility/Platform.swift,
-				Modules/Utility/Constants.m,
-				"Modules/Utility/UserDefaults+Shared.swift",
-				Modules/Utility/Utility.xcconfig,
-			);
-			target = C95FC56F2CE50FF30093AB32 /* Multipass */;
-		};
-		C95FC5C92CE540D50093AB32 /* Exceptions for "Multipass" folder in "Utility" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Modules/Utility/Constants.m,
-				"Modules/Utility/UserDefaults+Shared.swift",
-			);
-			target = C95FC5BB2CE540980093AB32 /* Utility */;
-		};
-		C9AB8E282D53ECC100B1462F /* Exceptions for "Multipass" folder in "UIUtility" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Modules/UIUtility/Platform.swift,
-			);
-			target = C9AB8E142D53EB8700B1462F /* UIUtility */;
-		};
-		C9AB8EFB2D56293F00B1462F /* Exceptions for "Multipass" folder in "Storage" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Modules/Storage/AccountStore.swift,
-				Modules/Storage/UserAccountStore.swift,
-			);
-			target = C9AB8EE72D5628C300B1462F /* Storage */;
-		};
-		C9CDBBE32D577C520000E010 /* Exceptions for "Multipass" folder in "Timeline" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Modules/Timeline/AvatarView.swift,
-				Modules/Timeline/FeedView.swift,
-				Modules/Timeline/PostAttachmentView.swift,
-				Modules/Timeline/PostStatusView.swift,
-				Modules/Timeline/PostView.swift,
-			);
-			target = C9CDBBCE2D577BC60000E010 /* Timeline */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		C9416F152D58B91D009079D3 /* UIUtility */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = UIUtility;
+			sourceTree = "<group>";
+		};
+		C9416F182D58B973009079D3 /* BlueskyAPI */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = BlueskyAPI;
+			sourceTree = "<group>";
+		};
+		C9416F1F2D58B9B8009079D3 /* MastodonAPI */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MastodonAPI;
+			sourceTree = "<group>";
+		};
+		C9416F2D2D58B9FC009079D3 /* Timeline */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Timeline;
+			sourceTree = "<group>";
+		};
+		C9416F3D2D58BA72009079D3 /* Settings */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		C9416F482D58BAA9009079D3 /* Storage */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Storage;
+			sourceTree = "<group>";
+		};
+		C9416F572D58BC6F009079D3 /* CompositeSocialService */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CompositeSocialService;
+			sourceTree = "<group>";
+		};
+		C9416F6E2D58BCF8009079D3 /* Utility */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Utility;
+			sourceTree = "<group>";
+		};
 		C95FC5722CE50FF30093AB32 /* Multipass */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				C95FC5C72CE540D30093AB32 /* Exceptions for "Multipass" folder in "Multipass" target */,
-				C95FC5C92CE540D50093AB32 /* Exceptions for "Multipass" folder in "Utility" target */,
-				C92217992CE7C995006C34BC /* Exceptions for "Multipass" folder in "MastodonAPI" target */,
-				C92217B02CE93158006C34BC /* Exceptions for "Multipass" folder in "BlueskyAPI" target */,
-				C92217E52CED1CB4006C34BC /* Exceptions for "Multipass" folder in "CompositeSocialService" target */,
-				C91D81A32D01F080007D1E82 /* Exceptions for "Multipass" folder in "Settings" target */,
-				C9AB8E282D53ECC100B1462F /* Exceptions for "Multipass" folder in "UIUtility" target */,
-				C9AB8EFB2D56293F00B1462F /* Exceptions for "Multipass" folder in "Storage" target */,
-				C9CDBBE32D577C520000E010 /* Exceptions for "Multipass" folder in "Timeline" target */,
-			);
 			path = Multipass;
 			sourceTree = "<group>";
 		};
@@ -359,6 +280,21 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C9416F132D58B918009079D3 /* Modules */ = {
+			isa = PBXGroup;
+			children = (
+				C9416F182D58B973009079D3 /* BlueskyAPI */,
+				C9416F572D58BC6F009079D3 /* CompositeSocialService */,
+				C9416F1F2D58B9B8009079D3 /* MastodonAPI */,
+				C9416F3D2D58BA72009079D3 /* Settings */,
+				C9416F482D58BAA9009079D3 /* Storage */,
+				C9416F2D2D58B9FC009079D3 /* Timeline */,
+				C9416F152D58B91D009079D3 /* UIUtility */,
+				C9416F6E2D58BCF8009079D3 /* Utility */,
+			);
+			path = Modules;
+			sourceTree = "<group>";
+		};
 		C95FC5672CE50FF30093AB32 = {
 			isa = PBXGroup;
 			children = (
@@ -366,6 +302,7 @@
 				C95FC5722CE50FF30093AB32 /* Multipass */,
 				C95FC5842CE50FF40093AB32 /* MultipassTests */,
 				C95FC58E2CE50FF40093AB32 /* MultipassUITests */,
+				C9416F132D58B918009079D3 /* Modules */,
 				C95FC5CF2CE542800093AB32 /* Frameworks */,
 				C95FC5712CE50FF30093AB32 /* Products */,
 			);
@@ -473,6 +410,9 @@
 				C9AB8E252D53EBE600B1462F /* PBXTargetDependency */,
 				C91D81AC2D020BB0007D1E82 /* PBXTargetDependency */,
 			);
+			fileSystemSynchronizedGroups = (
+				C9416F3D2D58BA72009079D3 /* Settings */,
+			);
 			name = Settings;
 			packageProductDependencies = (
 				C9AB8DB12D53CBD900B1462F /* ATResolve */,
@@ -494,6 +434,9 @@
 			dependencies = (
 				C9AB8EDE2D54DEA900B1462F /* PBXTargetDependency */,
 			);
+			fileSystemSynchronizedGroups = (
+				C9416F1F2D58B9B8009079D3 /* MastodonAPI */,
+			);
 			name = MastodonAPI;
 			packageProductDependencies = (
 			);
@@ -513,6 +456,9 @@
 			);
 			dependencies = (
 				C9CCAD1D2D5693A40025654D /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C9416F182D58B973009079D3 /* BlueskyAPI */,
 			);
 			name = BlueskyAPI;
 			packageProductDependencies = (
@@ -537,6 +483,9 @@
 				C963AABF2CF125300046E33B /* PBXTargetDependency */,
 				C963AABD2CF1252D0046E33B /* PBXTargetDependency */,
 				C963AABB2CF125200046E33B /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C9416F572D58BC6F009079D3 /* CompositeSocialService */,
 			);
 			name = CompositeSocialService;
 			packageProductDependencies = (
@@ -634,6 +583,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				C9416F6E2D58BCF8009079D3 /* Utility */,
+			);
 			name = Utility;
 			packageProductDependencies = (
 			);
@@ -652,6 +604,9 @@
 			buildRules = (
 			);
 			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				C9416F152D58B91D009079D3 /* UIUtility */,
 			);
 			name = UIUtility;
 			packageProductDependencies = (
@@ -674,6 +629,9 @@
 				C9AB8F012D56296F00B1462F /* PBXTargetDependency */,
 				C9AB8EFD2D56295400B1462F /* PBXTargetDependency */,
 			);
+			fileSystemSynchronizedGroups = (
+				C9416F482D58BAA9009079D3 /* Storage */,
+			);
 			name = Storage;
 			packageProductDependencies = (
 				C9AB8EFE2D56296500B1462F /* ATResolve */,
@@ -695,6 +653,9 @@
 			dependencies = (
 				C9416F052D58B84F009079D3 /* PBXTargetDependency */,
 				C9CDBBDF2D577C0E0000E010 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				C9416F2D2D58B9FC009079D3 /* Timeline */,
 			);
 			name = Timeline;
 			packageProductDependencies = (
@@ -777,14 +738,14 @@
 				C95FC56F2CE50FF30093AB32 /* Multipass */,
 				C95FC5802CE50FF40093AB32 /* MultipassTests */,
 				C95FC58A2CE50FF40093AB32 /* MultipassUITests */,
-				C95FC5BB2CE540980093AB32 /* Utility */,
 				C922178E2CE7C985006C34BC /* MastodonAPI */,
 				C92217A22CE8D949006C34BC /* BlueskyAPI */,
 				C92217D72CED1C80006C34BC /* CompositeSocialService */,
 				C91D81912D01EFFF007D1E82 /* Settings */,
-				C9AB8E142D53EB8700B1462F /* UIUtility */,
 				C9AB8EE72D5628C300B1462F /* Storage */,
 				C9CDBBCE2D577BC60000E010 /* Timeline */,
+				C9AB8E142D53EB8700B1462F /* UIUtility */,
+				C95FC5BB2CE540980093AB32 /* Utility */,
 			);
 		};
 /* End PBXProject section */
@@ -1293,8 +1254,8 @@
 		};
 		C95FC5C32CE540980093AB32 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = C95FC5722CE50FF30093AB32 /* Multipass */;
-			baseConfigurationReferenceRelativePath = Modules/Utility/Utility.xcconfig;
+			baseConfigurationReferenceAnchor = C95FC5B42CE5399C0093AB32 /* Configurations */;
+			baseConfigurationReferenceRelativePath = Utility.xcconfig;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				SDKROOT = macosx;
@@ -1303,8 +1264,8 @@
 		};
 		C95FC5C42CE540980093AB32 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = C95FC5722CE50FF30093AB32 /* Multipass */;
-			baseConfigurationReferenceRelativePath = Modules/Utility/Utility.xcconfig;
+			baseConfigurationReferenceAnchor = C95FC5B42CE5399C0093AB32 /* Configurations */;
+			baseConfigurationReferenceRelativePath = Utility.xcconfig;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				SDKROOT = macosx;
