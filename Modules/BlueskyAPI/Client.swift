@@ -100,8 +100,6 @@ extension Client {
 			throw ClientError.requestFailed
 		}
 		
-		print(String(decoding: data, as: UTF8.self))
-		
 		return try decoder.decode(Bsky.Feed.GetFeedResponse.self, from: data)
 	}
 }

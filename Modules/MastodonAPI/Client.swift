@@ -1,5 +1,7 @@
 import Foundation
 
+import Reblog
+
 public struct Client: Sendable {
 	public typealias ResponseProvider = @Sendable (URLRequest) async throws -> (Data, URLResponse)
 	

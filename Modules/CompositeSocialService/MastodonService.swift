@@ -76,7 +76,7 @@ public struct MastodonService: SocialService {
 		let statusArray = try await clientTask.value.timeline()
 		
 		return statusArray.map { status in
-			let content = status.reblog?.content ?? status.content
+			let content = try? status.reblog?.plainStringContent ?? status.plainStringContent
 			
 			let author = Author(
 				name: status.account.displayName,

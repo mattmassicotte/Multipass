@@ -4,6 +4,14 @@ import CompositeSocialService
 import OAuthenticator
 import Storage
 
+@frozen
+public enum ViewState<T> {
+  case initial
+  case error
+  case loading
+  case loaded(T)
+}
+
 @MainActor
 @Observable
 final class ViewModel {

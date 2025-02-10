@@ -1,5 +1,5 @@
 {
-  "originHash" : "c7751244e5ec7dabb6ffd701992721b1aa7f252b4f3b99e782ccad0c017f8794",
+  "originHash" : "251896a968c69589309d634ae3e04130a253c8fe72ff843802ff15294246ca02",
   "pins" : [
     {
       "identity" : "atat",
@@ -46,6 +46,15 @@
       }
     },
     {
+      "identity" : "reblog",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattmassicotte/Reblog",
+      "state" : {
+        "branch" : "main",
+        "revision" : "59b2f08b74613ddbfd261d67924cfd0a0aa0c6ce"
+      }
+    },
+    {
       "identity" : "secp256k1.swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/GigaBitcoin/secp256k1.swift.git",
@@ -61,15 +70,6 @@
       "state" : {
         "revision" : "08c07ff31a745ee5e522ac10132fb4949834d925",
         "version" : "0.4.0"
-      }
-    },
-    {
-      "identity" : "swiftsoup",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/scinfu/SwiftSoup",
-      "state" : {
-        "revision" : "0837db354faf9c9deb710dc597046edaadf5360f",
-        "version" : "2.7.6"
       }
     },
     {
