@@ -5,7 +5,7 @@ import CompositeSocialService
 struct PostView: View {
 	let post: Post
 	
-    var body: some View {
+	var body: some View {
 		HStack(alignment: .top) {
 			AvatarView(url: post.author.avatarURL)
 			VStack(alignment: .leading) {
@@ -26,8 +26,15 @@ struct PostView: View {
 				PostAttachmentView(attachments: post.attachments)
 				PostStatusView(source: post.source, status: post.status)
 			}
+			.contextMenu {
+				if let url = post.url {
+					Button("Print Link") {
+						print(url)
+					}
+				}
+			}
 		}
-    }
+	}
 }
 
 #Preview {
