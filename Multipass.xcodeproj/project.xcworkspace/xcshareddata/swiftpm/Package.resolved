@@ -1,5 +1,5 @@
 {
-  "originHash" : "251896a968c69589309d634ae3e04130a253c8fe72ff843802ff15294246ca02",
+  "originHash" : "e2afcd3cad56d87873781f2e2b2ab153cca4034458da92d20e027846607073ac",
   "pins" : [
     {
       "identity" : "atat",
@@ -51,7 +51,7 @@
       "location" : "https://github.com/mattmassicotte/Reblog",
       "state" : {
         "branch" : "main",
-        "revision" : "59b2f08b74613ddbfd261d67924cfd0a0aa0c6ce"
+        "revision" : "8a51c5b84d2189d9f413acfc047f2e2052f813c0"
       }
     },
     {
