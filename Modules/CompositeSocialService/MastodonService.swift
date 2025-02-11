@@ -2,6 +2,7 @@ import Foundation
 
 import MastodonAPI
 import OAuthenticator
+import Reblog
 
 public struct MastodonAccountDetails: Codable, Hashable, Sendable {
 	public let host: String
@@ -74,9 +75,30 @@ public struct MastodonService: SocialService {
 
 	public func timeline() async throws -> [Post] {
 		let statusArray = try await clientTask.value.timeline()
+		let parser = ContentParser()
 		
-		return statusArray.map { status in
-			let content = try? status.reblog?.plainStringContent ?? status.plainStringContent
+		return statusArray.compactMap { status -> Post? in
+			// filter direct relies
+			if status.inReplyToId != nil {
+				return nil
+			}
+			
+			let content: String
+			
+			do {
+				let visibleContent = status.reblog?.content ?? status.content
+				
+				let components = try parser.parse(visibleContent)
+				
+				if case let .link(_, value) = components.first, value.hasPrefix("@") {
+					return nil
+				}
+				
+				content = parser.renderToString(components)
+			} catch {
+				print("failed to process:", status)
+				return nil
+			}
 			
 			let author = Author(
 				name: status.account.displayName,
@@ -126,3 +148,4 @@ public struct MastodonService: SocialService {
 		}
 	}
 }
+
