@@ -68,8 +68,6 @@ extension Client {
 		
 		let (data, _) = try await provider(request)
 		
-		print(String(decoding: data, as: UTF8.self))
-		
 		return try decoder.decode([Status].self, from: data)
 	}
 }

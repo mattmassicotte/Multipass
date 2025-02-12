@@ -47,7 +47,7 @@ final class ViewModel {
 	}
 	
 	func updateAccounts(_ accounts: [UserAccount]) {
-		let services = accounts.filter { $0.source == .mastodon }.map { (account) -> any SocialService in
+		let services = accounts.map { (account) -> any SocialService in
 			switch account.source {
 			case .mastodon:
 				MastodonService(
