@@ -73,7 +73,6 @@ final class ViewModel {
 public struct FeedView: View {
 	@State private var model: ViewModel
 	@Environment(UserAccountStore.self) private var accountStore
-	@Environment(MenuActions.self) private var menuActions
 	
 	public init(secretStore: SecretStore) {
 		self._model = State(wrappedValue: ViewModel(secretStore: secretStore))
@@ -90,15 +89,13 @@ public struct FeedView: View {
 		.refreshable {
 			await model.refresh()
 		}
+		.focusedSceneValue(\.refreshAction) {
+			Task {
+				await model.refresh()
+			}
+		}
 		.task(id: model.accountsIdentifier) {
 			await model.refresh()
-		}
-		.onAppear {
-			menuActions.refresh = {
-				Task {
-					await model.refresh()
-				}
-			}
 		}
 	}
 }

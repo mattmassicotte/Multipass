@@ -3,16 +3,16 @@ import SwiftUI
 import UIUtility
 
 struct MenuCommands: Commands {
-	let actions: MenuActions
-		
+	@FocusedValue(\.refreshAction) var refreshAction
+	
 	var body: some Commands {
 		CommandGroup(after: .pasteboard) {
 			Divider()
 			Button("Refresh") {
-				actions.refresh?()
+				refreshAction?()
 			}
 			.keyboardShortcut("r")
-			.disabled(actions.refresh == nil)
+			.disabled(refreshAction == nil)
 		}
 	}
 }

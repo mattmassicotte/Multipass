@@ -1,11 +1,7 @@
 import SwiftUI
 
-@MainActor @Observable
-public final class MenuActions {
-	public typealias Handler = @MainActor () -> Void
+extension FocusedValues {
+	public typealias Action = () -> Void
 	
-	public var refresh: Handler? = nil
-	
-	public init() {
-	}
+	@Entry public var refreshAction: Action?
 }

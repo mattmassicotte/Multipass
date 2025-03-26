@@ -25,7 +25,6 @@ final class AppState {
 struct MultipassApp: App {
 	@State private var appState = AppState()
 	@State private var settingsVisible = false
-	@State private var actions = MenuActions()
 	
 	var body: some Scene {
 		WindowGroup {
@@ -55,9 +54,8 @@ struct MultipassApp: App {
 #endif
 		}
 		.environment(appState.accountStore)
-		.environment(actions)
 		.commands {
-			MenuCommands(actions: actions)
+			MenuCommands()
 		}
 
 #if os(macOS)
