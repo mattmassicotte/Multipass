@@ -146,6 +146,10 @@ public actor BlueskyService: SocialService {
 //			}
 		}
 	}
+	
+	public func likePost(_ post: Post) async throws {
+		
+	}
 }
 
 //extension TimelineResponse.FeedEntry {

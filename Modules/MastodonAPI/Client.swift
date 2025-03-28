@@ -70,4 +70,22 @@ extension Client {
 		
 		return try decoder.decode([Status].self, from: data)
 	}
+	
+	public func likePost(_ id: String) async throws -> Status {
+		var components = baseComponents
+		
+		components.path = "/api/v1/statuses/\(id)/favourite"
+		
+		guard let url = components.url else {
+			throw MastodonError.malformedURL(components)
+		}
+
+		var request = URLRequest(url: url)
+		
+		request.httpMethod = "POST"
+		
+		let (data, _) = try await provider(request)
+		
+		return try decoder.decode(Status.self, from: data)
+	}
 }

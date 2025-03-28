@@ -72,9 +72,15 @@ public struct MastodonService: SocialService {
 
 		return appRegistration
 	}
+	
+	private var client: MastodonAPI.Client {
+		get async throws {
+			try await clientTask.value
+		}
+	}
 
 	public func timeline() async throws -> [Post] {
-		let statusArray = try await clientTask.value.timeline()
+		let statusArray = try await client.timeline()
 		let parser = ContentParser()
 		
 		return statusArray.compactMap { status -> Post? in
@@ -140,12 +146,15 @@ public struct MastodonService: SocialService {
 				attachments: attachments,
 				status: PostStatus(
 					likeCount: status.favorites,
-					liked: false,
+					liked: status.favorited ?? false,
 					repostCount: status.reblogs,
-					reposted: false
+					reposted: status.reblogged ?? false
 				)
 			)
 		}
 	}
+	
+	public func likePost(_ post: Post) async throws {
+		_ = try await client.likePost(post.identifier)
+	}
 }
-

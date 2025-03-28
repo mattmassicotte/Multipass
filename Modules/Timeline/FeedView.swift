@@ -68,6 +68,18 @@ final class ViewModel {
 		self.client = CompositeClient(secretStore: secretStore, services: services)
 		self.accountsIdentifier = accounts.hashValue
 	}
+	
+	func handlePostAction(action: PostStatusAction, post: Post) {
+		switch action {
+		case .like:
+			Task {
+				try! await self.client.likePost(post)
+			}
+		case .repost:
+			print("nope, not yet")
+		}
+		
+	}
 }
 
 public struct FeedView: View {
@@ -80,7 +92,12 @@ public struct FeedView: View {
 	
 	public var body: some View {
 		List(model.posts) { post in
-			PostView(post: post)
+			PostView(
+				post: post,
+				actionHandler: { action in
+					model.handlePostAction(action: action, post: post)
+				}
+			)
 		}
 		.listStyle(PlainListStyle())
 		.onChange(of: accountStore.accounts, initial: true, { _, newValue in

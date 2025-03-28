@@ -4,6 +4,7 @@ import CompositeSocialService
 
 struct PostView: View {
 	let post: Post
+	let actionHandler: PostStatusView.ActionHandler
 	
 	var body: some View {
 		HStack(alignment: .top) {
@@ -24,7 +25,11 @@ struct PostView: View {
 				Text(post.content ?? "")
 					.padding(EdgeInsets(top: 4.0, leading: 2.0, bottom: 4.0, trailing: 1.0))
 				PostAttachmentView(attachments: post.attachments)
-				PostStatusView(source: post.source, status: post.status)
+				PostStatusView(
+					source: post.source,
+					status: post.status,
+					actionHandler: actionHandler
+				)
 			}
 			.contextMenu {
 				if let url = post.url {
@@ -38,5 +43,5 @@ struct PostView: View {
 }
 
 #Preview {
-	PostView(post: Post.placeholder)
+	PostView(post: Post.placeholder, actionHandler: { _ in })
 }

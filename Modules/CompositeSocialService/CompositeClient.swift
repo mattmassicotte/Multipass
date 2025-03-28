@@ -6,6 +6,7 @@ public typealias URLResponseProvider = OAuthenticator.URLResponseProvider
 
 public protocol SocialService: Sendable {
 	func timeline() async throws -> [Post]
+	func likePost(_ post: Post) async throws
 }
 
 public struct CompositeClient {
@@ -39,6 +40,19 @@ extension CompositeClient: SocialService {
 			}
 			
 			return posts
+		}
+	}
+	
+	public func likePost(_ post: Post) async throws {
+		try await withThrowingTaskGroup { group in
+			for service in services {
+				group.addTask {
+					try await service.likePost(post)
+				}
+			}
+			
+			for try await _ in group {
+			}
 		}
 	}
 }
