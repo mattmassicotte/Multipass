@@ -116,7 +116,11 @@ public actor BlueskyService: SocialService {
 		let response = try await client.timeline()
 
 		return response.feed.compactMap { entry in
-			Post(entry)
+			if entry.reply != nil {
+				return nil
+			}
+			
+			return Post(entry)
 		}
 	}
 	
