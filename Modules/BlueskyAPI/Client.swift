@@ -4,6 +4,7 @@ import ATAT
 enum ClientError: Error {
 	case malformedURL(URLComponents)
 	case requestFailed
+	case invalidArguments
 }
 
 public actor Client: Sendable {
@@ -11,11 +12,13 @@ public actor Client: Sendable {
 	
 	private let provider: ResponseProvider
 	public let host: String
+	public let account: String
 	private let decoder = ATJSONDecoder()
 	
-	public init(host: String, provider: @escaping ResponseProvider) {
+	public init(host: String, account: String, provider: @escaping ResponseProvider) {
 		self.provider = provider
 		self.host = host
+		self.account = account
 	}
 	
 	private var baseComponents: URLComponents {
@@ -95,11 +98,48 @@ extension Client {
 			let httpResponse = response as? HTTPURLResponse,
 			httpResponse.statusCode >= 200 && httpResponse.statusCode < 300
 		else {
-			print("response:", response)
-			print(String(decoding: data, as: UTF8.self))
+//			print("response:", response)
+//			print(String(decoding: data, as: UTF8.self))
 			throw ClientError.requestFailed
 		}
 		
 		return try decoder.decode(Bsky.Feed.GetFeedResponse.self, from: data)
+	}
+	
+	public func likePost(cid: ATProtoCID, uri: ATProtoURI) async throws {
+		var components = baseComponents
+		
+		components.path = "/xrpc/com.atproto.repo.createRecord"
+		
+		guard let url = components.url else {
+			throw ClientError.malformedURL(components)
+		}
+
+		let like = Bsky.Feed.Like(
+			createdAt: .now,
+			subject: Bsky.Repo.StrongRef(
+				cid: cid,
+				uri: uri
+			)
+		)
+		
+		let createRecord = Bsky.Repo.CreateRecord.Request(
+			repo: account,
+			collection: .feedLike,
+			record: .feedLike(like)
+		)
+		
+		var request = URLRequest(url: url)
+		
+		request.httpMethod = "POST"
+		request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+		request.setValue("application/json", forHTTPHeaderField: "Accept")
+		request.httpBody = try ATJSONEncoder().encode(createRecord)
+		
+		let (data, _) = try await provider(request)
+		
+		print(String(decoding: data, as: UTF8.self))
+		
+		_ = try decoder.decode(Bsky.Repo.CreateRecord.Response.self, from: data)
 	}
 }

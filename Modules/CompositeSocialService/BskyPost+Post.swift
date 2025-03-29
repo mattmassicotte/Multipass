@@ -12,6 +12,7 @@ extension Post {
 			repostingAuthor: feedViewPost.reasonRepost.flatMap { Author($0.by) },
 			identifier: feedViewPost.post.cid,
 			url: feedViewPost.post.url,
+			uri: feedViewPost.post.uri,
 			attachments: [],
 			status: PostStatus(
 				likeCount: feedViewPost.post.likeCount,

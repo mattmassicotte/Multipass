@@ -13,6 +13,7 @@ public struct BlueskyAccountDetails: Codable, Hashable, Sendable {
 
 enum BlueskyServiceError: Error {
 	case pdsResolutionFailed(String)
+	case uriMissing
 }
 
 public actor BlueskyService: SocialService {
@@ -60,7 +61,7 @@ public actor BlueskyService: SocialService {
 
 			let authenticator = Authenticator(config: config)
 
-			return BlueskyAPI.Client(host: resolvedPDS, provider: authenticator.responseProvider)
+			return BlueskyAPI.Client(host: resolvedPDS, account: account, provider: authenticator.responseProvider)
 		}
 	}
 
@@ -105,8 +106,14 @@ public actor BlueskyService: SocialService {
 		return key
 	}
 
+	private var client: BlueskyAPI.Client {
+		get async throws {
+			try await clientTask.value
+		}
+	}
+	
 	public func timeline() async throws -> [Post] {
-		let response = try await clientTask.value.timeline()
+		let response = try await client.timeline()
 
 		return response.feed.compactMap { entry in
 			Post(entry)
@@ -148,7 +155,15 @@ public actor BlueskyService: SocialService {
 	}
 	
 	public func likePost(_ post: Post) async throws {
+		if post.source != .bluesky {
+			return
+		}
 		
+		guard let uri = post.uri else {
+			throw BlueskyServiceError.uriMissing
+		}
+		
+		_ = try await client.likePost(cid: post.identifier, uri: uri)
 	}
 }
 

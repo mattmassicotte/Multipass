@@ -100,6 +100,7 @@ public struct Post: Hashable, Sendable {
 	public let repostingAuthor: Author?
 	public let identifier: String
 	public let url: URL?
+	public let uri: String?
 	public let attachments: [Attachment]
 	public let status: PostStatus
 	
@@ -111,6 +112,7 @@ public struct Post: Hashable, Sendable {
 		repostingAuthor: Author?,
 		identifier: String,
 		url: URL?,
+		uri: String? = nil,
 		attachments: [Attachment],
 		status: PostStatus
 	) {
@@ -121,6 +123,7 @@ public struct Post: Hashable, Sendable {
 		self.repostingAuthor = repostingAuthor
 		self.identifier = identifier
 		self.url = url
+		self.uri = uri
 		self.attachments = attachments
 		self.status = status
 	}

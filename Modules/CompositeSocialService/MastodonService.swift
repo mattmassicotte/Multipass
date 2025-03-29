@@ -155,6 +155,10 @@ public struct MastodonService: SocialService {
 	}
 	
 	public func likePost(_ post: Post) async throws {
+		if post.source != .mastodon {
+			return
+		}
+		
 		_ = try await client.likePost(post.identifier)
 	}
 }
