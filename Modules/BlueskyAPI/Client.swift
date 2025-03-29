@@ -98,8 +98,8 @@ extension Client {
 			let httpResponse = response as? HTTPURLResponse,
 			httpResponse.statusCode >= 200 && httpResponse.statusCode < 300
 		else {
-//			print("response:", response)
-//			print(String(decoding: data, as: UTF8.self))
+			print("response:", response)
+			print(String(decoding: data, as: UTF8.self))
 			throw ClientError.requestFailed
 		}
 		

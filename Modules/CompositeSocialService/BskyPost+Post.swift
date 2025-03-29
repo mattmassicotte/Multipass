@@ -16,7 +16,7 @@ extension Post {
 			attachments: [],
 			status: PostStatus(
 				likeCount: feedViewPost.post.likeCount,
-				liked: false,
+				liked: feedViewPost.post.viewer.like != nil,
 				repostCount: feedViewPost.post.repostCount,
 				reposted: false
 			)
