@@ -26,6 +26,14 @@ You can add and remove accounts and they will be persisted in the Keychain. You 
 - update `User.xcconfig` with your personal information
 - build/run with Xcode
 
+### Sub-Projects
+
+A number of subprojects have been pulled out of this app, which might be of interest as well.
+
+- [ATAT](https://github.com/mattmassicotte/ATAT): Little library for working with the AT Protocol
+- [ATResolve](https://github.com/mattmassicotte/ATResolve): AT Protocol PLC Resolver
+- [Reblog](https://github.com/mattmassicotte/Reblog): Little library for working with the Mastodon API
+
 ## Acknowledgements 
 
 This project uses symbols from [social-symbols](https://github.com/jeremieb/social-symbols). It rocks.
