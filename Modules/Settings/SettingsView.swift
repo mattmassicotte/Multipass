@@ -15,8 +15,10 @@ public struct SettingsView: View {
 				Text("nothing yet!")
 			}
 		}
+#if os(macOS)
 		.scenePadding()
 		.frame(minWidth: 350, minHeight: 100)
+#endif
 	}
 }
 
