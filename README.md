@@ -33,6 +33,7 @@ A number of subprojects have been pulled out of this app, which might be of inte
 - [ATAT](https://github.com/mattmassicotte/ATAT): Little library for working with the AT Protocol
 - [ATResolve](https://github.com/mattmassicotte/ATResolve): AT Protocol PLC Resolver
 - [Reblog](https://github.com/mattmassicotte/Reblog): Little library for working with the Mastodon API
+- [OAuthenticator](https://github.com/ChimeHQ/OAuthenticator): OAuth 2.0 request authentication
 
 ## Acknowledgements 
 
