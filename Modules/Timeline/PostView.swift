@@ -22,7 +22,7 @@ struct PostView: View {
 					}.fontWeight(.bold)
 					Text(post.author.handle)
 				}
-				Text(post.content ?? "")
+				Text(.init(post.content ?? ""))
 					.padding(EdgeInsets(top: 4.0, leading: 2.0, bottom: 4.0, trailing: 1.0))
 				PostAttachmentView(attachments: post.attachments)
 				PostStatusView(
