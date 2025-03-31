@@ -64,13 +64,23 @@ public final class UserAccountStore {
 	public func addAccount(_ account: UserAccount) async throws {
 		self.accounts.append(account)
 		
-		let data = try JSONEncoder().encode(accounts)
-		try await secretStore.write(data, Self.accountsKey)
+		try await writeToSecretStore()
 	}
 	
 	public func removeAllAccounts() async throws {
 		self.accounts.removeAll()
 		
+		try await writeToSecretStore()
+	}
+
+	public func removeAccount(_ account: UserAccount) async throws {
+		accounts.removeAll { storedAccount in
+			account == storedAccount
+		}
+		try await writeToSecretStore()
+	}
+
+	private func writeToSecretStore() async throws {
 		let data = try JSONEncoder().encode(accounts)
 		try await secretStore.write(data, Self.accountsKey)
 	}
