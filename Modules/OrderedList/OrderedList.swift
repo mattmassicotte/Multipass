@@ -7,6 +7,8 @@ import UIKit
 #endif
 
 public struct OrderedList<Content: View, Item: Hashable & Sendable> {
+	@Environment(\.refresh) private var refreshAction
+	
 	private let items: [Item]
 	private let content: (Item) -> Content
 	
@@ -29,6 +31,7 @@ extension OrderedList : NSViewControllerRepresentable {
 	
 	public func updateNSViewController(_ viewController: NSViewControllerType, context: Context) {
 		viewController.items = items
+		viewController.refreshAction = refreshAction
 	}
 }
 #elseif canImport(UIKit)
@@ -41,6 +44,7 @@ extension OrderedList : UIViewControllerRepresentable {
 	
 	public func updateUIViewController(_ viewController: TableViewController<Content, Item>, context: Context) {
 		viewController.items = items
+		viewController.refreshAction = refreshAction
 	}
 }
 

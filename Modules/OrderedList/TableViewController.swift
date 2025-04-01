@@ -12,6 +12,10 @@ public final class TableViewController<Content: View, Item: Hashable & Sendable>
 	private var snapshot = NSDiffableDataSourceSnapshot<Section, Item>()
 	let tableView = TableView(frame: .zero)
 	private let content: (Item) -> Content
+	var refreshAction: RefreshAction?
+#if canImport(UIKit)
+	let refreshControl = UIRefreshControl()
+#endif
 	
 	private lazy var dataSource: TableViewDiffableDataSource<Section, Item> = {
 		TableViewDiffableDataSource<Section, Item>(tableView: tableView) { [content] tableView, path, item in
@@ -31,6 +35,10 @@ public final class TableViewController<Content: View, Item: Hashable & Sendable>
 		super.init(nibName: nil, bundle: nil)
 		
 		snapshot.appendSections([0])
+		
+#if canImport(UIKit)
+		tableView.refreshControl = refreshControl
+#endif
 	}
 	
 	@available(*, unavailable)
@@ -54,6 +62,7 @@ public final class TableViewController<Content: View, Item: Hashable & Sendable>
 		
 		tableView.addTableColumn(column)
 		tableView.usesAutomaticRowHeights = true
+		tableView.headerView = nil
 		
 		let scrollView = NSScrollView()
 		
@@ -61,6 +70,8 @@ public final class TableViewController<Content: View, Item: Hashable & Sendable>
 		
 		self.view = scrollView
 #elseif canImport(UIKit)
+		refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+		
 		self.view = tableView
 #endif
 		updateDataSource()
@@ -69,4 +80,12 @@ public final class TableViewController<Content: View, Item: Hashable & Sendable>
 	private func updateDataSource() {
 		dataSource.apply(snapshot, animatingDifferences: true)
 	}
+	
+#if canImport(UIKit)
+	@objc private func refresh(_ refreshControl: UIRefreshControl) {
+		Task {
+			await refreshAction?()
+		}
+	}
+#endif
 }
