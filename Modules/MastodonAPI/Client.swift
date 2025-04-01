@@ -1,6 +1,12 @@
 import Foundation
 
+import OAuthenticator
 import Reblog
+
+enum ClientError: Error {
+	case unexpectedResponse(URLResponse)
+	case malformedURL(URLComponents)
+}
 
 public struct Client: Sendable {
 	public typealias ResponseProvider = @Sendable (URLRequest) async throws -> (Data, URLResponse)
@@ -29,10 +35,40 @@ public struct Client: Sendable {
 		
 		return components
 	}
-}
+	
+	private func load<Success: Decodable>(
+		apiPath: String,
+		block: (inout URLRequest) -> Void = { _ in }
+	) async throws -> Success {
+		var components = baseComponents
+		
+		components.path = "/api/v1/\(apiPath)"
 
-enum MastodonError: Error {
-	case malformedURL(URLComponents)
+		guard let url = components.url else {
+			throw ClientError.malformedURL(components)
+		}
+
+		var request = URLRequest(url: url)
+		
+		request.setValue("application/json", forHTTPHeaderField: "Accept")
+		
+		block(&request)
+
+		let (data, response) = try await provider(request)
+		
+		guard
+			let httpResponse = response as? HTTPURLResponse,
+			httpResponse.statusCode >= 200 && httpResponse.statusCode < 300
+		else {
+			print("unexpected data:", String(decoding: data, as: UTF8.self))
+			print("response:", response)
+			
+			throw ClientError.unexpectedResponse(response)
+		}
+
+		
+		return try decoder.decode(Success.self, from: data)
+	}
 }
 
 extension Client {
@@ -45,7 +81,7 @@ extension Client {
 		]
 
 		guard let url = urlBuilder.url else {
-			throw MastodonError.malformedURL(urlBuilder)
+			throw ClientError.malformedURL(urlBuilder)
 		}
 
 		let request = URLRequest(url: url)
@@ -56,19 +92,7 @@ extension Client {
 	}
 	
 	public func timeline() async throws -> [Status] {
-		var components = baseComponents
-		
-		components.path = "/api/v1/timelines/home"
-
-		guard let url = components.url else {
-			throw MastodonError.malformedURL(components)
-		}
-
-		let request = URLRequest(url: url)
-		
-		let (data, _) = try await provider(request)
-		
-		return try decoder.decode([Status].self, from: data)
+		try await load(apiPath: "timelines/home")
 	}
 	
 	public func likePost(_ id: String) async throws -> Status {
@@ -77,7 +101,7 @@ extension Client {
 		components.path = "/api/v1/statuses/\(id)/favourite"
 		
 		guard let url = components.url else {
-			throw MastodonError.malformedURL(components)
+			throw ClientError.malformedURL(components)
 		}
 
 		var request = URLRequest(url: url)

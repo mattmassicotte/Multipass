@@ -2,6 +2,7 @@ import SwiftUI
 
 import CompositeSocialService
 import OAuthenticator
+import OrderedList
 import Storage
 import UIUtility
 
@@ -20,8 +21,14 @@ final class ViewModel {
 	private var client: CompositeClient
 	@ObservationIgnored
 	private var services: [any SocialService] = []
+	// this is needed to workaround a bug in Xcode 16.3, but my assumption is it will be resolved shortly.
+	#if targetEnvironment(simulator)
+	@ObservationIgnored
+	private let responseProvider = URLSession(configuration: .ephemeral).responseProvider
+	#else
 	@ObservationIgnored
 	private let responseProvider = URLSession.defaultProvider
+	#endif
 	@ObservationIgnored
 	private let secretStore: SecretStore
 

@@ -37,8 +37,6 @@ public final class UserAccountStore {
 	public private(set) var accounts: [UserAccount]
 
 	@ObservationIgnored
-	private let responseProvider = URLSession.defaultProvider
-	@ObservationIgnored
 	private let secretStore: SecretStore
 
 	public init(secretStore: SecretStore) {

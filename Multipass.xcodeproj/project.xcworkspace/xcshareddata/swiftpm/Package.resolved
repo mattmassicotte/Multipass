@@ -42,7 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ChimeHQ/OAuthenticator.git",
       "state" : {
-        "revision" : "84cd5563b68bb004f9a1fa4ba4da728b4d5fd1b7"
+        "branch" : "main",
+        "revision" : "28ac9049f54d1d655cd5bd1645e706d1c0fb76f0"
       }
     },
     {
