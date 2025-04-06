@@ -2,6 +2,7 @@ import Testing
 import Foundation
 
 import MastodonAPI
+import Reblog
 
 struct MastodonAPITests {
 	@Test func markerDecode() async throws {

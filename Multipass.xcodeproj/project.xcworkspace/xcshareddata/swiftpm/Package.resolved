@@ -1,5 +1,5 @@
 {
-  "originHash" : "e2afcd3cad56d87873781f2e2b2ab153cca4034458da92d20e027846607073ac",
+  "originHash" : "4e75bfcbc124ddfc5adc23d640a0ff8a81bb12fa7a524838e4101aac7c9ca6d4",
   "pins" : [
     {
       "identity" : "atat",
@@ -62,6 +62,15 @@
       "state" : {
         "revision" : "4c77c7384768acf1093d66ccaacf298d322b10b7",
         "version" : "0.15.0"
+      }
+    },
+    {
+      "identity" : "stableview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattmassicotte/StableView",
+      "state" : {
+        "branch" : "main",
+        "revision" : "fe5f911fb00e7857a0429f25161680296b6d89b2"
       }
     },
     {

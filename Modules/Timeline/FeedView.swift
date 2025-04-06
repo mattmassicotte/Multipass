@@ -2,7 +2,7 @@ import SwiftUI
 
 import CompositeSocialService
 import OAuthenticator
-import OrderedList
+import StableView
 import Storage
 import UIUtility
 
@@ -91,6 +91,7 @@ final class ViewModel {
 
 public struct FeedView: View {
 	@State private var model: ViewModel
+	@State private var scrollState: ScrollState<Post> = .absolute(0.0)
 	@Environment(UserAccountStore.self) private var accountStore
 	
 	public init(secretStore: SecretStore) {
@@ -98,7 +99,7 @@ public struct FeedView: View {
 	}
 	
 	public var body: some View {
-		List(model.posts) { post in
+		PositionPreservingList(items: model.posts, scrollState: $scrollState) { post, row in
 			PostView(
 				post: post,
 				actionHandler: { action in
