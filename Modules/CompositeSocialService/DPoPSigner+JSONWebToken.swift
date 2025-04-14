@@ -1,10 +1,20 @@
+import CryptoKit
 import Foundation
 
-import CryptoKit
 import JSONWebToken
 import JSONWebKey
 import JSONWebSignature
 import OAuthenticator
+
+struct DPoPKey: Codable {
+	let data: Data
+	let id: UUID
+
+	init() {
+		self.id = UUID()
+		self.data = P256.Signing.PrivateKey().rawRepresentation
+	}
+}
 
 struct DPoPTokenClaims: JWTRegisteredFieldsClaims, Codable {
 	let iss: String?
@@ -56,16 +66,6 @@ struct DPoPTokenClaims: JWTRegisteredFieldsClaims, Codable {
 		self.htu = requestEndpoint
 		self.nonce = nonce
 		self.ath = accessTokenHash
-	}
-}
-
-struct DPoPKey: Codable {
-	let data: Data
-	let id: UUID
-
-	init() {
-		self.id = UUID()
-		self.data = P256.Signing.PrivateKey().rawRepresentation
 	}
 }
 

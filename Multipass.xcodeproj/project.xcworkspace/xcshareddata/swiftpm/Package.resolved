@@ -16,7 +16,7 @@
       "location" : "https://github.com/mattmassicotte/ATResolve",
       "state" : {
         "branch" : "main",
-        "revision" : "4f63a616e39af8267542b39965a8ad72cee52a6a"
+        "revision" : "fcdf3d6fc4661833d363dab48f456d1120850fd4"
       }
     },
     {
@@ -43,7 +43,7 @@
       "location" : "https://github.com/ChimeHQ/OAuthenticator.git",
       "state" : {
         "branch" : "main",
-        "revision" : "28ac9049f54d1d655cd5bd1645e706d1c0fb76f0"
+        "revision" : "5e1b277b08bcaf7284529e3e7e2fcd62e2a3526a"
       }
     },
     {
