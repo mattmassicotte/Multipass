@@ -32,6 +32,7 @@ A number of subprojects have either been pulled out of this app or influenced by
 
 - [ATAT](https://github.com/mattmassicotte/ATAT): Little library for working with the AT Protocol
 - [ATResolve](https://github.com/mattmassicotte/ATResolve): AT Protocol PLC Resolver
+- [Jot](https://github.com/mattmassicotte/Jot): Very simple JWT/JWK library for Swift
 - [OAuthenticator](https://github.com/ChimeHQ/OAuthenticator): OAuth 2.0 request authentication
 - [StableView](https://github.com/mattmassicotte/StableView): A TableView implementation that can preserve position for iOS and macOS
 - [Reblog](https://github.com/mattmassicotte/Reblog): Little library for working with the Mastodon API

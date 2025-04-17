@@ -97,7 +97,7 @@ public actor BlueskyService: SocialService {
 			print("failed to get existing DPoP key", error)
 		}
 
-		let key = DPoPKey()
+		let key = DPoPKey.P256()
 
 		let keyData = try JSONEncoder().encode(key)
 

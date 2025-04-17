@@ -10,6 +10,8 @@
 		C91D81A12D01F06E007D1E82 /* libSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C91D81922D01EFFF007D1E82 /* libSettings.a */; };
 		C922179A2CE7C9A2006C34BC /* libMastodonAPI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C922178F2CE7C985006C34BC /* libMastodonAPI.a */; };
 		C92217B12CE93161006C34BC /* libBlueskyAPI.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C92217A32CE8D949006C34BC /* libBlueskyAPI.a */; };
+		C92CD7432DB143DE00964B90 /* Jot in Frameworks */ = {isa = PBXBuildFile; productRef = C92CD7422DB143DE00964B90 /* Jot */; };
+		C92CD7482DB1483900964B90 /* Jot in Frameworks */ = {isa = PBXBuildFile; productRef = C92CD7472DB1483900964B90 /* Jot */; };
 		C941713A2D5A2081009079D3 /* Reblog in Frameworks */ = {isa = PBXBuildFile; productRef = C94171392D5A2081009079D3 /* Reblog */; };
 		C941713D2D5A2313009079D3 /* Reblog in Frameworks */ = {isa = PBXBuildFile; productRef = C941713C2D5A2313009079D3 /* Reblog */; };
 		C95FC5A02CE5122D0093AB32 /* OAuthenticator in Frameworks */ = {isa = PBXBuildFile; productRef = C95FC59F2CE5122D0093AB32 /* OAuthenticator */; };
@@ -27,7 +29,6 @@
 		C9CDBBCA2D5779500000E010 /* ATAT in Frameworks */ = {isa = PBXBuildFile; productRef = C9CDBBC92D5779500000E010 /* ATAT */; };
 		C9CDBBE02D577C230000E010 /* libTimeline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CDBBCF2D577BC60000E010 /* libTimeline.a */; };
 		C9CDBBE52D577C6B0000E010 /* ATResolve in Frameworks */ = {isa = PBXBuildFile; productRef = C9CDBBE42D577C6B0000E010 /* ATResolve */; };
-		C9DA69572CF9059E00CB0AAA /* jose-swift in Frameworks */ = {isa = PBXBuildFile; productRef = C9DA69562CF9059E00CB0AAA /* jose-swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -215,6 +216,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C92CD7432DB143DE00964B90 /* Jot in Frameworks */,
+				C92CD7482DB1483900964B90 /* Jot in Frameworks */,
 				C96D853B2DA31FC900AFA187 /* StableView in Frameworks */,
 				C941713A2D5A2081009079D3 /* Reblog in Frameworks */,
 				C941713D2D5A2313009079D3 /* Reblog in Frameworks */,
@@ -224,7 +227,6 @@
 				C9CCAD1F2D5693AD0025654D /* ATAT in Frameworks */,
 				C9AB8E262D53EC1600B1462F /* libUIUtility.a in Frameworks */,
 				C91D81A12D01F06E007D1E82 /* libSettings.a in Frameworks */,
-				C9DA69572CF9059E00CB0AAA /* jose-swift in Frameworks */,
 				C963AAB22CF0EF960046E33B /* libCompositeSocialService.a in Frameworks */,
 				C92217B12CE93161006C34BC /* libBlueskyAPI.a in Frameworks */,
 				C922179A2CE7C9A2006C34BC /* libMastodonAPI.a in Frameworks */,
@@ -480,8 +482,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				C92CD7452DB143E500964B90 /* PBXTargetDependency */,
 				C9AB8D532D53CA2300B1462F /* PBXTargetDependency */,
-				C9DA69762D00D6A000CB0AAA /* PBXTargetDependency */,
 				C963AABF2CF125300046E33B /* PBXTargetDependency */,
 				C963AABD2CF1252D0046E33B /* PBXTargetDependency */,
 				C963AABB2CF125200046E33B /* PBXTargetDependency */,
@@ -516,13 +518,14 @@
 			packageProductDependencies = (
 				C95FC59F2CE5122D0093AB32 /* OAuthenticator */,
 				C95FC5B22CE536B70093AB32 /* Valet */,
-				C9DA69562CF9059E00CB0AAA /* jose-swift */,
 				C9AB8D4A2D53C63700B1462F /* ATResolve */,
 				C9CCAD1E2D5693AD0025654D /* ATAT */,
 				C9CDBBC92D5779500000E010 /* ATAT */,
 				C94171392D5A2081009079D3 /* Reblog */,
 				C941713C2D5A2313009079D3 /* Reblog */,
 				C96D853A2DA31FC900AFA187 /* StableView */,
+				C92CD7422DB143DE00964B90 /* Jot */,
+				C92CD7472DB1483900964B90 /* Jot */,
 			);
 			productName = Multipass;
 			productReference = C95FC5702CE50FF30093AB32 /* Multipass.app */;
@@ -729,11 +732,11 @@
 			packageReferences = (
 				C95FC59E2CE5122D0093AB32 /* XCRemoteSwiftPackageReference "OAuthenticator" */,
 				C95FC5B12CE536B70093AB32 /* XCRemoteSwiftPackageReference "Valet" */,
-				C9DA69552CF9059E00CB0AAA /* XCRemoteSwiftPackageReference "jose-swift" */,
 				C9AB8D492D53C63700B1462F /* XCRemoteSwiftPackageReference "ATResolve" */,
 				C9CDBBC82D5779500000E010 /* XCRemoteSwiftPackageReference "ATAT" */,
 				C941713B2D5A2313009079D3 /* XCRemoteSwiftPackageReference "Reblog" */,
 				C96D85392DA31FC900AFA187 /* XCRemoteSwiftPackageReference "StableView" */,
+				C92CD7462DB1483900964B90 /* XCRemoteSwiftPackageReference "Jot" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C95FC5712CE50FF30093AB32 /* Products */;
@@ -865,6 +868,10 @@
 			target = C92217D72CED1C80006C34BC /* CompositeSocialService */;
 			targetProxy = C91D81AB2D020BB0007D1E82 /* PBXContainerItemProxy */;
 		};
+		C92CD7452DB143E500964B90 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = C92CD7442DB143E500964B90 /* Jot */;
+		};
 		C9416F052D58B84F009079D3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = C9AB8EE72D5628C300B1462F /* Storage */;
@@ -933,10 +940,6 @@
 			isa = PBXTargetDependency;
 			target = C92217D72CED1C80006C34BC /* CompositeSocialService */;
 			targetProxy = C9CDBBDE2D577C0E0000E010 /* PBXContainerItemProxy */;
-		};
-		C9DA69762D00D6A000CB0AAA /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = C9DA69752D00D6A000CB0AAA /* jose-swift */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1445,6 +1448,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		C92CD7462DB1483900964B90 /* XCRemoteSwiftPackageReference "Jot" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattmassicotte/Jot";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		C941713B2D5A2313009079D3 /* XCRemoteSwiftPackageReference "Reblog" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mattmassicotte/Reblog";
@@ -1493,17 +1504,22 @@
 				kind = branch;
 			};
 		};
-		C9DA69552CF9059E00CB0AAA /* XCRemoteSwiftPackageReference "jose-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/beatt83/jose-swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		C92CD7422DB143DE00964B90 /* Jot */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Jot;
+		};
+		C92CD7442DB143E500964B90 /* Jot */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Jot;
+		};
+		C92CD7472DB1483900964B90 /* Jot */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C92CD7462DB1483900964B90 /* XCRemoteSwiftPackageReference "Jot" */;
+			productName = Jot;
+		};
 		C94171372D5A2072009079D3 /* Reblog */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Reblog;
@@ -1588,16 +1604,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C9AB8D492D53C63700B1462F /* XCRemoteSwiftPackageReference "ATResolve" */;
 			productName = ATResolve;
-		};
-		C9DA69562CF9059E00CB0AAA /* jose-swift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9DA69552CF9059E00CB0AAA /* XCRemoteSwiftPackageReference "jose-swift" */;
-			productName = "jose-swift";
-		};
-		C9DA69752D00D6A000CB0AAA /* jose-swift */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = C9DA69552CF9059E00CB0AAA /* XCRemoteSwiftPackageReference "jose-swift" */;
-			productName = "jose-swift";
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
