@@ -11,7 +11,8 @@ struct AvatarView: View {
 		} placeholder: {
 			Image(systemName: "person.fill")
 		}
-		.frame(width: 40)
+		.frame(height: 40.0)
+		
     }
 }
 

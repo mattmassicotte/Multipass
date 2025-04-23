@@ -1,9 +1,8 @@
 import SwiftUI
 
 import CompositeSocialService
-import Settings
 import Storage
-import Timeline
+import Settings
 import UIUtility
 import Valet
 
@@ -24,36 +23,13 @@ final class AppState {
 @main
 struct MultipassApp: App {
 	@State private var appState = AppState()
-	@State private var settingsVisible = false
+	
 	
 	var body: some Scene {
 		WindowGroup {
-#if os(macOS)
-			VStack {
-				FeedView(secretStore: appState.secretStore)
-			}
-			.padding()
-#else
-			NavigationStack {
-				VStack {
-					FeedView(secretStore: appState.secretStore)
-				}
-				.toolbar {
-					Button {
-						settingsVisible = true
-					} label: {
-						Image(systemName: "gear")
-					}
-					
-				}
-			}
-			.sheet(isPresented: $settingsVisible) {
-				SettingsView()
-					.environment(appState.accountStore)
-			}
-#endif
+			MainAppView(appState: appState)
+				.environment(appState.accountStore)
 		}
-		.environment(appState.accountStore)
 		.commands {
 			MenuCommands()
 		}

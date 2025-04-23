@@ -10,34 +10,15 @@ struct PostView: View {
 		HStack(alignment: .top) {
 			AvatarView(url: post.author.avatarURL)
 			VStack(alignment: .leading) {
-				HStack {
-					Group {
-						if let author = post.repostingAuthor {
-							Image(systemName: "arrow.2.squarepath")
-							Text(author.name)
-							
-						} else {
-							Text(post.author.name)
-						}
-					}.fontWeight(.bold)
-					Text(post.author.handle)
-				}
-				Text(.init(post.content ?? ""))
-					.padding(EdgeInsets(top: 4.0, leading: 2.0, bottom: 4.0, trailing: 1.0))
-				PostAttachmentView(attachments: post.attachments)
+				PostContentView(post: post)
 				PostStatusView(
 					source: post.source,
 					status: post.status,
 					actionHandler: actionHandler
 				)
+				.padding(EdgeInsets(top: 2.0, leading: 0.0, bottom: 0.0, trailing: 0.0))
 			}
-			.contextMenu {
-				if let url = post.url {
-					Button("Print Link") {
-						print(url)
-					}
-				}
-			}
+			.padding(EdgeInsets(top: 0.0, leading: 4.0, bottom: 0.0, trailing: 0.0))
 		}
 	}
 }

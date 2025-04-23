@@ -7,7 +7,7 @@
       "location" : "https://github.com/mattmassicotte/ATAT",
       "state" : {
         "branch" : "main",
-        "revision" : "00b1127f09b2ac793019692d608d24bca09cd1e5"
+        "revision" : "7bcb5858b756d5507d0bcbb3b6359ef7a21daa74"
       }
     },
     {
@@ -16,7 +16,7 @@
       "location" : "https://github.com/mattmassicotte/ATResolve",
       "state" : {
         "branch" : "main",
-        "revision" : "fcdf3d6fc4661833d363dab48f456d1120850fd4"
+        "revision" : "6d86cb8b2bfcdb4ed2560fd3c638c232d87cc7f4"
       }
     },
     {
@@ -25,7 +25,7 @@
       "location" : "https://github.com/mattmassicotte/Jot",
       "state" : {
         "branch" : "main",
-        "revision" : "3be366906ada1e5ce5efa7beccf0d19bd35bf7e1"
+        "revision" : "0826782b0489dc76249b5def7d69f38684e5cb7f"
       }
     },
     {
@@ -43,7 +43,7 @@
       "location" : "https://github.com/mattmassicotte/Reblog",
       "state" : {
         "branch" : "main",
-        "revision" : "a986f5ad52c28166a19c2b1e85f67cb6089da4b8"
+        "revision" : "18ba4aae842c21c7b4c30c65ae5d46d90a0f9bea"
       }
     },
     {
@@ -52,7 +52,7 @@
       "location" : "https://github.com/mattmassicotte/StableView",
       "state" : {
         "branch" : "main",
-        "revision" : "fe5f911fb00e7857a0429f25161680296b6d89b2"
+        "revision" : "ccb54c2e2afa9df65456b482a1b97d9dddfd36a7"
       }
     },
     {
