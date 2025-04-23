@@ -12,16 +12,12 @@ struct PostAttachmentView: View {
 				case let .images(collection):
 					HStack {
 						ForEach(collection, id: \.hashValue) { imageDetails in
-							LoadedImageView(url: imageDetails.preview?.url, placeholderName: "photo.fill")
-								.frame(idealWidth: 226, idealHeight: 226)
-								.border(Color.gray)
+							AttachmentImageView(url: imageDetails.preview?.url)
 						}
 					}
 				case let .link(link):
 					VStack {
-						LoadedImageView(url: link.preview?.url, placeholderName: "photo.fill")
-							.frame(idealWidth: 226, idealHeight: 226)
-							.border(Color.gray)
+						AttachmentImageView(url: link.preview?.url)
 						Text(link.title ?? "no title")
 					}
 				}
