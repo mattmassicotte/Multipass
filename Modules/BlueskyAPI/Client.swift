@@ -3,6 +3,7 @@ import ATAT
 
 enum ClientError: Error {
 	case malformedURL(URLComponents)
+	case unexpectedResponse(URLResponse)
 	case requestFailed
 	case invalidArguments
 }
@@ -27,6 +28,43 @@ public actor Client: Sendable {
 		components.host = host
 		
 		return components
+	}
+	
+	private func load<Success: Decodable>(
+		apiPath: String,
+		queryItems: [URLQueryItem] = [],
+		block: (inout URLRequest) -> Void = { _ in }
+	) async throws -> Success {
+		var components = baseComponents
+		
+		components.path = "/xrpc/\(apiPath)"
+		
+		components.queryItems = queryItems
+
+		guard let url = components.url else {
+			throw ClientError.malformedURL(components)
+		}
+
+		var request = URLRequest(url: url)
+		
+		request.setValue("application/json", forHTTPHeaderField: "Accept")
+		
+		block(&request)
+
+		let (data, response) = try await provider(request)
+		
+		guard
+			let httpResponse = response as? HTTPURLResponse,
+			httpResponse.statusCode >= 200 && httpResponse.statusCode < 300
+		else {
+			print("unexpected data:", String(decoding: data, as: UTF8.self))
+			print("response:", response)
+			
+			throw ClientError.unexpectedResponse(response)
+		}
+
+		
+		return try decoder.decode(Success.self, from: data)
 	}
 }
 
@@ -79,31 +117,40 @@ extension Client {
 		return try decoder.decode(CreateSessionResponse.self, from: data)
 	}
 	
-	public func timeline() async throws -> Bsky.Feed.GetFeedResponse {
-		var components = baseComponents
-		
-		components.path = "/xrpc/app.bsky.feed.getTimeline"
-		
-		guard let url = components.url else {
-			throw ClientError.malformedURL(components)
-		}
-
-		var request = URLRequest(url: url)
-		
-		request.httpMethod = "GET"
-		
-		let (data, response) = try await provider(request)
-		
-		guard
-			let httpResponse = response as? HTTPURLResponse,
-			httpResponse.statusCode >= 200 && httpResponse.statusCode < 300
-		else {
-			print("response:", response)
-			print(String(decoding: data, as: UTF8.self))
-			throw ClientError.requestFailed
-		}
-		
-		return try decoder.decode(Bsky.Feed.GetFeedResponse.self, from: data)
+	public func timeline(cursor: String?, limit: Int = 50) async throws -> Bsky.Feed.GetFeedResponse {
+		try await load(
+			apiPath: "app.bsky.feed.getTimeline",
+			queryItems: [
+				URLQueryItem(name: "cursor", value: cursor),
+				URLQueryItem(name: "limit", value: String(limit))
+			]
+		)
+//		
+//		load(apiPath: "app.bsky.feed.getTimeline")
+//		var components = baseComponents
+//		
+//		components.path = "/xrpc/app.bsky.feed.getTimeline"
+//		
+//		guard let url = components.url else {
+//			throw ClientError.malformedURL(components)
+//		}
+//
+//		var request = URLRequest(url: url)
+//		
+//		request.httpMethod = "GET"
+//		
+//		let (data, response) = try await provider(request)
+//		
+//		guard
+//			let httpResponse = response as? HTTPURLResponse,
+//			httpResponse.statusCode >= 200 && httpResponse.statusCode < 300
+//		else {
+//			print("response:", response)
+//			print(String(decoding: data, as: UTF8.self))
+//			throw ClientError.requestFailed
+//		}
+//		
+//		return try decoder.decode(Bsky.Feed.GetFeedResponse.self, from: data)
 	}
 	
 	public func likePost(cid: ATProtoCID, uri: ATProtoURI) async throws {

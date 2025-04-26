@@ -1,27 +1,32 @@
-import SwiftUI
-
 import CompositeSocialService
 import StableView
 import Storage
+import SwiftUI
 import UIUtility
 
 public struct FeedView: View {
 	@State private var model: FeedViewModel
-	@State private var scrollState: AnchoredListPosition<Post> = .absolute(0.0)
 	@Environment(UserAccountStore.self) private var accountStore
 	@Environment(\.openURL) private var openURL
-	
-	public init(secretStore: SecretStore) {
-		self._model = State(wrappedValue: FeedViewModel(secretStore: secretStore))
+	@State private var newPosition: ScrollPosition = .init(idType: Post.ID.self)
+
+	public init(secretStore: SecretStore, timelineStore: TimelineStore) {
+		self._model = State(
+			wrappedValue: FeedViewModel(
+				secretStore: secretStore,
+				timelineStore: timelineStore
+			)
+		)
 	}
-	
+
 	public var body: some View {
-		AnchoredList(items: model.posts, scrollState: $scrollState) { post, row in
-//		List(model.posts, id: \.self) { post in
+		Text("Items Above: \(model.aboveCount)")
+		AnchoredList(items: model.posts, position: $model.positionAnchor) { post, row in
+			//		List(model.posts, id: \.self) { post in
 			PostView(
 				post: post,
 				actionHandler: { action in
-					model.handlePostAction(action: action, post: post)	
+					model.handlePostAction(action: action, post: post)
 				}
 			)
 			.frame(maxWidth: .infinity, alignment: .leading)

@@ -3,6 +3,7 @@ import Foundation
 import MastodonAPI
 import OAuthenticator
 import Reblog
+import Storage
 
 public struct MastodonAccountDetails: Codable, Hashable, Sendable {
 	public let host: String
@@ -79,8 +80,14 @@ public struct MastodonService: SocialService {
 		}
 	}
 
-	public func timeline() async throws -> [Post] {
-		let statusArray = try await client.timeline()
+	public func timeline(from position: ServicePosition, newer: Bool) async throws -> [Post] {
+		// this is kind of mind-bending. Our position is defined as the current loaded window.
+		//
+		// If we want newer statuses, then we need to set our minimum to the current maximum.
+		let minId = newer ? position.mastodon : nil
+		let maxId = newer ? nil : position.mastodon
+		
+		let statusArray = try await client.timeline(minimumId: minId, maximumId: maxId)
 		let parser = ContentParser()
 		
 		return statusArray.compactMap { status -> Post? in
@@ -89,68 +96,7 @@ public struct MastodonService: SocialService {
 				return nil
 			}
 			
-			let content: String
-			
-			do {
-				let visibleContent = status.reblog?.content ?? status.content
-				
-				let components = try parser.parse(visibleContent)
-				
-				if case let .link(_, value) = components.first, value.hasPrefix("@") {
-					return nil
-				}
-				
-				content = parser.renderToString(components)
-			} catch {
-				print("failed to process:", status)
-				return nil
-			}
-			
-			let author = Author(
-				name: status.account.displayName,
-				handle: status.account.resolvedUsername(with: host),
-				avatarURL: URL(string: status.account.avatarStatic)
-			)
-			
-			let rebloggedAuthor = status.reblog.map {
-				Author(
-					name: $0.account.displayName,
-					handle: $0.account.resolvedUsername(with: host),
-					avatarURL: URL(string: $0.account.avatarStatic)
-				)
-			}
-			
-			let imageCollections = status.mediaAttachments.compactMap { mediaAttachment -> Attachment.Image? in
-				guard mediaAttachment.type == .image else { return nil }
-				guard let url = mediaAttachment.url else { return nil }
-				
-				return Attachment.Image(
-					preview: mediaAttachment.previewURL.flatMap { .init(url: $0, size: nil, focus: nil) },
-					full: .init(url: url, size: nil, focus: nil),
-					description: mediaAttachment.description
-				)
-			}
-			
-			let attachments = [
-				Attachment.images(imageCollections)
-			]
-			
-			return Post(
-				content: content,
-				source: .mastodon,
-				date: status.createdAt,
-				author: author,
-				repostingAuthor: rebloggedAuthor,
-				identifier: status.id,
-				url: URL(string: status.uri),
-				attachments: attachments,
-				status: PostStatus(
-					likeCount: status.favorites,
-					liked: status.favorited ?? false,
-					repostCount: status.reblogs,
-					reposted: status.reblogged ?? false
-				)
-			)
+			return Post(status, host: host, parser: parser)
 		}
 	}
 	

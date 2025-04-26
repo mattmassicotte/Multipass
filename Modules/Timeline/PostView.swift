@@ -5,11 +5,24 @@ import CompositeSocialService
 struct PostView: View {
 	let post: Post
 	let actionHandler: PostStatusView.ActionHandler
+	@State private var formatter: RelativeDateTimeFormatter = {
+		let formatter = RelativeDateTimeFormatter()
+		
+		formatter.dateTimeStyle = .named
+		formatter.unitsStyle = .abbreviated
+
+		return formatter
+	}()
 	
 	var body: some View {
 		HStack(alignment: .top) {
 			AvatarView(url: post.author.avatarURL)
 			VStack(alignment: .leading) {
+				HStack {
+					Text(post.repostingAuthor?.handle ?? post.author.handle)
+						.font(.caption)
+					Text(formatter.localizedString(for: post.date, relativeTo: .now))
+				}
 				PostContentView(post: post)
 				PostStatusView(
 					source: post.source,

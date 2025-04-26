@@ -1,6 +1,7 @@
 import Foundation
 
 import OAuthenticator
+import Storage
 
 extension SecretStore {
 	func loginStore(for key: String) -> LoginStorage {

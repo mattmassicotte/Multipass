@@ -1,29 +1,7 @@
 import Foundation
 import CoreGraphics
 
-public enum DataSource: String, Hashable, Sendable, Codable, CaseIterable {
-	case mastodon
-	case bluesky
-	
-	/// The symbol asset name
-	public var imageName: String {
-		switch self {
-		case .mastodon:
-			"mastodon.clean.fill"
-		case .bluesky:
-			"bluesky"
-		}
-	}
-}
-
-extension DataSource: CustomStringConvertible {
-	public var description: String {
-		switch self {
-		case .mastodon: "Mastodon"
-		case .bluesky: "Bluesky"
-		}
-	}
-}
+import Storage
 
 public struct Author: Hashable, Sendable {
 	public let name: String
@@ -104,6 +82,17 @@ public struct Post: Hashable, Sendable {
 	public let attachments: [Attachment]
 	public let status: PostStatus
 	
+	// service-specific things
+	public let blueskyCursor: String?
+	public var blueskyURI: String? { uri }
+	public var mastodonStatusId: String? {
+		guard source == .mastodon else {
+			return nil
+		}
+		
+		return identifier
+	}
+	
 	public init(
 		content: String?,
 		source: DataSource,
@@ -114,7 +103,8 @@ public struct Post: Hashable, Sendable {
 		url: URL?,
 		uri: String? = nil,
 		attachments: [Attachment],
-		status: PostStatus
+		status: PostStatus,
+		blueskyCursor: String? = nil
 	) {
 		self.content = content
 		self.source = source
@@ -126,6 +116,7 @@ public struct Post: Hashable, Sendable {
 		self.uri = uri
 		self.attachments = attachments
 		self.status = status
+		self.blueskyCursor = blueskyCursor
 	}
 	
 	public static let placeholder = Post(

@@ -5,3 +5,9 @@ extension UserDefaults {
 		UserDefaults(suiteName: MTPAppGroupIdentifier)
 	}
 }
+
+extension FileManager {
+	public var appGroupURL: URL? {
+		containerURL(forSecurityApplicationGroupIdentifier: MTPAppGroupIdentifier)
+	}
+}

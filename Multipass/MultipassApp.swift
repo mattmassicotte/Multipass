@@ -7,16 +7,14 @@ import UIUtility
 import Valet
 
 @MainActor
-@Observable
 final class AppState {
-	@ObservationIgnored
 	let secretStore = SecretStore.valetStore(using: Valet.mainApp())
-	
-	@ObservationIgnored
 	let accountStore: UserAccountStore
+	let timelineStore: TimelineStore
 	
 	init() {
 		self.accountStore = UserAccountStore(secretStore: secretStore)
+		self.timelineStore = TimelineStore()
 	}
 }
 
@@ -24,11 +22,11 @@ final class AppState {
 struct MultipassApp: App {
 	@State private var appState = AppState()
 	
-	
 	var body: some Scene {
 		WindowGroup {
 			MainAppView(appState: appState)
 				.environment(appState.accountStore)
+				.environment(appState.timelineStore)
 		}
 		.commands {
 			MenuCommands()

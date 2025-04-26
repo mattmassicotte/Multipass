@@ -1,6 +1,7 @@
 import SwiftUI
 
 import CompositeSocialService
+import Storage
 
 @MainActor
 struct LikeAction {

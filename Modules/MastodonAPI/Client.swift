@@ -38,11 +38,14 @@ public struct Client: Sendable {
 	
 	private func load<Success: Decodable>(
 		apiPath: String,
+		queryItems: [URLQueryItem] = [],
 		block: (inout URLRequest) -> Void = { _ in }
 	) async throws -> Success {
 		var components = baseComponents
 		
 		components.path = "/api/v1/\(apiPath)"
+		
+		components.queryItems = queryItems
 
 		guard let url = components.url else {
 			throw ClientError.malformedURL(components)
@@ -91,8 +94,15 @@ extension Client {
 		return try decoder.decode(MarkerResponse.self, from: data)
 	}
 	
-	public func timeline() async throws -> [Status] {
-		try await load(apiPath: "timelines/home")
+	public func timeline(minimumId: String? = nil, maximumId: String? = nil, limit: Int = 20) async throws -> [Status] {
+		try await load(
+			apiPath: "timelines/home",
+			queryItems: [
+				URLQueryItem(name: "min_id", value: minimumId),
+				URLQueryItem(name: "max_id", value: maximumId),
+				URLQueryItem(name: "limit", value: String(limit)),
+			]
+		)
 	}
 	
 	public func likePost(_ id: String) async throws -> Status {

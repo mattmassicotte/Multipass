@@ -1,6 +1,4 @@
-import SwiftUI
-
-import CompositeSocialService 
+import SwiftUI 
 
 /// This might need to be further customized at some point
 public struct UserAccountDetails: Codable, Hashable, Sendable {

@@ -1,5 +1,5 @@
 {
-  "originHash" : "cb17216ed94c9c6a8dffbb820ff2fd21827c1af913397922573acfc3088fcc98",
+  "originHash" : "da0e5ba9af648a46b69074f1b4d6471fe5fa47f726c93b4ee1b4a9c3cfe114cb",
   "pins" : [
     {
       "identity" : "atat",
@@ -17,6 +17,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "6d86cb8b2bfcdb4ed2560fd3c638c232d87cc7f4"
+      }
+    },
+    {
+      "identity" : "empire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattmassicotte/Empire",
+      "state" : {
+        "branch" : "main",
+        "revision" : "fe65f335e4afab72172ed8c3c5436a55f54667ac"
       }
     },
     {
@@ -43,16 +52,7 @@
       "location" : "https://github.com/mattmassicotte/Reblog",
       "state" : {
         "branch" : "main",
-        "revision" : "18ba4aae842c21c7b4c30c65ae5d46d90a0f9bea"
-      }
-    },
-    {
-      "identity" : "stableview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/mattmassicotte/StableView",
-      "state" : {
-        "branch" : "main",
-        "revision" : "ccb54c2e2afa9df65456b482a1b97d9dddfd36a7"
+        "revision" : "2840bc217873068b4c9da891dc6ceec122ad6e37"
       }
     },
     {
@@ -62,6 +62,15 @@
       "state" : {
         "revision" : "08c07ff31a745ee5e522ac10132fb4949834d925",
         "version" : "0.4.0"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
+      "state" : {
+        "revision" : "f99ae8aa18f0cf0d53481901f88a0991dc3bd4a2",
+        "version" : "601.0.1"
       }
     },
     {

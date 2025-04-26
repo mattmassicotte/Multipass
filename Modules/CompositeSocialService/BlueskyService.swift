@@ -4,6 +4,7 @@ import Foundation
 import ATResolve
 import BlueskyAPI
 import OAuthenticator
+import Storage
 
 public struct BlueskyAccountDetails: Codable, Hashable, Sendable {
 	/// This is the user's PDS
@@ -112,8 +113,9 @@ public actor BlueskyService: SocialService {
 		}
 	}
 	
-	public func timeline() async throws -> [Post] {
-		let response = try await client.timeline()
+	public func timeline(from position: ServicePosition, newer: Bool) async throws -> [Post] {
+		assert(newer == true, "older isn't supported yet")
+		let response = try await client.timeline(cursor: position.bluesky)
 
 		return response.feed.compactMap { entry in
 			if entry.reply != nil {

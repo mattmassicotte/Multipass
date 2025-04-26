@@ -10,7 +10,10 @@ struct MainAppView: View {
 #if os(macOS)
 	var body: some View {
 		VStack {
-			FeedView(secretStore: appState.secretStore)
+			FeedView(
+				secretStore: appState.secretStore,
+				timelineStore: appState.timelineStore
+			)
 		}
 		.padding()
 	}
@@ -18,7 +21,10 @@ struct MainAppView: View {
 	var body: some View {
 		NavigationStack {
 			VStack {
-				FeedView(secretStore: appState.secretStore)
+				FeedView(
+					secretStore: appState.secretStore,
+					timelineStore: appState.timelineStore
+				)
 			}
 			.toolbar {
 				Button {

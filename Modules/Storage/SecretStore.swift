@@ -1,7 +1,5 @@
 import Foundation
 
-import OAuthenticator
-
 public struct SecretStore: Sendable {
 	public typealias ReadSecret = @Sendable (String) async throws -> Data?
 	public typealias WriteSecret = @Sendable (Data, String) async throws -> Void
@@ -13,8 +11,4 @@ public struct SecretStore: Sendable {
 		self.read = read
 		self.write = write
 	}
-
-//	public func readOrCreate(key: String, default: () throws -> Data) throws -> Data {
-//
-//	}
 }
