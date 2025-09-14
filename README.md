@@ -32,6 +32,7 @@ A number of subprojects have either been pulled out of this app or influenced by
 
 - [ATAT](https://github.com/mattmassicotte/ATAT): Little library for working with the AT Protocol
 - [ATResolve](https://github.com/mattmassicotte/ATResolve): AT Protocol PLC Resolver
+- [Empire](https://github.com/mattmassicotte/Empire): A sorted-key index persistence system
 - [Jot](https://github.com/mattmassicotte/Jot): Very simple JWT/JWK library for Swift
 - [OAuthenticator](https://github.com/ChimeHQ/OAuthenticator): OAuth 2.0 request authentication
 - [StableView](https://github.com/mattmassicotte/StableView): A TableView implementation that can preserve position for iOS and macOS
@@ -43,7 +44,9 @@ This project uses symbols from [social-symbols](https://github.com/jeremieb/soci
 
 ## Contributing and Collaboration
 
-I would love to hear from you! Issues or pull requests work great. Both a [Matrix space][matrix] and [Discord][discord] are available for live help, but I have a strong bias towards answering in the form of documentation. You can also find me [here](https://www.massicotte.org/about).
+I would love to hear from you! Issues or pull requests work great. Both a [Matrix space][matrix] and [Discord][discord] are also available. You can also find me [here](https://www.massicotte.org/about).
+
+It is always a good idea to discuss before taking on a significant task. That said, I have a strong bias towards enthusiasm. If you are excited about doing something, I'll do my best to get out of your way.
 
 I prefer collaboration, and would love to find ways to work together if you have a similar project.
 
