@@ -1213,33 +1213,17 @@
 		};
 		C95FC5992CE50FF40093AB32 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = C95FC5B42CE5399C0093AB32 /* Configurations */;
+			baseConfigurationReferenceRelativePath = Tests.xcconfig;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Multipass.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Multipass";
 			};
 			name = Debug;
 		};
 		C95FC59A2CE50FF40093AB32 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = C95FC5B42CE5399C0093AB32 /* Configurations */;
+			baseConfigurationReferenceRelativePath = Tests.xcconfig;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Multipass.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Multipass";
 			};
 			name = Release;
 		};
