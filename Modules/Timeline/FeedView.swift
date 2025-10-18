@@ -43,17 +43,9 @@ public struct FeedView: View {
 		.onChange(of: accountStore.accounts, initial: true, { _, newValue in
 			model.updateAccounts(newValue)
 		})
-#if os(macOS)
-		.focusedSceneValue(\.refreshAction) {
-			Task {
-				await model.refresh()
-			}
-		}
-#else
-		.refreshable {
+		.menuRefreshable {
 			await model.refresh()
 		}
-#endif
 		.task(id: model.accountsIdentifier) {
 			await model.refresh()
 		}
