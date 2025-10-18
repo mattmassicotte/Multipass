@@ -125,32 +125,6 @@ extension Client {
 				URLQueryItem(name: "limit", value: String(limit))
 			]
 		)
-//		
-//		load(apiPath: "app.bsky.feed.getTimeline")
-//		var components = baseComponents
-//		
-//		components.path = "/xrpc/app.bsky.feed.getTimeline"
-//		
-//		guard let url = components.url else {
-//			throw ClientError.malformedURL(components)
-//		}
-//
-//		var request = URLRequest(url: url)
-//		
-//		request.httpMethod = "GET"
-//		
-//		let (data, response) = try await provider(request)
-//		
-//		guard
-//			let httpResponse = response as? HTTPURLResponse,
-//			httpResponse.statusCode >= 200 && httpResponse.statusCode < 300
-//		else {
-//			print("response:", response)
-//			print(String(decoding: data, as: UTF8.self))
-//			throw ClientError.requestFailed
-//		}
-//		
-//		return try decoder.decode(Bsky.Feed.GetFeedResponse.self, from: data)
 	}
 	
 	public func likePost(cid: ATProtoCID, uri: ATProtoURI) async throws {
