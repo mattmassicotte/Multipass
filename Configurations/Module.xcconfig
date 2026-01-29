@@ -4,4 +4,4 @@ PRODUCT_NAME = $(TARGET_NAME)
 SKIP_INSTALL = YES
 
 // this is an absurd workaround required because Empire depends on a c library internally
-OTHER_SWIFT_FLAGS = $(inherited) -Xcc -fmodule-map-file=$(GENERATED_MODULEMAP_DIR)/clmdb.modulemap
+OTHER_SWIFT_FLAGS = $(inherited) -Xcc -fmodule-map-file=$(GENERATED_MODULEMAP_DIR)/clmdb.modulemap -enable-upcoming-feature NonisolatedNonsendingByDefault

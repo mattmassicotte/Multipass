@@ -17,11 +17,20 @@ enum BlueskyServiceError: Error {
 	case uriMissing
 }
 
-public actor BlueskyService: SocialService {
+struct ClientParams {
+	let provider: URLResponseProvider
+	let authServer: String
+	let pds: String?
+	let account: String
+	let secretStore: SecretStore
+}
+
+public class BlueskyService {
 	private static let dpopKey = "Bluesky DPoP Key"
 	public static let clientMetadataEndpoint = "https://downloads.chimehq.com/com.chimehq.Multipass/client-metadata.json"
 
-	let clientTask: Task<BlueskyAPI.Client, any Error>
+	private var clientResult: Result<BlueskyAPI.Client, any Error>?
+	let clientParams: ClientParams
 
 	public init(
 		with provider: @escaping URLResponseProvider,
@@ -30,40 +39,7 @@ public actor BlueskyService: SocialService {
 		account: String,
 		secretStore: SecretStore
 	) {
-		self.clientTask = Task<BlueskyAPI.Client, any Error> {
-			let loginStore = secretStore.loginStore(for: "Bluesky OAuth")
-
-			let key = try await Self.loadDPoPKey(with: secretStore)
-
-			// these three steps should be done on account creation
-			let clientConfig = try await ClientMetadata.load(for: Self.clientMetadataEndpoint, provider: provider)
-			let serverConfig = try await ServerMetadata.load(for: authServer, provider: provider)
-
-			// this is necessary because ?? doesn't work with async calls appearently?
-			let resolvedPDS: String
-			
-			if let pds {
-				resolvedPDS = pds
-			} else {
-				resolvedPDS = try await Self.resolve(handle: account)
-			}
-
-			let tokenHandling = Bluesky.tokenHandling(
-				account: account,
-				server: serverConfig,
-				jwtGenerator: DPoPSigner.JSONWebTokenGenerator(dpopKey: key)
-			)
-
-			let config = Authenticator.Configuration(
-				appCredentials: clientConfig.credentials,
-				loginStorage: loginStore,
-				tokenHandling: tokenHandling
-			)
-
-			let authenticator = Authenticator(config: config)
-
-			return BlueskyAPI.Client(host: resolvedPDS, account: account, provider: authenticator.responseProvider)
-		}
+		self.clientParams = ClientParams(provider: provider, authServer: authServer, pds: pds, account: account, secretStore: secretStore)
 	}
 
 	private static func resolve(handle: String) async throws -> String {
@@ -89,6 +65,41 @@ public actor BlueskyService: SocialService {
 		return host
 	}
 
+	private static func createClient(with params: ClientParams) async throws -> BlueskyAPI.Client {
+		let loginStore = params.secretStore.loginStore(for: "Bluesky OAuth")
+
+		let key = try await Self.loadDPoPKey(with: params.secretStore)
+
+		// these three steps should be done on account creation
+		let clientConfig = try await ClientMetadata.load(for: Self.clientMetadataEndpoint, provider: params.provider)
+		let serverConfig = try await ServerMetadata.load(for: params.authServer, provider: params.provider)
+
+		// this is necessary because ?? doesn't work with async calls appearently?
+		let resolvedPDS: String
+
+		if let pds = params.pds {
+			resolvedPDS = pds
+		} else {
+			resolvedPDS = try await Self.resolve(handle: params.account)
+		}
+
+		let tokenHandling = Bluesky.tokenHandling(
+			account: params.account,
+			server: serverConfig,
+			jwtGenerator: DPoPSigner.JSONWebTokenGenerator(dpopKey: key)
+		)
+
+		let config = Authenticator.Configuration(
+			appCredentials: clientConfig.credentials,
+			loginStorage: loginStore,
+			tokenHandling: tokenHandling
+		)
+
+		let authenticator = Authenticator(config: config)
+
+		return BlueskyAPI.Client(host: resolvedPDS, account: params.account, provider: authenticator.responseProvider)
+	}
+
 	private static func loadDPoPKey(with store: SecretStore) async throws -> DPoPKey {
 		do {
 			if let data = try await store.read(Self.dpopKey) {
@@ -109,7 +120,11 @@ public actor BlueskyService: SocialService {
 
 	private var client: BlueskyAPI.Client {
 		get async throws {
-			try await clientTask.value
+			if let result = clientResult {
+				return try result.get()
+			}
+
+			return try await Self.createClient(with: clientParams)
 		}
 	}
 	
@@ -125,16 +140,62 @@ public actor BlueskyService: SocialService {
 			return Post(entry)
 		}
 	}
-	
+}
+
+extension BlueskyService: SocialService {
+	public var id: String {
+		clientParams.account
+	}
+
+	public func timeline(within range: Range<Date>, isolation: isolated (any Actor)) -> some AsyncSequence<[Post], any Error> {
+		AsyncThrowingStream { continuation in
+			Task {
+				_ = isolation
+
+				var cursor: String? = nil
+
+				while true {
+					do {
+						let response = try await client.timeline(cursor: cursor)
+
+						guard let last = response.feed.last else { break }
+
+						cursor = response.cursor
+
+						// very inefficient, but have to keep going until we find our starting point
+						if last.post.date > range.upperBound {
+							continue
+						}
+
+						let posts: [Post] = response.feed
+							.filter { range.contains($0.post.date) }
+							.map { Post($0) }
+
+						continuation.yield(posts)
+
+						if last.post.date > range.lowerBound {
+							break
+						}
+					} catch {
+						continuation.finish(throwing: error)
+						break
+					}
+				}
+
+				continuation.finish()
+			}
+		}
+	}
+
 	public func likePost(_ post: Post) async throws {
 		if post.source != .bluesky {
 			return
 		}
-		
+
 		guard let uri = post.uri else {
 			throw BlueskyServiceError.uriMissing
 		}
-		
+
 		_ = try await client.likePost(cid: post.identifier, uri: uri)
 	}
 }

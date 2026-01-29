@@ -8,7 +8,7 @@ enum ClientError: Error {
 	case invalidArguments
 }
 
-public actor Client: Sendable {
+public struct Client: Sendable {
 	public typealias ResponseProvider = @Sendable (URLRequest) async throws -> (Data, URLResponse)
 	
 	private let provider: ResponseProvider
