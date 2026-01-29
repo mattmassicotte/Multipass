@@ -4,13 +4,23 @@ import ATAT
 
 extension Post {
 	init(_ feedViewPost: Bsky.Feed.FeedViewPost) {
+		let repostAuthor = feedViewPost.reasonRepost.flatMap { Author($0.by) }
+
+		let identfifier: String
+
+		if let handle = repostAuthor?.handle {
+			identfifier = feedViewPost.post.cid + "/\(handle)"
+		} else {
+			identfifier = feedViewPost.post.cid
+		}
+
 		self.init(
 			content: feedViewPost.text,
 			source: .bluesky,
-			date: feedViewPost.post.date,
+			date: feedViewPost.reasonRepost?.indexedAt ??  feedViewPost.post.date,
 			author: Author(feedViewPost.post.author),
-			repostingAuthor: feedViewPost.reasonRepost.flatMap { Author($0.by) },
-			identifier: feedViewPost.post.cid,
+			repostingAuthor: repostAuthor,
+			identifier: identfifier,
 			url: feedViewPost.post.url,
 			uri: feedViewPost.post.uri,
 			attachments: [],

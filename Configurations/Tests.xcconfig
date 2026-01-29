@@ -1,0 +1,6 @@
+SDKROOT = auto
+
+BUNDLE_LOADER = $(TEST_HOST)
+GENERATE_INFOPLIST_FILE = YES
+TEST_HOST = $(BUILT_PRODUCTS_DIR)/Multipass.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Multipass
+OTHER_SWIFT_FLAGS = $(inherited) -enable-upcoming-feature NonisolatedNonsendingByDefault

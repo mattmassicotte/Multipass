@@ -10,7 +10,7 @@ public struct MastodonAccountDetails: Codable, Hashable, Sendable {
 	public let account: String
 }
 
-public struct MastodonService: SocialService {
+public struct MastodonService {
 	private static let appRegistrationKey = "Mastodon App Registration"
 
 	let clientTask: Task<MastodonAPI.Client, any Error>
@@ -100,11 +100,61 @@ public struct MastodonService: SocialService {
 		}
 	}
 	
+
+}
+
+extension MastodonService: SocialService {
+	public var id: String {
+		// this is insufficient
+		host
+	}
+
+	public func timeline(within range: Range<Date>, isolation: isolated (any Actor)) -> some AsyncSequence<[Post], any Error> {
+		AsyncThrowingStream { [host] continuation in
+			Task {
+				_ = isolation
+				let parser = ContentParser()
+
+				var maxId: String? = nil
+
+				while true {
+					do {
+						let statuses = try await client.timeline(minimumId: nil, maximumId: maxId)
+
+						guard let last = statuses.last else { break }
+
+						maxId = last.id
+
+						// very inefficient, but have to keep going until we find our starting point
+						if last.createdAt > range.upperBound {
+							continue
+						}
+
+						let posts: [Post] = statuses
+							.filter { range.contains($0.createdAt) }
+							.compactMap { Post($0, host: host, parser: parser) }
+
+						continuation.yield(posts)
+
+						if last.createdAt > range.lowerBound {
+							break
+						}
+					} catch {
+						continuation.finish(throwing: error)
+						break
+					}
+				}
+
+				continuation.finish()
+			}
+		}
+	}
+
 	public func likePost(_ post: Post) async throws {
 		if post.source != .mastodon {
 			return
 		}
-		
+
 		_ = try await client.likePost(post.identifier)
 	}
 }

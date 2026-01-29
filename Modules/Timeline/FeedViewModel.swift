@@ -7,10 +7,6 @@ import StableView
 @MainActor
 @Observable
 final class FeedViewModel {
-	@ObservationIgnored
-	private var client: CompositeClient
-	@ObservationIgnored
-	private var services: [any SocialService] = []
 	// this is needed to workaround a bug in Xcode 16.3, but my assumption is it will be resolved shortly.
 	#if targetEnvironment(simulator)
 	@ObservationIgnored
@@ -24,29 +20,26 @@ final class FeedViewModel {
 	@ObservationIgnored
 	private let timelineStore: TimelineStore
 
+	@ObservationIgnored
+	private var timelineModel: TimelineModel
+
 	private(set) var accountsIdentifier: Int
 	var positionAnchor: AnchoredListPosition<Post>? {
 		didSet {
 			if let pos = positionAnchor {
-//				let handle = (pos.item.repostingAuthor ?? pos.item.author)?.handle
-//				
-//				print("position:", handle, pos.offset)
 				updateServicePosition(for: pos.item)
 			}
 		}
 	}
 	
-	private(set) var posts: [Post] = []
+	public var timelime = CompositeTimeline()
 
 	init(secretStore: SecretStore, timelineStore: TimelineStore) {
 		self.secretStore = secretStore
 		self.timelineStore = timelineStore
-		self.client = CompositeClient(
-			secretStore: secretStore,
-			services: []
-		)
 		
 		self.accountsIdentifier = 0
+		self.timelineModel = TimelineModel(services: [])
 	}
 	
 	var servicePosition: ServicePosition? {
@@ -70,54 +63,18 @@ final class FeedViewModel {
 	}
 	
 	var aboveCount: Int {
-		guard
-			let pos = positionAnchor,
-			let idx = posts.firstIndex(of: pos.item)
-		else {
-			return -1
-		}
-		
-		return idx
+		0
 	}
 	
 	func refresh() async {
-		if client.services.isEmpty {
-			return
-		}
-		
-		let position = servicePosition ?? .unknown
-		print("refreshing from:", position)
-		
-		do {
-			let newPosts = try await client.timeline(from: position, newer: true)
-			
-			mergeNewPosts(newPosts)
-		} catch {
-			print("dammm", error)
+		let now = Date.now
+		let range = now.addingTimeInterval(-60*60*2)..<now
+
+		await timelineModel.fill(gap: range) { idx, state in
+			print("fill state: \(idx), \(state)")
 		}
 	}
-	
-	private func mergeNewPosts(_ newPosts: [Post]) {
-		var currentPosts = posts
-		
-		// filter out duplicates
-		let currentIds = Set(currentPosts.map { $0.id })
-		let newPosts = newPosts.filter({ currentIds.contains($0.id) == false })
-		
-		let currentCount = currentPosts.count
-		let removeCount = (currentCount + newPosts.count) - timelineStore.maximumPosts
-		
-		
-		if removeCount > 0 {
-			currentPosts.removeLast(min(removeCount, currentCount))
-		}
-		
-		currentPosts.append(contentsOf: newPosts)
-		currentPosts.sort(by: { $0 > $1 })
-		
-		self.posts = currentPosts
-	}
-	
+
 	func updateAccounts(_ accounts: [UserAccount]) {
 		let services = accounts
 			.map { (account) -> any SocialService in
@@ -137,20 +94,15 @@ final class FeedViewModel {
 					)
 				}
 			}
-		
-		self.client = CompositeClient(secretStore: secretStore, services: services)
-		self.accountsIdentifier = accounts.hashValue
+
+		self.timelineModel = TimelineModel(services: services)
+
+		timelineModel.timelineHandler = {
+			self.timelime = $0
+		}
 	}
 	
 	func handlePostAction(action: PostStatusAction, post: Post) {
-		switch action {
-		case .like:
-			Task {
-				try! await self.client.likePost(post)
-			}
-		case .repost:
-			print("nope, not yet")
-		}
-		
+		fatalError()
 	}
 }
