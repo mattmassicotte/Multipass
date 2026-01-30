@@ -82,5 +82,6 @@ struct AccountSettingsView: View {
 }
 
 #Preview {
-	AccountSettingsView()
+	Text("Account Settings View")
+//	AccountSettingsView()
 }

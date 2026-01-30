@@ -1,7 +1,6 @@
-import SwiftUI
+import Foundation
 
 import Empire
-import Utility
 
 @IndexKeyRecord("singleKey")
 public struct ServicePosition: Hashable, Sendable {

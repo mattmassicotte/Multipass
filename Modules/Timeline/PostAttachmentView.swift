@@ -25,3 +25,7 @@ struct PostAttachmentView: View {
 		}
 	}
 }
+
+#Preview {
+	PostAttachmentView(attachments: [])
+}

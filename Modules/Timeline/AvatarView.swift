@@ -17,5 +17,5 @@ struct AvatarView: View {
 }
 
 #Preview {
-	AvatarView(url: nil)
+	AvatarView(url: URL(string: "https://robohash.org/abc.png")!)
 }

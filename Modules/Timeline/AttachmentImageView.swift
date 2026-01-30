@@ -9,3 +9,7 @@ struct AttachmentImageView: View {
 			.border(Color.gray)
 	}
 }
+
+#Preview {
+	AttachmentImageView(url: URL(string: "https://picsum.photos/300/200")!)
+}

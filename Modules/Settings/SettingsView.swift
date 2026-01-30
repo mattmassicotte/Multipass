@@ -23,5 +23,11 @@ public struct SettingsView: View {
 }
 
 #Preview {
-	SettingsView()
+	Text("Settings View")
+	
+	/// Unable to preview Settings view as the environment requires code from the Multipass app level
+//	@Previewable @State var accountStore = UserAccountStore(secretStore: SecretStore.valetStore(using: Valet.mainApp()))
+//	
+//	SettingsView()
+//		.environment(appState.accountStore)
 }
