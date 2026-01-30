@@ -44,3 +44,11 @@ struct MainAppView: View {
 	}
 #endif
 }
+
+#Preview {
+	@Previewable @State var appState = AppState()
+	
+	MainAppView(appState: appState)
+		.environment(appState.accountStore)
+		.environment(appState.timelineStore)
+}

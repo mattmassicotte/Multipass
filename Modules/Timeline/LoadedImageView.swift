@@ -21,5 +21,5 @@ struct LoadedImageView: View {
 }
 
 #Preview {
-    LoadedImageView(url: URL(string: "https://robohash.org/abc.png")!)
+    LoadedImageView(url: URL(string: "https://picsum.photos/300/200")!)
 }

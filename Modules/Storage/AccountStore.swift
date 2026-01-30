@@ -1,4 +1,4 @@
-import SwiftUI
+import Foundation
 
 public struct ServiceAccount: Sendable {
 	public let source: DataSource

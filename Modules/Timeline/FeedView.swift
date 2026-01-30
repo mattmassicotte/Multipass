@@ -61,3 +61,7 @@ public struct FeedView: View {
 		}
 	}
 }
+
+#Preview {
+	Text("Feed View")
+}

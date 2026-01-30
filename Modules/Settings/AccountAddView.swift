@@ -61,5 +61,6 @@ struct AccountAddView: View {
 }
 
 #Preview {
-	AccountAddView(source: .mastodon)
+	Text("Account Add View")
+//	AccountAddView(source: .mastodon)
 }
