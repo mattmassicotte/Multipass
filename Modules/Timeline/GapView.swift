@@ -7,55 +7,11 @@
 
 import SwiftUI
 
-struct Gap {
-	/// Unique ID created when gap is initialized
-	let id: UUID
-	/// A date range that defines the bounds of this gap
-	var range: Range<Date>
-	/// Loading status of the posts in this gap.
-	var loadingStatus: LoadingStatus
-	/// Read/Unread status of posts in this gap
-	var readStatus: ReadStatus
-	
-	enum LoadingStatus {
-		case unloaded
-		case loading(unloaded: Range<Date>, isPaused: Bool, error: Error?)
-		case loaded
-	}
-	
-	enum ReadStatus {
-		case unknown
-		case unread
-		case read
-		case mixed
-	}
-	
-	enum OpeningDirection {
-		/// Opening direction that locks to the oldest post so the user can read posts chronologically
-		case oldestFirst
-		/// Opening direction that locks to the newest post so the user can read posts chronologically
-		case newestFirst
-	}
-}
-
-extension Gap {
-	static func example(
-		id: UUID = UUID(),
-		range: Range<Date>,
-		loadingStatus: LoadingStatus = .loaded,
-		readStatus: ReadStatus = .unknown
-	) -> Self {
-		.init(
-			id: id,
-			range: range,
-			loadingStatus: loadingStatus,
-			readStatus: readStatus
-		)
-	}
-}
-
 struct GapView: View {
-	@Binding var gap: Gap
+	let gap: Gap
+	
+	let updateLoadingStatus: (Gap.LoadingStatus) -> Void
+	let onRemove: () -> Void
 	
 	var duration: String? {
 		let componentsFormatter = DateComponentsFormatter()
@@ -64,6 +20,40 @@ struct GapView: View {
 		componentsFormatter.maximumUnitCount = 2
 
 		return componentsFormatter.string(from: gap.range.lowerBound, to: gap.range.upperBound)
+	}
+	
+	func testLoadingButton() -> some View {
+		Button {
+			switch gap.loadingStatus {
+			case .unloaded:
+				updateLoadingStatus(.loading)
+			case .loading:
+				updateLoadingStatus(.paused)
+			case .paused:
+				updateLoadingStatus(.loading)
+			case .error:
+				updateLoadingStatus(.loading)
+			case .loaded:
+				onRemove()
+			}
+		} label: {
+			switch gap.loadingStatus {
+			case .unloaded:
+				Label("Download", systemImage: "arrow.trianglehead.clockwise.icloud")
+			case .loading:
+				ProgressView()
+			case .paused:
+				Label("Download", systemImage: "pause")
+			case .error:
+				Label("Restart", systemImage: "exclamationmark.triangle")
+			case .loaded:
+				Label {
+					Text("Show Posts")
+				} icon: {
+					Image(systemName: "arrow.down")
+				}
+			}
+		}
 	}
 	
 	func loadingButton(direction: Gap.OpeningDirection) -> some View {
@@ -142,6 +132,8 @@ struct GapView: View {
 					Image(systemName: "arrow.trianglehead.clockwise.icloud")
 				case .loading:
 					ProgressView()
+				case .paused:
+					Image(systemName: "pause")
 				case .loaded:
 					switch direction {
 					case .oldestFirst:
@@ -149,49 +141,84 @@ struct GapView: View {
 					case .newestFirst:
 						Image(systemName: "arrow.down")
 					}
+				case .error:
+					Image(systemName: "exclamationmark.triangle")
 				}
 			}
 		} primaryAction: {
 			switch gap.loadingStatus {
 			case .unloaded:
-				gap.loadingStatus = .loading(unloaded: gap.range, isPaused: false, error: nil)
+				updateLoadingStatus(.loading)
 			case .loading:
-				gap.loadingStatus = .loaded
+				updateLoadingStatus(.paused)
+			case .paused:
+				updateLoadingStatus(.loading)
+			case .error:
+				updateLoadingStatus(.loading)
 			case .loaded:
-				gap.loadingStatus = .unloaded
+				onRemove()
 			}
 		}
 		.menuOrder(.fixed)
 	}
 	
+	func rangeView(_ range: Range<Date>, label: String = "Range") -> some View {
+		Text("\(label): \(range.lowerBound, format: .dateTime.hour().minute().second()) - \(range.upperBound, format: .dateTime.hour().minute().second())")
+	}
+	
     var body: some View {
-		HStack {
-			loadingButton(direction: .newestFirst)
-				.frame(maxHeight: .infinity, alignment: .top)
-		
-			HStack {
-				if let duration {
-					Text("Gap: \(duration)")
+		VStack {
+			if let duration {
+				Text("Gap: \(duration)")
+				Text(gap.loadingStatus.rawValue)
+				rangeView(gap.range)
+				if let concealedRange = gap.concealedRange {
+					rangeView(concealedRange, label: "Concealed")
 				}
 			}
-			.frame(maxWidth: .infinity)
-			
-			loadingButton(direction: .oldestFirst)
-				.frame(maxHeight: .infinity, alignment: .bottom)
+			ForEach(gap.serviceIDs.sorted(), id: \.self) { serviceID in
+				Text("\(serviceID)")
+					.font(.headline)
+				if let gapLoadedRange = gap.loadedRanges[serviceID] {
+					ForEach(gapLoadedRange, id: \.self) { range in
+						rangeView(range)
+					}
+				} else {
+					Text("Empty")
+				}
+				
+			}
+		}
+		.frame(maxWidth: .infinity)
+		.padding(.horizontal)
+//		.overlay(alignment: .topLeading) {
+//			loadingButton(direction: .newestFirst)
+//		}
+		.overlay(alignment: .bottomTrailing) {
+			testLoadingButton()
+//			loadingButton(direction: .oldestFirst)
 		}
 		.accentColor(.pink)
-		.padding(.horizontal)
-		.frame(maxWidth: .infinity, maxHeight: 60)
 		.background(Color.gray)
     }
 }
 
 #Preview {
-	@Previewable @State var gap: Gap = .example(range: Date()..<Date().addingTimeInterval(10000))
+	@Previewable @State var gap: Gap? = .example(range: Date()..<Date().addingTimeInterval(10000))
 	
 	VStack(alignment: .leading) {
 		PostView(post: .placeholder) { _ in }
-		GapView(gap: $gap)
+		if let thisGap = gap {
+			GapView(gap: .example(range: Date()..<Date().addingTimeInterval(10000))) {
+				gap?.loadingStatus = $0
+			} onRemove: {
+				gap = nil
+			}
+		} else {
+			Button("Add gap") {
+				gap = .example(range: Date()..<Date().addingTimeInterval(10000))
+			}
+		}
 		PostView(post: .placeholder) { _ in }
 	}
 }

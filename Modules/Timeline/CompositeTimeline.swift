@@ -4,153 +4,182 @@ import CompositeSocialService
 import Algorithms
 
 public struct CompositeTimeline: Hashable, Sendable {
-	public typealias GapIdProvider = (String, Range<Date>) -> UUID
-
-	public struct GapContext: Hashable, Sendable {
-		public var serviceGaps: [String: Range<Date>]
-
-		public init(_ serviceGaps: [String : Range<Date>]) {
-			self.serviceGaps = serviceGaps
-		}
-
-		public init(name: String, range: Range<Date>) {
-			self.serviceGaps = [name: range]
-		}
-
-		public var maximumDate: Date {
-			var date = Date.distantPast
-
-			for range in serviceGaps.values {
-				date = max(range.upperBound, date)
-			}
-
-			return date
-		}
-
-		public mutating func merge(_ other: Self) {
-			self.serviceGaps.merge(other.serviceGaps) { rangeA, rangeB in
-				let lower = min(rangeA.lowerBound, rangeB.lowerBound)
-				let upper = max(rangeA.upperBound, rangeB.upperBound)
-
-				return lower..<upper
-			}
-		}
-	}
-
 	public enum Element: Hashable, Sendable, Comparable {
 		case post(Post)
-		case gap(UUID, GapContext)
-
-		var date: Date {
+		case gap(Gap)
+		
+		/// Value used when sorting. Items must always sort the same way so multiple values are used to ensure order never flip flops if two share the same date.
+		var sortValue: (upperBound: Date, lowerBound: Date, id: String) {
 			switch self {
 			case .post(let post):
-				post.date
-			case .gap(_, let context):
-				context.maximumDate
+				(
+					upperBound: post.date,
+					lowerBound: post.date,
+					id: post.id
+				)
+			case .gap(let gap):
+				(
+					upperBound: gap.range.upperBound,
+					lowerBound: gap.range.lowerBound,
+					id: gap.id.uuidString
+				)
 			}
 		}
-
-		public static func < (lhs: CompositeTimeline.Element, rhs: CompositeTimeline.Element) -> Bool {
-			lhs.date < rhs.date
-		}
-
-		public static func gap(_ id: UUID, _ gaps: [String: Range<Date>]) -> Self {
-			let context = GapContext(gaps)
-
-			return .gap(id, context)
+		
+		public static func < (lhs: Self, rhs: Self) -> Bool {
+			/// Sorting by newest date first.
+			lhs.sortValue < rhs.sortValue
 		}
 	}
+	
+	public var serviceIDs: Set<SocialServiceID>
+	
+	/// Posts sorted from newest to oldest
+	public var posts: [Post]
+	/// Gaps sorted from oldest to newest
+	public var gaps: [Gap]
+	/// Posts and gaps sorted from newest to oldest
+	public var elements: [Element] = []
+	
+	public var timelineRange: Range<Date>?
+	
 
-	public var elements: [Element]
-
-	public init(_ elements: [Element] = []) {
-		self.elements = elements
+	public init(
+		serviceIDs: Set<SocialServiceID> = [],
+		posts: [Post] = [],
+		gaps: [Gap] = [],
+		timelineRange: Range<Date>? = nil
+	) {
+		self.serviceIDs = serviceIDs
+		self.posts = posts
+		self.gaps = gaps
+		self.timelineRange = timelineRange
+		self.updateElements()
 	}
-
-	public mutating func merge(_ timeline: AccountTimeline, idProvider: GapIdProvider) {
-		let newElements = timeline.elements.map { element in
-			switch element {
-			case .post(let post):
-				return Element.post(post)
-			case .gap(let range):
-				let id = idProvider(timeline.serviceId, range)
-				let context = GapContext([timeline.serviceId: range])
-
-				return Element.gap(id, context)
+	
+	mutating public func addGapLoadingNewest(maxTimeframe: TimeInterval = 60*60*2) -> Gap {
+		let now = Date.now
+		let lowerBound = timelineRange?.upperBound ?? now.addingTimeInterval(-abs(maxTimeframe))
+		
+		return addGap(range: lowerBound..<now, loadingStatus: .loading)
+	}
+	
+	public mutating func addGap(range: Range<Date>, loadingStatus: Gap.LoadingStatus) -> Gap {
+		let gap = Gap(id: UUID(), range: range, serviceIDs: serviceIDs, loadingStatus: loadingStatus)
+		gaps.insert(gap)
+		if let timelineRange {
+			self.timelineRange = Swift.min(timelineRange.lowerBound, range.lowerBound)..<Swift.max(timelineRange.upperBound, range.upperBound)
+		} else {
+			self.timelineRange = gap.range
+		}
+		return gap
+	}
+	
+	public mutating func updateGap(id: Gap.ID, _ loadingStatus: Gap.LoadingStatus) {
+		guard let index = gaps.firstIndex(where: { $0.id == id }) else {
+			return
+		}
+		
+		gaps[index].loadingStatus = loadingStatus
+	}
+	
+	public mutating func update(with fragment: TimelineFragment) throws {
+		guard let gapIndex = gaps.firstIndex(where: { $0.id == fragment.gapID }) else {
+			print("Fragment returned without a matching gap id \(fragment.gapID)")
+			return
+		}
+		try gaps[gapIndex].updateRanges(with: fragment)
+		posts.update(with: fragment.posts)
+		updateElements()
+	}
+	
+	public mutating func removeGap(id: Gap.ID) {
+		gaps = gaps.filter { $0.id != id }
+		updateElements()
+	}
+	
+	public mutating func updateElements() {
+		elements = (
+			posts.map { Element.post($0) }
+			+ gaps.reversed().map { Element.gap($0) }
+		)
+		.sorted(by: >)
+		.reduce(into: [Element]()) { partialResult, element in
+			guard let previous = partialResult.last
+			else {
+				partialResult = [element]
+				return
+			}
+			
+			switch (previous, element) {
+			case let (.post(previousPost), .post(post)):
+				// Ignore posts with duplicate ids
+				if previousPost.id != post.id {
+					partialResult.append(element)
+				}
+				
+			case (_, .gap):
+				partialResult.append(element)
+				
+			case let (.gap(previousGap), .post(post)):
+				/// Only append a post if a previous gap doesn't contain it
+				if !previousGap.conceals(post.date) {
+					partialResult.append(element)
+				}
 			}
 		}
-
-		self.elements.append(contentsOf: newElements)
-		self.elements.sort(by: >)
-	}
-
-	public mutating func merge(_ timelines: [AccountTimeline], idProvider: GapIdProvider) {
-		for subtimeline in timelines {
-			merge(subtimeline, idProvider: idProvider)
-		}
-	}
-
-	public mutating func consolidateGaps() {
-		var index = elements.startIndex
-
-		while index < elements.endIndex {
-			let nextIndex = elements.index(after: index)
-			if nextIndex >= elements.endIndex {
-				break
-			}
-
-			let current = elements[index]
-			let next = elements[nextIndex]
-
-			switch (current, next) {
-			case (.post, _):
-				break
-			case (.gap, .post):
-				break
-			case (.gap(let idA, var context), .gap(let idB, let other)):
-				// return the id which has the smallest maximum date, because I *think* that should result
-				// in the longest-lived gap ids
-				let id = context.maximumDate <= other.maximumDate ? idA : idB
-
-				context.merge(other)
-
-				elements[index] = .gap(id, context)
-				elements.remove(at: nextIndex)
-				continue
-			}
-
-			index = nextIndex
-		}
+		
+		print("Updated Elements - Posts: \(posts.count) Gaps: \(gaps.count) Elements: \(elements.count)")
 	}
 }
+
 
 extension CompositeTimeline.Element: Identifiable {
 	public var id: String {
 		switch self {
-		case .post(let post):
-			post.id
-		case .gap(let id, _):
-			id.uuidString
+		case let .post(post):
+			"post - \(post.id)"
+		case let .gap(gap):
+			"gap - \(gap.id.uuidString)"
 		}
+	}
+	
+	var post: Post? {
+		switch self {
+		case let .post(post):
+			return post
+		case .gap:
+			return nil
+		}
+	}
+		
+	var gap: Gap? {
+		switch self {
+		case let .gap(gap):
+			return gap
+		case .post:
+			return nil
+		}
+	}
+}
+
+extension Array<CompositeTimeline.Element> {
+	var posts: [Post] {
+		compactMap { $0.post }
+	}
+		
+	var gaps: [Gap] {
+		compactMap { $0.gap }
 	}
 }
 
 extension CompositeTimeline.Element: CustomDebugStringConvertible {
 	public var debugDescription: String {
 		switch self {
-		case .post(let post):
+		case let .post(post):
 			"<Post \(post.id) \(post.date)>"
-		case .gap(let id, let context):
-			"<Gap \(id) \(context)>"
+		case let .gap(gap):
+			"<Gap \(gap.id) \(gap.range)>"
 		}
-	}
-}
-
-extension CompositeTimeline {
-	public init(timelines: [AccountTimeline], idProvider: GapIdProvider) {
-		self.init()
-
-		merge(timelines, idProvider: idProvider)
-		consolidateGaps()
 	}
 }

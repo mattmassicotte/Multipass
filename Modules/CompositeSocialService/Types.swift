@@ -139,7 +139,18 @@ extension Post: Identifiable {
 }
 
 extension Post: Comparable {
+	var sortValue: (Date, ID) {
+		(date, id)
+	}
+	
 	public static func < (lhs: Post, rhs: Post) -> Bool {
-		lhs.date < rhs.date
+		lhs.sortValue < rhs.sortValue
+	}
+}
+
+public extension Array<Post> {
+	mutating func update(with newPosts: [Post]) {
+		#warning("Deduplication logic here")
+		self = (self + newPosts).sorted(by: >)
 	}
 }

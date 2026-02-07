@@ -20,9 +20,6 @@ final class FeedViewModel {
 	@ObservationIgnored
 	private let timelineStore: TimelineStore
 
-	@ObservationIgnored
-	private var timelineModel: TimelineModel
-
 	private(set) var accountsIdentifier: Int
 	var positionAnchor: AnchoredListPosition<Post>? {
 		didSet {
@@ -32,14 +29,17 @@ final class FeedViewModel {
 		}
 	}
 	
-	public var timelime = CompositeTimeline()
+	public var services: [any SocialService] = []
+	
+	public var timeline = CompositeTimeline()
+	
+	public var gapTasks: [Gap.ID: Task<Void, Never>] = [:]
 
 	init(secretStore: SecretStore, timelineStore: TimelineStore) {
 		self.secretStore = secretStore
 		self.timelineStore = timelineStore
 		
 		self.accountsIdentifier = 0
-		self.timelineModel = TimelineModel(services: [])
 	}
 	
 	var servicePosition: ServicePosition? {
@@ -66,17 +66,43 @@ final class FeedViewModel {
 		0
 	}
 	
-	func refresh() async {
-		let now = Date.now
-		let range = now.addingTimeInterval(-60*60*2)..<now
-
-		await timelineModel.fill(gap: range) { idx, state in
-			print("fill state: \(idx), \(state)")
+	public func refresh() async {
+		let newGap = timeline.addGapLoadingNewest()
+		fill(newGap)
+	}
+	
+	public func fill(_ gap: Gap) {
+		gapTasks[gap.id] = Task {
+			defer {
+				gapTasks.removeValue(forKey: gap.id)
+			}
+			
+			do {
+				try await withTaskCancellationHandler {
+					
+					for service in services {
+						let serviceTimeline = service.timeline(within: gap.range, gapID: gap.id, isolation: #isolation)
+						
+						for try await fragment in serviceTimeline {
+							try Task.checkCancellation()
+							try timeline.update(with: fragment)
+						}
+					}
+				} onCancel: {
+					// Maybe update gap status to stopped or paused?
+				}
+			} catch {
+				timeline.updateGap(id: gap.id, .error)
+				// Update gap with error
+			}
+			
+			print("Timeline: \(timeline.elements.count)")
 		}
 	}
+	
 
 	func updateAccounts(_ accounts: [UserAccount]) {
-		let services = accounts
+		services = accounts
 			.map { (account) -> any SocialService in
 				switch account.source {
 				case .mastodon:
@@ -94,15 +120,11 @@ final class FeedViewModel {
 					)
 				}
 			}
-
-		self.timelineModel = TimelineModel(services: services)
-
-		timelineModel.timelineHandler = {
-			self.timelime = $0
-		}
+		timeline.serviceIDs = Set(services.map(\.id))
 	}
 	
 	func handlePostAction(action: PostStatusAction, post: Post) {
 		fatalError()
 	}
 }
+
