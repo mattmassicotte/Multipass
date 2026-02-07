@@ -109,36 +109,66 @@ extension MastodonService: SocialService {
 		host
 	}
 
-	public func timeline(within range: Range<Date>, isolation: isolated (any Actor)) -> some AsyncSequence<[Post], any Error> {
+	public func timeline(within range: Range<Date>, gapID: UUID, isolation: isolated (any Actor)) -> some AsyncSequence<TimelineFragment, any Error> {
 		AsyncThrowingStream { [host] continuation in
 			Task {
 				_ = isolation
 				let parser = ContentParser()
 
 				var maxId: String? = nil
-
+				
+				/// Both bounds start at the upper bound with the newest posts.
+				var fragmentLowerBound = range.upperBound
+				var fragmentUpperBound = range.upperBound
+				
 				while true {
 					do {
 						let statuses = try await client.timeline(minimumId: nil, maximumId: maxId)
 
-						guard let last = statuses.last else { break }
-
-						maxId = last.id
+						/// The oldest date included in the status array. If empty the lower bound can be the distant past as there are no more.
+						let statusLowerBound = statuses.last?.createdAt ?? .distantPast
+						
+						maxId = statuses.last?.id
 
 						// very inefficient, but have to keep going until we find our starting point
-						if last.createdAt > range.upperBound {
+						guard statusLowerBound < range.upperBound else {
 							continue
 						}
 
+						/// posts assumed to be sorted newest to oldest
 						let posts: [Post] = statuses
 							.filter { range.contains($0.createdAt) }
 							.compactMap { Post($0, host: host, parser: parser) }
+						
+						if statusLowerBound < range.lowerBound {
+							/// If there are older posts then the posts includes the oldest post and we can use the range lower bound.
+							fragmentLowerBound = range.lowerBound
+						} else if let oldestPostDate = posts.last?.date {
+							/// If we don't know if there are older posts then we use the oldest post date.
+							fragmentLowerBound = oldestPostDate
+						} else {
+							/// If the posts array is empty then we are out of posts and we use the range lower bound.
+							fragmentLowerBound = range.lowerBound
+						}
 
-						continuation.yield(posts)
-
-						if last.createdAt > range.lowerBound {
+						/// Even if the array of posts is empty we want to yield a result to show a range of time has no posts in it.
+						continuation.yield(
+							TimelineFragment(
+								serviceID: id,
+								gapID: gapID,
+								posts: posts,
+								range: fragmentLowerBound..<fragmentUpperBound
+							)
+						)
+						
+						/// If this fragment reaches the lower bound of the range we are done.
+						if Calendar.current.isDate(fragmentLowerBound, equalTo: range.lowerBound, toGranularity: .second) {
 							break
 						}
+						
+						/// After submitting a fragment, we reset the upper bound to equal the previous lower bound.
+						fragmentUpperBound = fragmentLowerBound
+						
 					} catch {
 						continuation.finish(throwing: error)
 						break

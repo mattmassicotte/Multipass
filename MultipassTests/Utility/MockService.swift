@@ -11,12 +11,13 @@ final class MockService: SocialService {
 		self.fragments = fragments
 	}
 
-	convenience init(id: String, posts: [Post]) {
-		self.init(id: id, fragments: [posts])
+	convenience init(id: String, fragment: TimelineFragment) {
+		self.init(id: id, fragments: [fragment])
 	}
 
 	public func timeline(
 		within range: Range<Date>,
+		gapID: UUID,
 		isolation: isolated (any Actor) = #isolation
 	) -> some AsyncSequence<TimelineFragment, any Error> {
 		AsyncThrowingStream { [fragments] continuation in

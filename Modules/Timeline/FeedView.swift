@@ -20,45 +20,39 @@ public struct FeedView: View {
 	}
 
 	public var body: some View {
-		Text("Items Above: \(model.aboveCount)")
-		List(model.timelime.elements) { entry in
-			switch entry {
-			case .gap:
-				Text("GAP")
-			case .post(let post):
-				PostView(post: post, actionHandler: { _ in })
-					.frame(maxWidth: .infinity, alignment: .leading)
-					.padding(.vertical, 6.0)
+		VStack {
+			if model.timeline.elements.isEmpty {
+				List {
+					Text("Empty List")
+				}
+			} else {
+				Text("Items Above: \(model.aboveCount)")
+				List(model.timeline.elements) { entry in
+					switch entry {
+					case let .gap(gap):
+						GapView(gap: gap) { loadingStatus in
+							model.timeline.updateGap(id: gap.id, loadingStatus)
+						} onRemove: {
+							model.timeline.removeGap(id: gap.id)
+						}
+					case let .post(post):
+						PostView(post: post, actionHandler: { _ in })
+							.frame(maxWidth: .infinity, alignment: .leading)
+							.padding(.vertical, 6.0)
+					}
+				}
+				.listStyle(PlainListStyle())
 			}
 		}
-//		AnchoredList(items: model.posts, position: $model.positionAnchor) { post, row in
-//			//		List(model.posts, id: \.self) { post in
-//			PostView(
-//				post: post,
-//				actionHandler: { action in
-//					model.handlePostAction(action: action, post: post)
-//				}
-//			)
-//			.frame(maxWidth: .infinity, alignment: .leading)
-//			.padding(.vertical, 6.0)
-//			.contextMenu {
-//				if let url = post.url {
-//					Button("Open Link") {
-//						openURL(url)
-//					}
-//				}
-//			}
-//		}
-		.listStyle(PlainListStyle())
-		.onChange(of: accountStore.accounts, initial: true, { _, newValue in
+		.onChange(of: accountStore.accounts, initial: true) { _, newValue in
 			model.updateAccounts(newValue)
-		})
+		}
 		.menuRefreshable {
 			await model.refresh()
 		}
-		.task(id: model.accountsIdentifier) {
-			await model.refresh()
-		}
+//		.task(id: model.accountsIdentifier) {
+//			await model.refresh()
+//		}
 	}
 }
 
