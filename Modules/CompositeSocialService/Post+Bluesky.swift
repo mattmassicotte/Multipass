@@ -3,8 +3,17 @@ import Foundation
 import ATAT
 
 extension Post {
-	init(_ feedViewPost: Bsky.Feed.FeedViewPost) {
-		let repostAuthor = feedViewPost.reasonRepost.flatMap { Author($0.by) }
+	init(_ feedViewPost: App.Bsky.Feed.Defs.FeedViewPost) {
+		let repostAuthor: Author?
+		let date: Date
+
+		if case let .reasonRepost(repost) = feedViewPost.reason {
+			repostAuthor = Author(repost.by)
+			date = repost.indexedAt
+		} else {
+			repostAuthor = nil
+			date = feedViewPost.post.date
+		}
 
 		let identfifier: String
 
@@ -17,7 +26,7 @@ extension Post {
 		self.init(
 			content: feedViewPost.text,
 			source: .bluesky,
-			date: feedViewPost.reasonRepost?.indexedAt ??  feedViewPost.post.date,
+			date: date,
 			author: Author(feedViewPost.post.author),
 			repostingAuthor: repostAuthor,
 			identifier: identfifier,
@@ -25,9 +34,9 @@ extension Post {
 			uri: feedViewPost.post.uri,
 			attachments: [],
 			status: PostStatus(
-				likeCount: feedViewPost.post.likeCount,
+				likeCount: feedViewPost.post.likeCount ?? 0,
 				liked: feedViewPost.post.viewer.like != nil,
-				repostCount: feedViewPost.post.repostCount,
+				repostCount: feedViewPost.post.repostCount ?? 0,
 				reposted: false
 			)
 		)
@@ -35,7 +44,7 @@ extension Post {
 }
 
 extension Author {
-	init(_ profile: Bsky.Actor.ProfileViewBasic) {
+	init(_ profile: App.Bsky.Actor.Defs.ProfileViewBasic) {
 		self.init(
 			name: profile.displayName ?? "",
 			handle: profile.handle,
@@ -44,7 +53,7 @@ extension Author {
 	}
 }
 
-extension Bsky.Feed.FeedViewPost {
+extension App.Bsky.Feed.Defs.FeedViewPost {
 	var text: String? {
 		guard case let .post(post) = post.record else {
 			return nil

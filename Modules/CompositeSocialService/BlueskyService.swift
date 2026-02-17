@@ -221,10 +221,11 @@ extension BlueskyService: SocialService {
 			return
 		}
 
-		guard let uri = post.uri else {
-			throw BlueskyServiceError.uriMissing
-		}
+//		guard let uri = post.uri else {
+//			throw BlueskyServiceError.uriMissing
+//		}
 
-		_ = try await client.likePost(cid: post.identifier, uri: uri)
+//		_ = try await client.likePost(cid: post.identifier, uri: uri)
+		fatalError("nope")
 	}
 }

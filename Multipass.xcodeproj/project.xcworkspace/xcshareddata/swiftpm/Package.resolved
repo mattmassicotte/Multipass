@@ -1,5 +1,5 @@
 {
-  "originHash" : "c445c8c67b74728d5db44644e3e9dfb1ec689ac54938bd9c477c3b0d0cf7d994",
+  "originHash" : "566abb1881066d0d2c0f8f70494841c719ac82883e81646dbf9ec4d276554596",
   "pins" : [
     {
       "identity" : "atat",
@@ -7,7 +7,7 @@
       "location" : "https://github.com/mattmassicotte/ATAT",
       "state" : {
         "branch" : "main",
-        "revision" : "7bcb5858b756d5507d0bcbb3b6359ef7a21daa74"
+        "revision" : "67347afb79a7a62c6a5f1eb9968fd600902a9c32"
       }
     },
     {

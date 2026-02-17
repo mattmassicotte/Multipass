@@ -117,7 +117,7 @@ extension Client {
 		return try decoder.decode(CreateSessionResponse.self, from: data)
 	}
 	
-	public func timeline(cursor: String?, limit: Int = 50) async throws -> Bsky.Feed.GetFeedResponse {
+	public func timeline(cursor: String?, limit: Int = 50) async throws -> App.Bsky.Feed.GetTimeline.Output {
 		try await load(
 			apiPath: "app.bsky.feed.getTimeline",
 			queryItems: [
@@ -127,40 +127,40 @@ extension Client {
 		)
 	}
 	
-	public func likePost(cid: ATProtoCID, uri: ATProtoURI) async throws {
-		var components = baseComponents
-		
-		components.path = "/xrpc/com.atproto.repo.createRecord"
-		
-		guard let url = components.url else {
-			throw ClientError.malformedURL(components)
-		}
-
-		let like = Bsky.Feed.Like(
-			createdAt: .now,
-			subject: Bsky.Repo.StrongRef(
-				cid: cid,
-				uri: uri
-			)
-		)
-		
-		let createRecord = Bsky.Repo.CreateRecord.Request(
-			repo: account,
-			collection: .feedLike,
-			record: .feedLike(like)
-		)
-		
-		var request = URLRequest(url: url)
-		
-		request.httpMethod = "POST"
-		request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-		request.setValue("application/json", forHTTPHeaderField: "Accept")
-		request.httpBody = try ATJSONEncoder().encode(createRecord)
-		
-		let (data, _) = try await provider(request)
-		
-		print(String(decoding: data, as: UTF8.self))
-		
-		_ = try decoder.decode(Bsky.Repo.CreateRecord.Response.self, from: data)
-	}
+//	public func likePost(cid: ATProtoCID, uri: ATProtoURI) async throws {
+//		var components = baseComponents
+//		
+//		components.path = "/xrpc/com.atproto.repo.createRecord"
+//		
+//		guard let url = components.url else {
+//			throw ClientError.malformedURL(components)
+//		}
+//
+//		let like = Bsky.Feed.Like(
+//			createdAt: .now,
+//			subject: Bsky.Repo.StrongRef(
+//				cid: cid,
+//				uri: uri
+//			)
+//		)
+//		
+//		let createRecord = Bsky.Repo.CreateRecord.Request(
+//			repo: account,
+//			collection: .feedLike,
+//			record: .feedLike(like)
+//		)
+//		
+//		var request = URLRequest(url: url)
+//		
+//		request.httpMethod = "POST"
+//		request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//		request.setValue("application/json", forHTTPHeaderField: "Accept")
+//		request.httpBody = try ATJSONEncoder().encode(createRecord)
+//		
+//		let (data, _) = try await provider(request)
+//		
+//		print(String(decoding: data, as: UTF8.self))
+//		
+//		_ = try decoder.decode(Bsky.Repo.CreateRecord.Response.self, from: data)
+//	}
 }
