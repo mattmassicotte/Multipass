@@ -1,4 +1,6 @@
+import Algorithms
 import Foundation
+
 import ATAT
 
 enum ClientError: Error {
@@ -163,4 +165,19 @@ extension Client {
 //		
 //		_ = try decoder.decode(Bsky.Repo.CreateRecord.Response.self, from: data)
 //	}
+
+	public func getProfiles(_ ids: [String]) async throws -> App.Bsky.Actor.GetProfiles.Output {
+		var total: [App.Bsky.Actor.Defs.ProfileViewDetailed] = []
+
+		for chunk in ids.chunks(ofCount: 20) {
+			let partial: App.Bsky.Actor.GetProfiles.Output = try await load(
+				apiPath: "app.bsky.actor.getProfiles",
+				queryItems: chunk.map { URLQueryItem(name: "actors[]", value: $0) }
+			)
+
+			total.append(contentsOf: partial.profiles)
+		}
+
+		return App.Bsky.Actor.GetProfiles.Output(profiles: total)
+	}
 }

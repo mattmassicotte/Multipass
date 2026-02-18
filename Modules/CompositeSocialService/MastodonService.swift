@@ -187,4 +187,14 @@ extension MastodonService: SocialService {
 
 		_ = try await client.likePost(post.identifier)
 	}
+
+	public func profiles(for identifiers: [String]) async throws -> [Profile] {
+		let accounts = try await client.profiles(for: identifiers)
+
+		let parser = ContentParser()
+
+		return accounts.map { account in
+			Profile(account, host: host, parser: parser)
+		}
+	}
 }

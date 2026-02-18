@@ -3,20 +3,6 @@ import CoreGraphics
 
 import Storage
 
-public struct Author: Hashable, Sendable {
-	public let name: String
-	public let handle: String
-	public let avatarURL: URL?
-	
-	public init(name: String, handle: String, avatarURL: URL? = nil) {
-		self.name = name
-		self.handle = handle
-		self.avatarURL = avatarURL
-	}
-	
-	public static let placeholder = Author(name: "placeholder", handle: "placeholder")
-}
-
 public enum Attachment: Hashable, Sendable {
 	public struct ImageSpecifier: Hashable, Sendable {
 		public let url: URL

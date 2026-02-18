@@ -29,7 +29,7 @@ struct PostContentView: View {
 			content: "hello",
 			source: .mastodon,
 			date: .now,
-			author: Author(name: "author", handle: "me@me"),
+			author: .placeholder,
 			repostingAuthor: nil,
 			identifier: "1234",
 			url: nil,

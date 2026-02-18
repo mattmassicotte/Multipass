@@ -228,4 +228,12 @@ extension BlueskyService: SocialService {
 //		_ = try await client.likePost(cid: post.identifier, uri: uri)
 		fatalError("nope")
 	}
+
+	public func profiles(for identifiers: [String]) async throws -> [Profile] {
+		try await client.getProfiles(identifiers)
+			.profiles
+			.map {
+				Profile($0)
+			}
+	}
 }

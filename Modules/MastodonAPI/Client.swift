@@ -1,3 +1,4 @@
+import Algorithms
 import Foundation
 
 import OAuthenticator
@@ -121,5 +122,20 @@ extension Client {
 		let (data, _) = try await provider(request)
 		
 		return try decoder.decode(Status.self, from: data)
+	}
+
+	public func profiles(for ids: [String]) async throws -> [Account] {
+		var total: [Account] = []
+
+		for chunk in ids.chunks(ofCount: 20) {
+			let partial: [Account] = try await load(
+				apiPath: "accounts",
+				queryItems: chunk.map { URLQueryItem(name: "id[]", value: $0) }
+			)
+
+			total.append(contentsOf: partial)
+		}
+
+		return total
 	}
 }

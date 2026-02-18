@@ -43,11 +43,27 @@ extension Post {
 	}
 }
 
+extension Handle {
+	init(atProtoHandle: String) {
+		let components = atProtoHandle.split(separator: ".")
+		if components.count > 2 {
+			self.init(
+				host: components.suffix(2).joined(separator: "."),
+				name: components.prefix(components.count - 2).joined(separator: "."),
+				platform: .bluesky
+			)
+		} else {
+			self.init(host: atProtoHandle, name: "", platform: .bluesky)
+		}
+	}
+}
+
 extension Author {
 	init(_ profile: App.Bsky.Actor.Defs.ProfileViewBasic) {
 		self.init(
 			name: profile.displayName ?? "",
-			handle: profile.handle,
+			platformId: profile.did,
+			handle: Handle(atProtoHandle: profile.handle),
 			avatarURL: profile.avatarURL
 		)
 	}
@@ -60,5 +76,15 @@ extension App.Bsky.Feed.Defs.FeedViewPost {
 		}
 		
 		return post.text
+	}
+}
+
+extension Profile {
+	init(_ profile: App.Bsky.Actor.Defs.ProfileViewDetailed) {
+		self.handle = Handle(atProtoHandle: profile.handle)
+		self.avatarURL = profile.avatarURL
+		self.displayName = profile.displayName ?? ""
+		self.references = []
+		self.platformId = profile.did
 	}
 }

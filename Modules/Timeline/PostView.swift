@@ -19,7 +19,7 @@ struct PostView: View {
 			AvatarView(url: post.author.avatarURL)
 			VStack(alignment: .leading) {
 				HStack {
-					Text(post.repostingAuthor?.handle ?? post.author.handle)
+					Text(post.repostingAuthor?.handle.displayString ?? post.author.handle.displayString)
 						.font(.caption)
 					Text(formatter.localizedString(for: post.date, relativeTo: .now))
 				}
