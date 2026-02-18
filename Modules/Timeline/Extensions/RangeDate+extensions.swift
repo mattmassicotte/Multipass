@@ -80,6 +80,10 @@ extension Range<Date> {
 			|| calendar.isDate(upperBound, equalTo: other.upperBound, toGranularity: component)
 		)
 	}
+	
+	static func / (lhs: Self, rhs: Self) -> Double {
+		lhs.upperBound.timeIntervalSince(lhs.lowerBound) / rhs.upperBound.timeIntervalSince(rhs.lowerBound)
+	}
 }
 
 extension Range<Date>? {

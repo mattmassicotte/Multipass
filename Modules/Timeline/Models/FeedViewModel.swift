@@ -67,11 +67,34 @@ final class FeedViewModel {
 	}
 	
 	public func refresh() async {
-		let newGap = timeline.addGapLoadingNewest()
-		fill(newGap)
+		let newGapID = timeline.addGapForNewest()
+		do {
+			try fillGap(id: newGapID)
+		} catch {
+			print(error.localizedDescription)
+		}
 	}
 	
-	public func fill(_ gap: Gap) {
+	public func gapAction(_ action: Gap.Action) {
+		do {
+			switch action {
+			case let .fill(id, _):
+				try fillGap(id: id)
+			case let .cancel(id):
+				gapTasks[id]?.cancel()
+			case let .remove(id, _):
+				timeline.removeGap(id: id)
+			}
+		} catch {
+			print(error.localizedDescription)
+		}
+	}
+	
+	public func fillGap(id: Gap.ID) throws {
+		guard let gap = timeline.gaps[id] else {
+			throw Gap.Error.noGapMatchingID(id: id)
+		}
+		timeline.gaps[id]?.isLoading = true
 		gapTasks[gap.id] = Task {
 			defer {
 				gapTasks.removeValue(forKey: gap.id)
@@ -92,7 +115,7 @@ final class FeedViewModel {
 					// Maybe update gap status to stopped or paused?
 				}
 			} catch {
-				timeline.updateGap(id: gap.id, .error)
+				timeline.gaps[gap.id]?.isLoading = false
 				// Update gap with error
 			}
 			

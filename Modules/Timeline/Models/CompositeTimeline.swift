@@ -4,32 +4,9 @@ import CompositeSocialService
 import Algorithms
 
 public struct CompositeTimeline: Hashable, Sendable {
-	public enum Element: Hashable, Sendable, Comparable {
+	public enum Element: Hashable, Sendable {
 		case post(Post)
 		case gap(Gap)
-		
-		/// Value used when sorting. Items must always sort the same way so multiple values are used to ensure order never flip flops if two share the same date.
-		var sortValue: (upperBound: Date, lowerBound: Date, id: String) {
-			switch self {
-			case .post(let post):
-				(
-					upperBound: post.date,
-					lowerBound: post.date,
-					id: post.id
-				)
-			case .gap(let gap):
-				(
-					upperBound: gap.range.upperBound,
-					lowerBound: gap.range.lowerBound,
-					id: gap.id.uuidString
-				)
-			}
-		}
-		
-		public static func < (lhs: Self, rhs: Self) -> Bool {
-			/// Sorting by newest date first.
-			lhs.sortValue < rhs.sortValue
-		}
 	}
 	
 	public var serviceIDs: Set<SocialServiceID>
@@ -43,7 +20,7 @@ public struct CompositeTimeline: Hashable, Sendable {
 	
 	public var timelineRange: Range<Date>?
 	
-
+	
 	public init(
 		serviceIDs: Set<SocialServiceID> = [],
 		posts: [Post] = [],
@@ -56,39 +33,27 @@ public struct CompositeTimeline: Hashable, Sendable {
 		self.timelineRange = timelineRange
 		self.updateElements()
 	}
-	
-	mutating public func addGapLoadingNewest(maxTimeframe: TimeInterval = 60*60*2) -> Gap {
+}
+
+extension CompositeTimeline {
+	mutating func addGapForNewest(maxTimeframe: TimeInterval = 60*60*2) -> Gap.ID {
 		let now = Date.now
 		let lowerBound = timelineRange?.upperBound ?? now.addingTimeInterval(-abs(maxTimeframe))
 		
-		return addGap(range: lowerBound..<now, loadingStatus: .loading)
+		return addGap(range: lowerBound..<now)
 	}
 	
-	public mutating func addGap(range: Range<Date>, loadingStatus: Gap.LoadingStatus) -> Gap {
-		let gap = Gap(id: UUID(), range: range, serviceIDs: serviceIDs, loadingStatus: loadingStatus)
-		gaps.insert(gap)
+	public mutating func addGap(range: Range<Date>) -> Gap.ID {
 		if let timelineRange {
 			self.timelineRange = Swift.min(timelineRange.lowerBound, range.lowerBound)..<Swift.max(timelineRange.upperBound, range.upperBound)
 		} else {
-			self.timelineRange = gap.range
+			self.timelineRange = range
 		}
-		return gap
-	}
-	
-	public mutating func updateGap(id: Gap.ID, _ loadingStatus: Gap.LoadingStatus) {
-		guard let index = gaps.firstIndex(where: { $0.id == id }) else {
-			return
-		}
-		
-		gaps[index].loadingStatus = loadingStatus
+		return gaps.insertNewGap(range: range, serviceIDs: serviceIDs)
 	}
 	
 	public mutating func update(with fragment: TimelineFragment) throws {
-		guard let gapIndex = gaps.firstIndex(where: { $0.id == fragment.gapID }) else {
-			print("Fragment returned without a matching gap id \(fragment.gapID)")
-			return
-		}
-		try gaps[gapIndex].updateRanges(with: fragment)
+		try gaps.fill(with: fragment)
 		posts.update(with: fragment.posts)
 		updateElements()
 	}
@@ -133,17 +98,46 @@ public struct CompositeTimeline: Hashable, Sendable {
 	}
 }
 
-
-extension CompositeTimeline.Element: Identifiable {
-	public var id: String {
+extension CompositeTimeline.Element: Comparable {
+	/// Value used when sorting. Items must always sort the same way so multiple values are used to ensure order never flip flops if two share the same date.
+	var sortValue: (upperBound: Date, lowerBound: Date, id: String) {
 		switch self {
 		case let .post(post):
-			"post - \(post.id)"
+			(
+				upperBound: post.date,
+				lowerBound: post.date,
+				id: post.id
+			)
 		case let .gap(gap):
-			"gap - \(gap.id.uuidString)"
+			(
+				upperBound: gap.range.upperBound,
+				lowerBound: gap.range.lowerBound,
+				id: gap.id.uuidString
+			)
 		}
 	}
 	
+	public static func < (lhs: Self, rhs: Self) -> Bool {
+		/// Sorting by newest date first.
+		lhs.sortValue < rhs.sortValue
+	}
+}
+
+extension CompositeTimeline.Element: Identifiable {
+	public enum ElementID: Hashable, Sendable {
+		case post(Post.ID)
+		case gap(Gap.ID)
+	}
+	
+	public var id: ElementID {
+		switch self {
+		case let .post(post): .post(post.id)
+		case let .gap(gap): .gap(gap.id)
+		}
+	}
+}
+
+extension CompositeTimeline.Element {
 	var post: Post? {
 		switch self {
 		case let .post(post):
