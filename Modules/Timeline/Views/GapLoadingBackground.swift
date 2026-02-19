@@ -79,9 +79,7 @@ extension GapLoadingBackground {
 		
 		Color.red.frame(height: 100)
 	}
-	.listRowSpacing(0)
+//	.listRowSpacing(0)
 	.listRowInsets(.all, 0)
 	.listRowSeparator(.hidden)
-	
-	
 }

@@ -2,7 +2,7 @@ import Foundation
 
 import CompositeSocialService
 
-struct GithubSocialAccount: Sendable, Codable {
+struct GithubSocialProfile: Sendable, Codable {
 	let provider: String
 	let url: String
 
@@ -29,7 +29,7 @@ struct GithubSocialAccount: Sendable, Codable {
 	}
 }
 
-extension GithubSocialAccount: CustomDebugStringConvertible {
+extension GithubSocialProfile: CustomDebugStringConvertible {
 	var debugDescription: String {
 		"<\(provider): \(url) \(handle.debugDescription)>"
 	}
@@ -42,7 +42,7 @@ final class GitHubSocialClient {
 		self.provider = provider
 	}
 
-	public func socialProfiles(for profile: AccountProfile) async throws -> [GithubSocialAccount] {
+	public func socialProfiles(for profile: Profile) async throws -> [GithubSocialProfile] {
 		let githubProfiles = profile.githubProfiles
 
 		guard
@@ -55,7 +55,7 @@ final class GitHubSocialClient {
 		return try await socialProfiles(for: username)
 	}
 
-	public func socialProfiles(for username: String) async throws -> [GithubSocialAccount] {
+	public func socialProfiles(for username: String) async throws -> [GithubSocialProfile] {
 		guard let url = URL(string: "https://api.github.com/users/\(username)/social_accounts") else {
 			fatalError()
 		}
@@ -77,6 +77,6 @@ final class GitHubSocialClient {
 			throw AuthorResolverError.unexpectedGitHubResponse
 		}
 
-		return try JSONDecoder().decode([GithubSocialAccount].self, from: data)
+		return try JSONDecoder().decode([GithubSocialProfile].self, from: data)
 	}
 }
