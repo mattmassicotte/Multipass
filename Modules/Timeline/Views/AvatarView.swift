@@ -3,19 +3,21 @@ import SwiftUI
 struct AvatarView: View {
 	let url: URL?
 	
-    var body: some View {
+	var body: some View {
 		AsyncImage(url: url) { image in
 			image
 				.resizable()
-				.aspectRatio(contentMode: .fit)
+				.scaledToFit()
 		} placeholder: {
 			Image(systemName: "person.fill")
+				.resizable()
+				.scaledToFit()
 		}
-		.frame(width: 40.0)
-		
+		.aspectRatio(1, contentMode: .fit)
     }
 }
 
 #Preview {
+	AvatarView(url: nil)
 	AvatarView(url: URL(string: "https://robohash.org/abc.png")!)
 }

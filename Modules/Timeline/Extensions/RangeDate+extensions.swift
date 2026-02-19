@@ -8,6 +8,15 @@
 import Foundation
 
 extension Range<Date> {
+	var duration: TimeInterval {
+		upperBound.timeIntervalSince(lowerBound)
+	}
+	
+	static func latest(_ timeInterval: TimeInterval) -> Self {
+		let now = Date.now
+		return now.addingTimeInterval(-timeInterval)..<now
+	}
+	
 	/// Removes a date range from another date range.
 	/// - Parameter other: Range to remove
 	/// - Returns: A tuple containing 0 to 2 ranges that remain.
@@ -79,6 +88,10 @@ extension Range<Date> {
 			contains(other.upperBound)
 			|| calendar.isDate(upperBound, equalTo: other.upperBound, toGranularity: component)
 		)
+	}
+	
+	static func / (lhs: Self, rhs: Self) -> Double {
+		lhs.upperBound.timeIntervalSince(lhs.lowerBound) / rhs.upperBound.timeIntervalSince(rhs.lowerBound)
 	}
 }
 

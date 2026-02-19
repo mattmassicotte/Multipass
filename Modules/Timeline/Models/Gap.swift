@@ -18,31 +18,34 @@ public struct Gap: Hashable, Sendable, Identifiable {
 	/// Service IDs
 	public let serviceIDs: Set<SocialServiceID>
 	/// A dictionary of arrays of service  keyed to the service ID string.
-	public var loadedRanges: LoadedRanges
-	/// Loading status of the posts in this gap.
-	public var loadingStatus: LoadingStatus
+	private(set) var loadedRanges: LoadedRanges
+	/// True if there is a current loading task running for this gap
+	public var isLoading: Bool
+	
 	/// Should loaded ranges of posts be shown or hidden by this gap. Only ranges anchored at the start and end loaded by all accounts listed in `serviceIDs` will be revealed.
-	public var showLoadedRanges: Bool = false
+	public let showLoadedRanges: Bool = false
 	/// Read/Unread status of posts in this gap
 	public var readStatus: ReadStatus
+	/// Error status of this gap
+	public var error: Self.Error? = nil
 	
 	init(
 		id: UUID,
 		range: Range<Date>,
 		serviceIDs: Set<SocialServiceID>,
 		loadedRanges: LoadedRanges = [:],
-		loadingStatus: LoadingStatus,
+		isLoading: Bool = false,
 		readStatus: ReadStatus = .unknown
 	) {
 		self.id = id
 		self.range = range
 		self.serviceIDs = serviceIDs
 		self.loadedRanges = loadedRanges
-		self.loadingStatus = loadingStatus
+		self.isLoading = isLoading
 		self.readStatus = readStatus
 	}
 	
-	public enum LoadingStatus: String, Hashable, Sendable {
+	public enum LoadingStatus: String, Hashable, Sendable, CaseIterable {
 		case unloaded
 		case loading
 		case paused
@@ -55,23 +58,44 @@ public struct Gap: Hashable, Sendable, Identifiable {
 		case read
 	}
 	
-	public enum OpeningDirection {
-		/// Opening direction that locks to the oldest post so the user can read posts chronologically
-		case oldestFirst
-		/// Opening direction that locks to the newest post so the user can read posts chronologically
-		case newestFirst
+	enum Action {
+		case fill(Gap.ID)
+		case cancel(Gap.ID)
+		case reveal(
+			gapID: Gap.ID,
+			fromEdge: TemporalEdge,
+			toDate: Date? = nil,
+			anchor: TemporalEdge
+		)
+		
+		var gapID: Gap.ID {
+			switch self {
+			case let .fill(id): id
+			case let .cancel(id): id
+			case let .reveal(id, _, _, _): id
+			}
+		}
 	}
 	
-	public enum Error: LocalizedError {
-		case noServiceMatchingID(_ id: SocialServiceID)
-		case noGapMatchingID(id: Gap.ID)
+	public enum Error: LocalizedError, Hashable, Sendable {
+		case noSocialServiceMatching(id: SocialServiceID)
+		case noGapMatching(id: Gap.ID)
+		case gapAlreadyExists(id: Gap.ID)
+		case unloadedGapCannotBeRemoved(id: Gap.ID)
+		case gapAlreadyBeingFilled(id: Gap.ID)
 		
 		public var errorDescription: String? {
 			switch self {
-			case .noGapMatchingID:
-				"No gap available matching the provided ID."
-			case .noServiceMatchingID(_):
-				"No social service available matching the provided ID."
+			case let .noSocialServiceMatching(id):
+				"No social service available matching the provided ID: \(id)"
+			case let .noGapMatching(id):
+				"No gap available matching the provided ID: \(id)"
+			case let .gapAlreadyExists(id):
+				"Gap with the same id already exists. ID: \(id)"
+			case let .unloadedGapCannotBeRemoved(id):
+				"Unloaded gap cannot be removed. ID: \(id)"
+			case let .gapAlreadyBeingFilled(id):
+				"Gap already being filled. ID: \(id)"
 			}
 		}
 	}
@@ -89,6 +113,21 @@ extension Gap: Comparable {
 }
 
 public extension Gap {
+	/// Loading status of the posts in this gap.
+	var loadingStatus: LoadingStatus {
+		if error != nil {
+			return .error
+		} else if unloadedRange == nil {
+			return .loaded
+		} else if isLoading {
+			return .loading
+		} else if loadedRanges.isEmpty {
+			return .unloaded
+		} else {
+			return .paused
+		}
+	}
+	
 	/// Range of posts to be concealed
 	var concealedRange: Range<Date>? {
 		showLoadedRanges ? unloadedRange : range
@@ -148,11 +187,23 @@ public extension Gap {
 		return range.lowerBound..<upperBound
 	}
 	
-	mutating func updateRanges(with fragment: TimelineFragment) throws {
-		loadingStatus = .loading
+	var loadedNewestProgress: Double {
+		loadedNewestRange / range
+	}
+	
+	var loadedOldestProgress: Double {
+		loadedOldestRange / range
+	}
+	
+	var loadedProgress: Double {
+		unloadedRange == nil ? 1 : min(loadedNewestProgress + loadedOldestProgress, 1)
+	}
+	
+	mutating func fill(with fragment: TimelineFragment) throws {
+		isLoading = true
 		
 		guard serviceIDs.contains(fragment.serviceID) else {
-			throw Error.noServiceMatchingID(fragment.serviceID)
+			throw Error.noSocialServiceMatching(id: fragment.serviceID)
 		}
 		
 		let serviceRanges = loadedRanges[fragment.serviceID] ?? []
@@ -162,7 +213,7 @@ public extension Gap {
 		if let concealedRange, range != concealedRange {
 			range = concealedRange
 		} else {
-			loadingStatus = .loaded
+			isLoading = false
 		}
 	}
 	
@@ -170,12 +221,7 @@ public extension Gap {
 		range.overlaps(other.range)
 	}
 	
-	
 	func removing(_ other: Range<Date>) -> (before: Self?, after: Self?) {
-		if loadingStatus == .loading {
-			/// Maybe throw an error here
-		}
-		
 		var updatedGap = self
 		
 		switch range.removing(other) {
@@ -189,17 +235,17 @@ public extension Gap {
 			return (before: nil, after: updatedGap)
 		case let (.some(beforeRange), .some(afterRange)):
 			updatedGap.range = beforeRange
-			let newGap = Gap(id: UUID(), range: afterRange, serviceIDs: serviceIDs, loadingStatus: .unloaded)
+			let newGap = Gap(id: UUID(), range: afterRange, serviceIDs: serviceIDs)
 			return (before: updatedGap, after: newGap)
 		}
 	}
 	
 	static func example(
 		id: UUID = UUID(),
-		range: Range<Date>,
+		range: Range<Date> = (Date().addingTimeInterval(.hours(-2)))..<Date(),
 		serviceIDs: Set<SocialServiceID> = [],
 		loadedRanges: LoadedRanges = [:],
-		loadingStatus: LoadingStatus = .unloaded,
+		isLoading: Bool = false,
 		readStatus: ReadStatus = .unknown
 	) -> Self {
 		.init(
@@ -207,7 +253,7 @@ public extension Gap {
 			range: range,
 			serviceIDs: serviceIDs,
 			loadedRanges: loadedRanges,
-			loadingStatus: loadingStatus,
+			isLoading: isLoading,
 			readStatus: readStatus
 		)
 	}
@@ -215,7 +261,8 @@ public extension Gap {
 
 public extension [Gap] {
 	/// Inserts a new gap into an array adjusting others accordingly
-	mutating func insert(_ newGap: Gap) {
+	mutating func insertNewGap(range: Range<Date>, serviceIDs: Set<SocialServiceID>) -> Gap.ID {
+		let newGap = Gap(id: UUID(), range: range, serviceIDs: serviceIDs)
 		let adjustedGaps: [Gap] = reduce(into: [Gap]()) { partialResult, gap in
 			if gap.overlaps(newGap) {
 				let remaining = gap.removing(newGap.range)
@@ -226,6 +273,12 @@ public extension [Gap] {
 		}
 			
 		self = (adjustedGaps + [newGap]).sorted()
+		return newGap.id
+	}
+	
+	
+	mutating func fill(with fragment: TimelineFragment) throws {
+		try self[fragment.gapID]?.fill(with: fragment)
 	}
 }
 
