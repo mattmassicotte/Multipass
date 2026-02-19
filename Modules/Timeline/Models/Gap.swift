@@ -165,7 +165,7 @@ public extension Gap {
 			return range.upperBound..<range.upperBound
 		}
 			
-		return lowerBound..<range.upperBound
+		return max(range.lowerBound, min(lowerBound, range.upperBound))..<range.upperBound
 	}
 	
 	/// Largest date range anchored at the lower bound without gaps that holds posts from every service.
@@ -184,15 +184,15 @@ public extension Gap {
 			return range.lowerBound..<range.lowerBound
 		}
 			
-		return range.lowerBound..<upperBound
+		return range.lowerBound..<max(range.lowerBound, min(upperBound, range.upperBound))
 	}
 	
 	var loadedNewestProgress: Double {
-		loadedNewestRange / range
+		min(loadedNewestRange / range, 1)
 	}
 	
 	var loadedOldestProgress: Double {
-		loadedOldestRange / range
+		min(loadedOldestRange / range, 1)
 	}
 	
 	var loadedProgress: Double {
@@ -210,10 +210,12 @@ public extension Gap {
 		
 		loadedRanges[fragment.serviceID] = serviceRanges.merging(fragment.range)
 		
-		if let concealedRange, range != concealedRange {
-			range = concealedRange
-		} else {
+		if unloadedRange == nil {
+			/// End loading
 			isLoading = false
+		} else if let concealedRange, range != concealedRange {
+			/// Show posts automatically
+			range = concealedRange
 		}
 	}
 	
@@ -246,9 +248,10 @@ public extension Gap {
 		serviceIDs: Set<SocialServiceID> = [],
 		loadedRanges: LoadedRanges = [:],
 		isLoading: Bool = false,
-		readStatus: ReadStatus = .unknown
+		readStatus: ReadStatus = .unknown,
+		error: Error? = nil
 	) -> Self {
-		.init(
+		var gap = Self.init(
 			id: id,
 			range: range,
 			serviceIDs: serviceIDs,
@@ -256,6 +259,10 @@ public extension Gap {
 			isLoading: isLoading,
 			readStatus: readStatus
 		)
+		
+		gap.error = error
+		
+		return gap
 	}
 }
 

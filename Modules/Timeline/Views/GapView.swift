@@ -58,9 +58,36 @@ struct GapView: View {
 			VStack {
 				if let duration {
 					Text("Gap: \(duration)")
-					Text(gap.loadingStatus.rawValue)
 				} else {
 					Text("Gap")
+				}
+				Label {
+					switch gap.loadingStatus {
+					case .unloaded:
+						Text("Load")
+					case .loading:
+						Text("Loading...")
+					case .paused:
+						Text("Paused")
+					case .loaded:
+						Text("Loaded")
+					case .error:
+						Text("Error: \(gap.error?.localizedDescription, default: "Unknown error")")
+					}
+				} icon: {
+					switch gap.loadingStatus {
+					case .unloaded:
+						EmptyView()
+					case .loading:
+						Image(systemName: "arrow.trianglehead.2.clockwise")
+							.symbolEffect(.rotate)
+					case .paused:
+						Image(systemName: "pause")
+					case .loaded:
+						Image(systemName: "checkmark")
+					case .error:
+						Image(systemName: "exclamationmark.triangle")
+					}
 				}
 			}
 			.frame(maxWidth: .infinity)
@@ -87,27 +114,53 @@ struct GapView: View {
 }
 
 #Preview {
-	@Previewable @State var gap: Gap? = .example(range: Date()..<Date().addingTimeInterval(10000))
-	
-	VStack(alignment: .leading) {
-		PostView(post: .placeholder) { _ in }
-		if let thisGap = gap {
-			GapView(gap: thisGap) { action in
-				switch action {
-				case .fill:
-					gap?.isLoading = true
-				case .cancel:
-					break
-				case .reveal:
-					gap = nil
-				}
-			}
-		} else {
-			Button("Add gap") {
-				gap = .example(range: Date()..<Date().addingTimeInterval(10000))
-			}
-		}
-		PostView(post: .placeholder) { _ in }
+	VStack(spacing: 0) {
+		Divider()
+		
+		GapView(
+			gap: Gap.example(
+				range: .latest(.hours(2)),
+				serviceIDs: ["1"],
+				loadedRanges: ["1": [.latest(.hours(1))]],
+				isLoading: true
+			)
+		) { _ in }
+		
+		Divider()
+		
+		GapView(
+			gap: Gap.example(
+				range: .latest(.hours(2)),
+				serviceIDs: ["1"],
+				loadedRanges: ["1": [.latest(.hours(1))]],
+				isLoading: false
+			)
+		) { _ in }
+		
+		Divider()
+		
+		GapView(
+			gap: Gap.example(
+				range: .latest(.hours(2)),
+				serviceIDs: ["1"],
+				loadedRanges: ["1": [.latest(.hours(1))]],
+				isLoading: true,
+				error: .gapAlreadyBeingFilled(id: UUID())
+			)
+		) { _ in }
+		
+		Divider()
+		
+		GapView(
+			gap: Gap.example(
+				range: .latest(.hours(2)),
+				serviceIDs: ["1"],
+				loadedRanges: ["1": [.latest(.hours(2))]],
+				isLoading: false
+			)
+		) { _ in }
+		
+		Divider()
 	}
 }
 

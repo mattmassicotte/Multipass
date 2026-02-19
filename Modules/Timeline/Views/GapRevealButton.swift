@@ -20,11 +20,14 @@ struct GapRevealButton: View {
 	@ViewBuilder
 	var menuButtons: some View {
 		if duration > .hours(2) {
+			#if os(macOS)
+			#else
 			Button {
 				showNewest()
 			} label: {
 				Text("All")
 			}
+			#endif
 		
 			Section {
 				ForEach([1, 2, 3], id: \.self) { hours in
@@ -58,23 +61,18 @@ struct GapRevealButton: View {
 		}
 	}
 	
-    var body: some View {
+	var body: some View {
 		Menu {
 			menuButtons
 		} label: {
 			Label {
-				switch anchor {
-				case .oldest:
-					Text("Oldest")
-				case .newest:
-					Text("Newest")
-				}
+				Text("Show All")
 			} icon: {
 				switch anchor {
 				case .oldest:
-					Image(systemName: "chevron.up")
+					Image(systemName: "arrow.up")
 				case .newest:
-					Image(systemName: "chevron.down")
+					Image(systemName: "arrow.down")
 				}
 			}
 			.padding(4)
@@ -82,9 +80,13 @@ struct GapRevealButton: View {
 			showNewest()
 		}
 		.menuOrder(.fixed)
+		#if os(macOS)
+		.labelStyle(.titleAndIcon)
+		#else
 		.labelStyle(.iconOnly)
+		#endif
 		.buttonStyle(.glass)
-    }
+	}
 	
 	func showOldest(hours: Int) {
 		let date = Calendar.current.date(byAdding: .hour, value: hours, to: range.lowerBound) ?? range.lowerBound.addingTimeInterval(Double(3600 * hours))
@@ -111,7 +113,7 @@ struct GapRevealButton: View {
 			return
 		}
 		
-		let date = Calendar.current.date(byAdding: .hour, value: -hours, to: range.upperBound) ?? range.upperBound.addingTimeInterval(Double(-3600 * hours))
+		let date = range.upperBound.addingTimeInterval(Double(.hours(-hours)))
 		
 		action(
 			.reveal(

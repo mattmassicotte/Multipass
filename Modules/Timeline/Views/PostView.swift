@@ -6,11 +6,12 @@ struct PostView: View {
 	let post: Post
 	let action: (Post.Action) -> Void
 	
-	@State private var formatter: RelativeDateTimeFormatter = {
+	let formatter: RelativeDateTimeFormatter = {
 		let formatter = RelativeDateTimeFormatter()
 		
 		formatter.dateTimeStyle = .named
 		formatter.unitsStyle = .abbreviated
+		formatter.formattingContext = .listItem
 
 		return formatter
 	}()
@@ -81,7 +82,7 @@ struct PostView: View {
 						
 						Spacer()
 						
-						Text(formatter.localizedString(for: post.date, relativeTo: .now))
+						Text(post.date, formatter: formatter)
 							.font(.caption)
 					}
 					
@@ -103,6 +104,10 @@ struct PostView: View {
 					status: post.status,
 					action: action
 				)
+				#if os(macOS)
+				.frame(maxWidth: 300)
+				#endif
+				.frame(maxWidth: .infinity, alignment: .trailing)
 				.gridCellColumns(2)
 			}
 		}
