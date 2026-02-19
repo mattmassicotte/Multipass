@@ -9,19 +9,19 @@ import SwiftUI
 
 struct GapLoadingBackground: View {
 	let color: Color
-	let loadedOldest: CGFloat
-	let loadedNewest: CGFloat
+	let loadedOldestProgress: CGFloat
+	let loadedNewestProgress: CGFloat
 	let animation: Animation
 	
 	init(
 		color: Color,
-		loadedOldest: CGFloat,
-		loadedNewest: CGFloat,
+		loadedOldestProgress: CGFloat,
+		loadedNewestProgress: CGFloat,
 		animation: Animation = .default
 	) {
 		self.color = color
-		self.loadedOldest = loadedOldest
-		self.loadedNewest = loadedNewest
+		self.loadedOldestProgress = loadedOldestProgress
+		self.loadedNewestProgress = loadedNewestProgress
 		self.animation = animation
 	}
 	
@@ -31,16 +31,16 @@ struct GapLoadingBackground: View {
 			.overlay(alignment: .bottom) {
 				color
 					.alignmentGuide(.bottom) { d in
-						d[.top] + d.height * loadedOldest
+						d[.top] + d.height * loadedOldestProgress
 					}
-					.animation(animation, value: loadedOldest)
+					.animation(animation, value: loadedOldestProgress)
 			}
 			.overlay(alignment: .top) {
 				color
 					.alignmentGuide(.top) { d in
-						d[.bottom] - d.height * loadedNewest
+						d[.bottom] - d.height * loadedNewestProgress
 					}
-					.animation(animation, value: loadedNewest)
+					.animation(animation, value: loadedNewestProgress)
 			}
 			.clipped()
     }
@@ -50,36 +50,41 @@ extension GapLoadingBackground {
 	init(gap: Gap, color: Color) {
 		self.init(
 			color: color,
-			loadedOldest: gap.loadedOldestProgress,
-			loadedNewest: gap.loadedNewestProgress
+			loadedOldestProgress: gap.loadedOldestProgress,
+			loadedNewestProgress: gap.loadedNewestProgress
 		)
 	}
 }
 
 
 #Preview {
-	@Previewable @State var loadedNewest: CGFloat = 0
-	@Previewable @State var loadedOldest: CGFloat = 0
+	@Previewable @State var loadedNewestProgress: CGFloat = 0
+	@Previewable @State var loadedOldestProgress: CGFloat = 0
 	
 	VStack {
 		Color.red.frame(height: 100)
 		
 		Text("Gap")
 			.onTapGesture {
-				if loadedNewest < 1 {
-					loadedOldest = 1
-					loadedNewest = 1
+				if loadedNewestProgress < 1 {
+					loadedOldestProgress = 1
+					loadedNewestProgress = 1
 				} else {
-					loadedOldest = 0
-					loadedNewest = 0
+					loadedOldestProgress = 0
+					loadedNewestProgress = 0
 				}
 			}
 			.frame(maxWidth: .infinity, maxHeight: 100)
-			.background(GapLoadingBackground(color: .blue, loadedOldest: loadedOldest, loadedNewest: loadedNewest))
+			.background(
+				GapLoadingBackground(
+					color: .blue,
+					loadedOldestProgress: loadedOldestProgress,
+					loadedNewestProgress: loadedNewestProgress
+				)
+			)
 		
 		Color.red.frame(height: 100)
 	}
-//	.listRowSpacing(0)
-	.listRowInsets(.all, 0)
-	.listRowSeparator(.hidden)
+	
+	
 }

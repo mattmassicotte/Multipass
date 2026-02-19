@@ -141,6 +141,7 @@ final class FeedViewModel {
 		guard let gap = timeline.gaps[id] else {
 			throw Gap.Error.noGapMatching(id: id)
 		}
+		timeline.gaps[id]?.error = nil
 		timeline.gaps[id]?.isLoading = true
 		timeline.updateElements()
 		gapTasks[gap.id] = Task {

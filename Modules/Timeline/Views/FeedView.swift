@@ -20,11 +20,14 @@ public struct FeedView: View {
 		)
 	}
 	
+	static let loadingButtonID = CompositeTimeline.Element.ElementID.gap(UUID())
+	
+	var scrollPositionID: CompositeTimeline.Element.ElementID? {
+		scrollPosition.viewID(type: CompositeTimeline.Element.ID.self)
+	}
 	var scrollPositionItem: CompositeTimeline.Element? {
-		guard let id = scrollPosition.viewID(type: CompositeTimeline.Element.ID.self) else {
-			return nil
-		}
-		return model.timeline.elements[id]
+		guard let scrollPositionID else { return nil }
+		return model.timeline.elements[scrollPositionID]
 	}
 
 	public var body: some View {
@@ -44,29 +47,43 @@ public struct FeedView: View {
 						Divider()
 					}
 					
-					TimelineLoadingButton(action: model.timelineAction)
-						.frame(maxWidth: .infinity)
-						.padding()
+					VStack {
+						TimelineLoadingButton(action: model.timelineAction)
+					}
+					.frame(maxWidth: .infinity)
+					.padding()
+					.id(Self.loadingButtonID)
 				}
+				.scrollTargetLayout()
 			}
-			.scrollTargetLayout()
 			.scrollPosition($scrollPosition)
 			.defaultScrollAnchor(.top)
-			
-			VStack {
-				if let scrollPositionItem {
-					Text("Scroll Position")
-					switch scrollPositionItem {
-					case .post(let post):
-						Text("Post")
-						Text(post.date, style: .time)
-					case .gap(let gap):
-						Text("Gap")
-						Text(gap.range.lowerBound, style: .time)
+			.overlay(alignment: .bottom) {
+				VStack {
+					if let scrollPositionItem {
+						Text("Scroll Position")
+						switch scrollPositionItem {
+						case .post(let post):
+							Text("Post")
+							if let content = post.content {
+								Text(content)
+									.lineLimit(1)
+							}
+						case .gap(let gap):
+							Text("Gap")
+							Text(gap.range.lowerBound, style: .time)
+						}
+					} else if let scrollPositionID {
+						if scrollPositionID == Self.loadingButtonID {
+							Text("Loading Button")
+						} else {
+							Text("Unknown")
+						}
 					}
 				}
+				.font(.caption2)
+				.border(.red)
 			}
-			.border(.red)
 		}
 		.onChange(of: accountStore.accounts, initial: true) { _, newValue in
 			model.updateAccounts(newValue)
@@ -86,10 +103,10 @@ public struct FeedView: View {
 		case let .reveal(id, fromEdge, toDate, anchor):
 			let scrollToID: CompositeTimeline.Element.ID?
 			switch (fromEdge, toDate, anchor) {
-			case (_, nil, .oldest), (.newest, _, .newest):
+			case (_, nil, .newest), (.newest, _, .newest):
 				scrollToID = model.timeline.elements.lastBefore(id: .gap(id))?.id
-			case (_, nil, .newest), (.oldest, _, .oldest):
-				scrollToID = model.timeline.elements.firstAfter(id: .gap(id))?.id
+			case (_, nil, .oldest), (.oldest, _, .oldest):
+				scrollToID = model.timeline.elements.firstAfter(id: .gap(id))?.id ?? Self.loadingButtonID
 			case (.newest, _, .oldest), (.oldest, _, .newest):
 				scrollToID = .gap(id)
 			}
@@ -102,7 +119,12 @@ public struct FeedView: View {
 	}
 	
 	func scrollTo(id: CompositeTimeline.Element.ID) {
-		scrollPosition.scrollTo(id: id, anchor: .center)
+		if let element = model.timeline.elements[id] {
+			print("Scroll to: \(element.debugDescription)")
+		} else if id == Self.loadingButtonID {
+			print("Scroll to: Loading button")
+		}
+		scrollPosition.scrollTo(id: id)
 	}
 }
 

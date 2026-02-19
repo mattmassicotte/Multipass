@@ -69,8 +69,8 @@ extension CompositeTimeline {
 	}
 	
 	public mutating func update(with fragment: TimelineFragment) throws {
-		try gaps.fill(with: fragment)
 		posts.update(with: fragment.posts)
+		try gaps.fill(with: fragment)
 		updateElements()
 	}
 	
@@ -137,7 +137,7 @@ extension CompositeTimeline {
 			}
 		}
 		
-		print("Updated Elements - Posts: \(posts.count) Gaps: \(gaps.count) Elements: \(elements.count)")
+		print("\(elements.count) Elements Updated - \(posts.count) Posts, \(gaps.count) Gaps")
 	}
 }
 
