@@ -45,7 +45,7 @@ public struct Gap: Hashable, Sendable, Identifiable {
 		self.readStatus = readStatus
 	}
 	
-	public enum LoadingStatus: String, Hashable, Sendable {
+	public enum LoadingStatus: String, Hashable, Sendable, CaseIterable {
 		case unloaded
 		case loading
 		case paused
@@ -58,40 +58,44 @@ public struct Gap: Hashable, Sendable, Identifiable {
 		case read
 	}
 	
-	public enum OpeningDirection {
-		/// Opening direction that locks to the oldest post so the user can read posts chronologically
-		case oldestFirst
-		/// Opening direction that locks to the newest post so the user can read posts chronologically
-		case newestFirst
-	}
-	
 	enum Action {
-		case fill(Gap.ID, direction: OpeningDirection)
+		case fill(Gap.ID)
 		case cancel(Gap.ID)
-		case remove(Gap.ID, direction: OpeningDirection)
+		case reveal(
+			gapID: Gap.ID,
+			fromEdge: TemporalEdge,
+			toDate: Date? = nil,
+			anchor: TemporalEdge
+		)
 		
 		var gapID: Gap.ID {
 			switch self {
-			case let .fill(id, _): id
+			case let .fill(id): id
 			case let .cancel(id): id
-			case let .remove(id, _): id
+			case let .reveal(id, _, _, _): id
 			}
 		}
 	}
 	
 	public enum Error: LocalizedError, Hashable, Sendable {
-		case noServiceMatchingID(_ id: SocialServiceID)
-		case noGapMatchingID(id: Gap.ID)
-		case gapWithIDAlreadyExists(id: Gap.ID)
+		case noSocialServiceMatching(id: SocialServiceID)
+		case noGapMatching(id: Gap.ID)
+		case gapAlreadyExists(id: Gap.ID)
+		case unloadedGapCannotBeRemoved(id: Gap.ID)
+		case gapAlreadyBeingFilled(id: Gap.ID)
 		
 		public var errorDescription: String? {
 			switch self {
-			case .noGapMatchingID:
-				"No gap available matching the provided ID."
-			case .noServiceMatchingID(_):
-				"No social service available matching the provided ID."
-			case .gapWithIDAlreadyExists(_):
-				"Gap with the same id already exists."
+			case let .noSocialServiceMatching(id):
+				"No social service available matching the provided ID: \(id)"
+			case let .noGapMatching(id):
+				"No gap available matching the provided ID: \(id)"
+			case let .gapAlreadyExists(id):
+				"Gap with the same id already exists. ID: \(id)"
+			case let .unloadedGapCannotBeRemoved(id):
+				"Unloaded gap cannot be removed. ID: \(id)"
+			case let .gapAlreadyBeingFilled(id):
+				"Gap already being filled. ID: \(id)"
 			}
 		}
 	}
@@ -199,7 +203,7 @@ public extension Gap {
 		isLoading = true
 		
 		guard serviceIDs.contains(fragment.serviceID) else {
-			throw Error.noServiceMatchingID(fragment.serviceID)
+			throw Error.noSocialServiceMatching(id: fragment.serviceID)
 		}
 		
 		let serviceRanges = loadedRanges[fragment.serviceID] ?? []
@@ -216,7 +220,6 @@ public extension Gap {
 	func overlaps(_ other: Gap) -> Bool {
 		range.overlaps(other.range)
 	}
-	
 	
 	func removing(_ other: Range<Date>) -> (before: Self?, after: Self?) {
 		var updatedGap = self
@@ -239,7 +242,7 @@ public extension Gap {
 	
 	static func example(
 		id: UUID = UUID(),
-		range: Range<Date> = (Date().addingTimeInterval(-60*60*2))..<Date(),
+		range: Range<Date> = (Date().addingTimeInterval(.hours(-2)))..<Date(),
 		serviceIDs: Set<SocialServiceID> = [],
 		loadedRanges: LoadedRanges = [:],
 		isLoading: Bool = false,

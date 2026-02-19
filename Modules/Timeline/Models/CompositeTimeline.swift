@@ -36,20 +36,36 @@ public struct CompositeTimeline: Hashable, Sendable {
 }
 
 extension CompositeTimeline {
-	mutating func addGapForNewest(maxTimeframe: TimeInterval = 60*60*2) -> Gap.ID {
+	enum Action {
+		case loadRecent(maxTimeInterval: TimeInterval)
+		case loadOlder(timeInterval: TimeInterval)
+	}
+}
+
+extension CompositeTimeline {
+	mutating func addGapForNewest(maxTimeInterval: TimeInterval = .hours(4)) -> Gap.ID {
 		let now = Date.now
-		let lowerBound = timelineRange?.upperBound ?? now.addingTimeInterval(-abs(maxTimeframe))
+		let lowerBound = timelineRange?.upperBound ?? now.addingTimeInterval(-abs(maxTimeInterval))
 		
 		return addGap(range: lowerBound..<now)
 	}
 	
-	public mutating func addGap(range: Range<Date>) -> Gap.ID {
+	mutating func addGapForOldest(timeInterval: TimeInterval) -> Gap.ID {
+		let upperBound = timelineRange?.lowerBound ?? Date.now
+		let lowerBound = upperBound.addingTimeInterval(-abs(timeInterval))
+		
+		return addGap(range: lowerBound..<upperBound)
+	}
+	
+	mutating func addGap(range: Range<Date>) -> Gap.ID {
 		if let timelineRange {
 			self.timelineRange = Swift.min(timelineRange.lowerBound, range.lowerBound)..<Swift.max(timelineRange.upperBound, range.upperBound)
 		} else {
 			self.timelineRange = range
 		}
-		return gaps.insertNewGap(range: range, serviceIDs: serviceIDs)
+		let id = gaps.insertNewGap(range: range, serviceIDs: serviceIDs)
+		updateElements()
+		return id
 	}
 	
 	public mutating func update(with fragment: TimelineFragment) throws {
@@ -58,8 +74,35 @@ extension CompositeTimeline {
 		updateElements()
 	}
 	
-	public mutating func removeGap(id: Gap.ID) {
-		gaps = gaps.filter { $0.id != id }
+	mutating func removeGap(id: Gap.ID) throws {
+		gaps = try gaps
+			.filter { gap in
+				if gap.id == id {
+					guard gap.loadingStatus == .loaded else {
+						throw Gap.Error.unloadedGapCannotBeRemoved(id: id)
+					}
+					return false
+				}
+				return true
+			}
+		updateElements()
+	}
+	
+	public mutating func reveal(id: Gap.ID, from edge: TemporalEdge, to date: Date?) throws {
+		guard
+			let date,
+			let gap = gaps[id],
+			let newRange = gap.range.removing(from: edge, to: date)
+		else {
+			try removeGap(id: id)
+			return
+		}
+		
+		if gap.unloadedRange?.contains(date) ?? false {
+			throw Gap.Error.unloadedGapCannotBeRemoved(id: id)
+		}
+		
+		gaps[id]?.range = newRange
 		updateElements()
 	}
 	

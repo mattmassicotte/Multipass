@@ -22,9 +22,16 @@ extension Post {
 		} else {
 			identfifier = feedViewPost.post.cid
 		}
+		
+		let content: AttributedString?
+		if let text = feedViewPost.text {
+			content = AttributedString(text)
+		} else {
+			content = nil
+		}
 
 		self.init(
-			content: feedViewPost.text,
+			content: content,
 			source: .bluesky,
 			date: date,
 			author: Author(feedViewPost.post.author),

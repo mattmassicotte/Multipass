@@ -3,54 +3,106 @@ import SwiftUI
 import CompositeSocialService
 import Storage
 
-@MainActor
-struct LikeAction {
-	public func callAsFunction() {
-		
-	}
-}
-
-public enum PostStatusAction {
-	case like
-	case repost
-}
 
 public struct PostStatusView: View {
-	public typealias ActionHandler = (PostStatusAction) -> Void
-	
+	public let postID: Post.ID
 	public let source: DataSource
 	public let status: PostStatus
-	public let actionHandler: ActionHandler
-	
-	var likeImageName: String {
-		status.liked ? "heart.fill" : "heart"
-	}
-	
-	var repostImageName: String {
-		"arrow.2.squarepath"
-	}
+	public let action: (Post.Action) -> Void
 	
     public var body: some View {
 		HStack {
-			Image(source.imageName)
-			Image(systemName: likeImageName)
-				.onTapGesture {
-					actionHandler(.like)
+			Button {
+				/// Reply
+			} label: {
+				Label {
+					Text("Reply")
+				} icon: {
+					Image(systemName: "bubble")
 				}
-			Text("\(status.likeCount)")
-			Image(systemName: repostImageName)
-				.onTapGesture {
-					actionHandler(.repost)
+			}
+			.labelStyle(.iconOnly)
+			.disabled(true)
+			.frame(maxWidth: .infinity)
+			
+			Button {
+				action(.repost(postID))
+			} label: {
+				Label {
+					Text("\(status.repostCount)")
+						.font(.subheadline)
+				} icon: {
+					Image(systemName: "arrow.2.squarepath")
+						.bold(status.reposted)
 				}
-			Text("\(status.repostCount)")
+				.accessibilityLabel(status.reposted ? "Reposted" : "Repost")
+			}
+			.accentColor(status.reposted ? .accentColor : .primary)
+			.frame(maxWidth: .infinity)
+			
+			Button {
+				if status.liked {
+					action(.unlike(postID))
+				} else {
+					action(.like(postID))
+				}
+			} label: {
+				Label {
+					Text("\(status.likeCount)")
+						.font(.subheadline)
+				} icon: {
+					if status.liked {
+						Image(systemName: "heart.fill")
+					} else {
+						Image(systemName: "heart")
+					}
+				}
+				.accessibilityLabel(status.liked ? "Unlike" : "Like")
+			}
+			.accentColor(status.liked ? .accentColor : .primary)
+			.frame(maxWidth: .infinity)
+			
+			Button {
+				/// Share
+				action(.repost(postID))
+			} label: {
+				Label {
+					Text("Share")
+				} icon: {
+					Image(systemName: "square.and.arrow.up")
+				}
+			}
+			.labelStyle(.iconOnly)
+			.disabled(true)
+			.frame(maxWidth: .infinity)
 		}
+		.accentColor(.primary)
+		.labelIconToTitleSpacing(2)
     }
 }
 
 #Preview {
-	PostStatusView(
-		source: .mastodon,
-		status: PostStatus(likeCount: 0, liked: false, repostCount: 0, reposted: false),
-		actionHandler: { _ in }
-	)
+	VStack {
+		PostStatusView(
+			postID: "1",
+			source: .mastodon,
+			status: PostStatus(
+				likeCount: 0,
+				liked: false,
+				repostCount: 0,
+				reposted: false
+			)
+		) { _ in }
+		
+		PostStatusView(
+			postID: "2",
+			source: .mastodon,
+			status: PostStatus(
+				likeCount: 3,
+				liked: true,
+				repostCount: 4,
+				reposted: true
+			)
+		) { _ in }
+	}
 }

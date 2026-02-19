@@ -11,13 +11,16 @@ struct GapView: View {
 	let gap: Gap
 	let action: (Gap.Action) -> Void
 	
+	static let formatter: DateComponentsFormatter = {
+		let formatter = DateComponentsFormatter()
+		formatter.allowedUnits = [.year, .month, .day, .hour, .minute, .second]
+		formatter.unitsStyle = .brief
+		formatter.maximumUnitCount = 2
+		return formatter
+	}()
+	
 	var duration: String? {
-		let componentsFormatter = DateComponentsFormatter()
-		componentsFormatter.allowedUnits = [.year, .month, .day, .hour, .minute, .second]
-		componentsFormatter.unitsStyle = .brief
-		componentsFormatter.maximumUnitCount = 2
-
-		return componentsFormatter.string(from: gap.range.lowerBound, to: gap.range.upperBound)
+		Self.formatter.string(from: gap.range.lowerBound, to: gap.range.upperBound)
 	}
 	
 	func rangeView(_ range: Range<Date>, label: String = "Range") -> some View {
@@ -48,26 +51,38 @@ struct GapView: View {
 	
     var body: some View {
 		HStack {
-			GapLoadingButton(gap: gap, direction: .newestFirst, action: action)
+			if gap.loadingStatus == .loaded {
+				GapRevealButton(gap: gap, anchor: .newest, action: action)
+			}
 			
 			VStack {
 				if let duration {
 					Text("Gap: \(duration)")
 					Text(gap.loadingStatus.rawValue)
-					
 				} else {
 					Text("Gap")
 				}
 			}
 			.frame(maxWidth: .infinity)
 			
-			GapLoadingButton(gap: gap, direction: .oldestFirst, action: action)
+			if gap.loadingStatus == .loaded {
+				GapRevealButton(gap: gap, anchor: .oldest, action: action)
+			}
+		}
+		.onTapGesture {
+			switch gap.loadingStatus {
+			case .unloaded, .paused, .error:
+				action(.fill(gap.id))
+			case .loading:
+				action(.cancel(gap.id))
+			case .loaded:
+				break
+			}
 		}
 		.padding(.horizontal)
 		.frame(maxWidth: .infinity)
 		.accentColor(.pink)
-		.background(Color.gray)
-		.listRowBackground(GapLoadingBackground(gap: gap))
+		.background(GapLoadingBackground(gap: gap, color: .gray))
     }
 }
 
@@ -83,7 +98,7 @@ struct GapView: View {
 					gap?.isLoading = true
 				case .cancel:
 					break
-				case .remove:
+				case .reveal:
 					gap = nil
 				}
 			}

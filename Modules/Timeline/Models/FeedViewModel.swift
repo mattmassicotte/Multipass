@@ -66,8 +66,8 @@ final class FeedViewModel {
 		0
 	}
 	
-	public func refresh() async {
-		let newGapID = timeline.addGapForNewest()
+	func refresh(maxTimeInterval: TimeInterval) {
+		let newGapID = timeline.addGapForNewest(maxTimeInterval: maxTimeInterval)
 		do {
 			try fillGap(id: newGapID)
 		} catch {
@@ -75,49 +75,96 @@ final class FeedViewModel {
 		}
 	}
 	
+	func loadOlder(timeInterval: TimeInterval) {
+		let newGapID = timeline.addGapForOldest(timeInterval: timeInterval)
+		do {
+			try fillGap(id: newGapID)
+		} catch {
+			print(error.localizedDescription)
+		}
+	}
+	
+	public func timelineAction(_ action: CompositeTimeline.Action) {
+		switch action {
+		case let .loadRecent(maxTimeInterval):
+			refresh(maxTimeInterval: maxTimeInterval)
+		case let .loadOlder(timeInterval):
+			loadOlder(timeInterval: timeInterval)
+		}
+	}
+	
 	public func gapAction(_ action: Gap.Action) {
 		do {
 			switch action {
-			case let .fill(id, _):
+			case let .fill(id):
 				try fillGap(id: id)
 			case let .cancel(id):
 				gapTasks[id]?.cancel()
-			case let .remove(id, _):
-				timeline.removeGap(id: id)
+				timeline.gaps[id]?.isLoading = false
+			case let .reveal(id, edge, date, _):
+				try timeline.reveal(id: id, from: edge, to: date)
 			}
 		} catch {
 			print(error.localizedDescription)
 		}
 	}
 	
+	public func postAction(_ action: Post.Action) {
+		do {
+			switch action {
+			case let .like(id):
+				throw Post.Action.Error.unableToLikePost(id: id)
+			case let .unlike(id):
+				throw Post.Action.Error.unableToUnlikePost(id: id)
+			case let .repost(id):
+				throw Post.Action.Error.unableToRepostPost(id: id)
+			case let .group(id, _):
+				throw Post.Action.Error.unableToGroupPost(id: id)
+			}
+		} catch {
+			print(error.localizedDescription)
+		}
+	}
+	
+	public func updateTimeline(with fragment: TimelineFragment) throws {
+		try timeline.update(with: fragment)
+	}
+	
+	public func updateTimelineElements() {
+		timeline.updateElements()
+	}
+	
 	public func fillGap(id: Gap.ID) throws {
+		guard gapTasks[id] == nil else {
+			throw Gap.Error.gapAlreadyBeingFilled(id: id)
+		}
 		guard let gap = timeline.gaps[id] else {
-			throw Gap.Error.noGapMatchingID(id: id)
+			throw Gap.Error.noGapMatching(id: id)
 		}
 		timeline.gaps[id]?.isLoading = true
+		timeline.updateElements()
 		gapTasks[gap.id] = Task {
 			defer {
 				gapTasks.removeValue(forKey: gap.id)
 			}
 			
 			do {
-				try await withTaskCancellationHandler {
+				for service in services {
+					let serviceTimeline = service.timeline(within: gap.range, gapID: gap.id, isolation: #isolation)
 					
-					for service in services {
-						let serviceTimeline = service.timeline(within: gap.range, gapID: gap.id, isolation: #isolation)
-						
-						for try await fragment in serviceTimeline {
-							try Task.checkCancellation()
-							try timeline.update(with: fragment)
-						}
+					for try await fragment in serviceTimeline {
+						try Task.checkCancellation()
+						try timeline.update(with: fragment)
 					}
-				} onCancel: {
-					// Maybe update gap status to stopped or paused?
 				}
+			} catch let error as Gap.Error {
+				timeline.gaps[gap.id]?.error = error
 			} catch {
-				timeline.gaps[gap.id]?.isLoading = false
-				// Update gap with error
+				print(error.localizedDescription)
 			}
+			
+			timeline.gaps[gap.id]?.isLoading = false
+			timeline.updateElements()
 			
 			print("Timeline: \(timeline.elements.count)")
 		}
@@ -144,10 +191,6 @@ final class FeedViewModel {
 				}
 			}
 		timeline.serviceIDs = Set(services.map(\.id))
-	}
-	
-	func handlePostAction(action: PostStatusAction, post: Post) {
-		fatalError()
 	}
 }
 

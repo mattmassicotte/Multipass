@@ -30,7 +30,7 @@ extension Author {
 
 extension Post {
 	init?(_ status: Status, host: String, parser: ContentParser) {
-		let content: String
+		let content: AttributedString
 
 		do {
 			let visibleContent = status.reblog?.content ?? status.content
@@ -40,8 +40,20 @@ extension Post {
 			if case let .link(_, value) = components.first, value.hasPrefix("@") {
 				return nil
 			}
-
-			content = parser.renderToString(components)
+			
+			content = components.reduce(into: AttributedString()) { partialResult, component in
+				var attributedString: AttributedString
+				switch component {
+				case let .text(string):
+					attributedString = AttributedString(string)
+				case let .link(url, string):
+					attributedString = AttributedString(string)
+					attributedString.link = url
+				case .seperator:
+					attributedString = AttributedString("\n")
+				}
+				partialResult.append(attributedString)
+			}
 		} catch {
 			print("failed to process:", status)
 			return nil

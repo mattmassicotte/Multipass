@@ -29,50 +29,51 @@ public struct FeedView: View {
 
 	public var body: some View {
 		VStack {
-			Button {
-				Task {
-					await model.refresh()
-				}
-			} label: {
-				Text("Load Posts")
-			}
-			
-			if !model.timeline.elements.isEmpty {
-				ScrollView {
+			ScrollView {
+				LazyVStack(spacing: 0) {
+					Divider()
+					
 					ForEach(model.timeline.elements) { element in
 						switch element {
 						case let .gap(gap):
 							GapView(gap: gap, action: gapAction)
 						case let .post(post):
-							PostView(post: post, actionHandler: { _ in })
-								.frame(maxWidth: .infinity, alignment: .leading)
-								.padding(.vertical, 6.0)
+							PostView(post: post, action: model.postAction)
 						}
+						
+						Divider()
+					}
+					
+					TimelineLoadingButton(action: model.timelineAction)
+						.frame(maxWidth: .infinity)
+						.padding()
+				}
+			}
+			.scrollTargetLayout()
+			.scrollPosition($scrollPosition)
+			.defaultScrollAnchor(.top)
+			
+			VStack {
+				if let scrollPositionItem {
+					Text("Scroll Position")
+					switch scrollPositionItem {
+					case .post(let post):
+						Text("Post")
+						Text(post.date, style: .time)
+					case .gap(let gap):
+						Text("Gap")
+						Text(gap.range.lowerBound, style: .time)
 					}
 				}
-				.scrollTargetLayout()
-				.scrollPosition($scrollPosition)
-				.defaultScrollAnchor(.top)
 			}
-			
-			if let scrollPositionItem {
-				Text("Scroll Position")
-				switch scrollPositionItem {
-				case .post(let post):
-					Text("Post")
-					Text(post.date, style: .time)
-				case .gap(let gap):
-					Text("Gap")
-					Text(gap.range.lowerBound, style: .time)
-				}
-			}
+			.border(.red)
 		}
 		.onChange(of: accountStore.accounts, initial: true) { _, newValue in
 			model.updateAccounts(newValue)
 		}
-//		.menuRefreshable {
-//			await model.refresh()
-//		}
+		.menuRefreshable {
+			model.timelineAction(.loadRecent(maxTimeInterval: .hours(2)))
+		}
 //		.task(id: model.accountsIdentifier) {
 //			await model.refresh()
 //		}
@@ -80,19 +81,21 @@ public struct FeedView: View {
 	
 	func gapAction(_ action: Gap.Action) -> Void {
 		switch action {
-		case let .fill(_, direction), let .remove(_, direction: direction):
-			let scrollToElement: CompositeTimeline.Element?
-			switch direction {
-			case .newestFirst:
-				scrollToElement = model.timeline.elements.lastBefore(id: .gap(action.gapID))
-			case .oldestFirst:
-				scrollToElement = model.timeline.elements.firstAfter(id: .gap(action.gapID))
-			}
-			if let scrollToElement {
-				scrollTo(id: scrollToElement.id)
-			}
-		case .cancel:
+		case .fill, .cancel:
 			break
+		case let .reveal(id, fromEdge, toDate, anchor):
+			let scrollToID: CompositeTimeline.Element.ID?
+			switch (fromEdge, toDate, anchor) {
+			case (_, nil, .oldest), (.newest, _, .newest):
+				scrollToID = model.timeline.elements.lastBefore(id: .gap(id))?.id
+			case (_, nil, .newest), (.oldest, _, .oldest):
+				scrollToID = model.timeline.elements.firstAfter(id: .gap(id))?.id
+			case (.newest, _, .oldest), (.oldest, _, .newest):
+				scrollToID = .gap(id)
+			}
+			if let scrollToID {
+				scrollTo(id: scrollToID)
+			}
 		}
 		
 		model.gapAction(action)

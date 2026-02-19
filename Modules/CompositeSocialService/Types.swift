@@ -57,7 +57,7 @@ public struct PostStatus: Hashable, Sendable {
 }
 
 public struct Post: Hashable, Sendable {
-	public let content: String?
+	public let content: AttributedString?
 	public let source: DataSource
 	public let date: Date
 	public let author: Author
@@ -80,7 +80,7 @@ public struct Post: Hashable, Sendable {
 	}
 	
 	public init(
-		content: String?,
+		content: AttributedString?,
 		source: DataSource,
 		date: Date,
 		author: Author,
@@ -110,7 +110,7 @@ public struct Post: Hashable, Sendable {
 		source: .mastodon,
 		date: .now,
 		author: Author.placeholder,
-		repostingAuthor: nil,
+		repostingAuthor: Author.placeholder,
 		identifier: "abc123",
 		url: URL(string: "https://example.com")!,
 		attachments: [],

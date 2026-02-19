@@ -3,38 +3,14 @@ import SwiftUI
 import CompositeSocialService
 
 struct PostContentView: View {
-	let post: Post
+	let content: AttributedString
 	
     var body: some View {
-		VStack(alignment: .leading) {
-			Text(attributedContent)
-				.fixedSize(horizontal: false, vertical: true)
-				.padding(insets)
-			PostAttachmentView(attachments: post.attachments)
-		}
+		Text(content)
+			.fixedSize(horizontal: false, vertical: true)
     }
-	
-	var insets: EdgeInsets {
-		EdgeInsets(top: 4.0, leading: 2.0, bottom: 4.0, trailing: 1.0)
-	}
-	
-	var attributedContent: AttributedString {
-		AttributedString(post.content ?? "")
-	}
 }
 
 #Preview {
-	PostContentView(
-		post: Post(
-			content: "hello",
-			source: .mastodon,
-			date: .now,
-			author: .placeholder,
-			repostingAuthor: nil,
-			identifier: "1234",
-			url: nil,
-			attachments: [],
-			status: PostStatus(likeCount: 0, liked: false, repostCount: 0, reposted: false)
-		)
-	)
+	PostContentView(content: "It's light. Handle's adjustable for easy carrying, good for righties and lefties. Breaks down into four parts, undetectable by x-ray, ideal for quick, discreet interventions. A word on firepower. Titanium recharger, three thousand round clip with bursts of three to three hundred, and with the Replay button - another Zorg invention - it's even easier. One shot... https://example.com")
 }

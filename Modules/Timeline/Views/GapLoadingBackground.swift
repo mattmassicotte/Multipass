@@ -8,11 +8,18 @@
 import SwiftUI
 
 struct GapLoadingBackground: View {
+	let color: Color
 	let loadedOldest: CGFloat
 	let loadedNewest: CGFloat
 	let animation: Animation
 	
-	init(loadedOldest: CGFloat, loadedNewest: CGFloat, animation: Animation = .default) {
+	init(
+		color: Color,
+		loadedOldest: CGFloat,
+		loadedNewest: CGFloat,
+		animation: Animation = .default
+	) {
+		self.color = color
 		self.loadedOldest = loadedOldest
 		self.loadedNewest = loadedNewest
 		self.animation = animation
@@ -20,28 +27,32 @@ struct GapLoadingBackground: View {
 	
     var body: some View {
 		Color.clear
+			.frame(maxWidth: .infinity, maxHeight: .infinity)
 			.overlay(alignment: .bottom) {
-				Rectangle()
-					.fill(.background)
-					.containerRelativeFrame(.vertical) { length, _ in
-						length * loadedOldest
+				color
+					.alignmentGuide(.bottom) { d in
+						d[.top] + d.height * loadedOldest
 					}
 					.animation(animation, value: loadedOldest)
 			}
 			.overlay(alignment: .top) {
-				Rectangle()
-					.fill(.background)
-					.containerRelativeFrame(.vertical) { length, _ in
-						length * loadedNewest
+				color
+					.alignmentGuide(.top) { d in
+						d[.bottom] - d.height * loadedNewest
 					}
 					.animation(animation, value: loadedNewest)
 			}
+			.clipped()
     }
 }
 
 extension GapLoadingBackground {
-	init(gap: Gap) {
-		self.init(loadedOldest: gap.loadedOldestProgress, loadedNewest: gap.loadedNewestProgress)
+	init(gap: Gap, color: Color) {
+		self.init(
+			color: color,
+			loadedOldest: gap.loadedOldestProgress,
+			loadedNewest: gap.loadedNewestProgress
+		)
 	}
 }
 
@@ -50,10 +61,10 @@ extension GapLoadingBackground {
 	@Previewable @State var loadedNewest: CGFloat = 0
 	@Previewable @State var loadedOldest: CGFloat = 0
 	
-	List {
+	VStack {
 		Color.red.frame(height: 100)
 		
-		Color.blue
+		Text("Gap")
 			.onTapGesture {
 				if loadedNewest < 1 {
 					loadedOldest = 1
@@ -63,8 +74,8 @@ extension GapLoadingBackground {
 					loadedNewest = 0
 				}
 			}
-			.frame(height: 100)
-			.listRowBackground(GapLoadingBackground(loadedOldest: loadedOldest, loadedNewest: loadedNewest))
+			.frame(maxWidth: .infinity, maxHeight: 100)
+			.background(GapLoadingBackground(color: .blue, loadedOldest: loadedOldest, loadedNewest: loadedNewest))
 		
 		Color.red.frame(height: 100)
 	}
