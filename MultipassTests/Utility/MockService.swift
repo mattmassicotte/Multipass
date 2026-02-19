@@ -4,11 +4,13 @@ import CompositeSocialService
 
 final class MockService: SocialService {
 	let fragments: [TimelineFragment]
+	let profiles: [Profile]
 	let id: String
 
-	init(id: String, fragments: [TimelineFragment]) {
+	init(id: String, fragments: [TimelineFragment], profiles: [Profile] = []) {
 		self.id = id
 		self.fragments = fragments
+		self.profiles = profiles
 	}
 
 	convenience init(id: String, fragment: TimelineFragment) {
@@ -30,5 +32,9 @@ final class MockService: SocialService {
 	}
 
 	func likePost(_ post: Post) async throws {
+	}
+
+	func profiles(for identifiers: [String]) async throws -> [CompositeSocialService.Profile] {
+		profiles
 	}
 }

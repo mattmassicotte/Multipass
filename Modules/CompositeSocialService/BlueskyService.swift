@@ -147,6 +147,10 @@ extension BlueskyService: SocialService {
 		clientParams.account
 	}
 
+	public var platform: SocialPlatform {
+		.bluesky
+	}
+
 	public func timeline(within range: Range<Date>, gapID: UUID, isolation: isolated (any Actor)) -> some AsyncSequence<TimelineFragment, any Error> {
 		AsyncThrowingStream { continuation in
 			Task {

@@ -109,6 +109,10 @@ extension MastodonService: SocialService {
 		host
 	}
 
+	public var platform: SocialPlatform {
+		.mastodon
+	}
+
 	public func timeline(within range: Range<Date>, gapID: UUID, isolation: isolated (any Actor)) -> some AsyncSequence<TimelineFragment, any Error> {
 		AsyncThrowingStream { [host] continuation in
 			Task {
