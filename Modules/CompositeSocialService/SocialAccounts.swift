@@ -1,4 +1,4 @@
-public struct ServiceAccounts {
+public struct SocialAccounts {
 	let services: [SocialPlatform: any SocialAccount]
 
 	public init(services: [any SocialAccount]) {
