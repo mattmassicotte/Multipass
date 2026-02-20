@@ -1,6 +1,5 @@
 import SwiftUI
 
-import CompositeSocialService
 import SocialModels
 
 struct PostView: View {

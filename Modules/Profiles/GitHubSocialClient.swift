@@ -1,6 +1,6 @@
 import Foundation
 
-import CompositeSocialService
+import SocialClients
 import SocialModels
 
 struct GithubSocialProfile: Sendable, Codable {

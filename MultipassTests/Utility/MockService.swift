@@ -1,6 +1,6 @@
 import Foundation
 
-import CompositeSocialService
+import SocialClients
 
 final class MockService: SocialAccount {
 	let fragments: [TimelineFragment]

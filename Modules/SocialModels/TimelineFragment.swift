@@ -1,10 +1,3 @@
-//
-//  TimelineFragment.swift
-//  CompositeSocialService
-//
-//  Created by Ryan Lintott on 2026-02-06.
-//
-
 import Foundation
 
 public struct TimelineFragment: Hashable, Sendable {

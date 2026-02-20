@@ -1,7 +1,5 @@
 import SwiftUI
 
-import CompositeSocialService
-
 struct PostContentView: View {
 	let content: AttributedString
 	

@@ -1,7 +1,7 @@
 import Foundation
 
+import SocialClients
 import Storage
-import CompositeSocialService
 
 extension Post {
 	init(id: String, source: DataSource = .mastodon, time: TimeInterval) {

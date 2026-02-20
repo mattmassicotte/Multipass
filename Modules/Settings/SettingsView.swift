@@ -1,6 +1,6 @@
 import SwiftUI
 
-import CompositeSocialService
+import SocialClients
 
 public struct SettingsView: View {
 	public init() {

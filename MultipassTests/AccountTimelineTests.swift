@@ -1,7 +1,7 @@
 import Testing
 import Foundation
 
-import CompositeSocialService
+import SocialClients
 import Timeline
 
 //extension AccountTimeline.Element {

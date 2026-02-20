@@ -16,8 +16,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "C92217D72CED1C80006C34BC"
-               BuildableName = "libCompositeSocialService.a"
-               BlueprintName = "CompositeSocialService"
+               BuildableName = "libSocialClients.a"
+               BlueprintName = "SocialClients"
                ReferencedContainer = "container:Multipass.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -51,8 +51,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "C92217D72CED1C80006C34BC"
-            BuildableName = "libCompositeSocialService.a"
-            BlueprintName = "CompositeSocialService"
+            BuildableName = "libSocialClients.a"
+            BlueprintName = "SocialClients"
             ReferencedContainer = "container:Multipass.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

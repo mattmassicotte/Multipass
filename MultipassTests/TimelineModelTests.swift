@@ -1,7 +1,7 @@
 import Foundation
 import Testing
 
-import CompositeSocialService
+import SocialClients
 import Timeline
 
 //struct CombinedTimelineTests {

@@ -1,7 +1,7 @@
 import Algorithms
 import Foundation
 
-import CompositeSocialService
+import SocialClients
 import SocialModels
 
 public struct CompositeTimeline: Hashable, Sendable {

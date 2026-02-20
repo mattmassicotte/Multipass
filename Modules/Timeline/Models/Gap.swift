@@ -5,8 +5,15 @@
 //  Created by Ryan Lintott on 2026-02-02.
 //
 
-import CompositeSocialService
+// plain alphabetical
+import SocialClients
 import Foundation
+import SocialModels
+
+// grouped by local, remote first
+import Foundation
+
+import SocialClients
 import SocialModels
 
 public struct Gap: Hashable, Sendable, Identifiable {

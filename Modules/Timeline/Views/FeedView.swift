@@ -1,4 +1,4 @@
-import CompositeSocialService
+import SocialModels
 import StableView
 import Storage
 import SwiftUI

@@ -1,4 +1,4 @@
-import CompositeSocialService
+import SocialClients
 import SocialModels
 import Utility
 

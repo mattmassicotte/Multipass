@@ -1,8 +1,8 @@
 import SwiftUI
 
-import CompositeSocialService
-import Storage
 import Settings
+import SocialClients
+import Storage
 import UIUtility
 import Valet
 

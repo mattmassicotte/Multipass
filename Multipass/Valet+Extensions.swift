@@ -1,6 +1,6 @@
 import Foundation
 
-import CompositeSocialService
+import SocialClients
 import Storage
 import Utility
 import Valet
