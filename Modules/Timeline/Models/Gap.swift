@@ -9,14 +9,14 @@ import CompositeSocialService
 import Foundation
 
 public struct Gap: Hashable, Sendable, Identifiable {
-	public typealias LoadedRanges = [SocialServiceID : Array<Range<Date>>]
+	public typealias LoadedRanges = [SocialAccountID : Array<Range<Date>>]
 	
 	/// Unique ID created when gap is initialized
 	public let id: UUID
 	/// A date range that defines the bounds of this gap
 	public var range: Range<Date>
 	/// Service IDs
-	public let serviceIDs: Set<SocialServiceID>
+	public let serviceIDs: Set<SocialAccountID>
 	/// A dictionary of arrays of service  keyed to the service ID string.
 	private(set) var loadedRanges: LoadedRanges
 	/// True if there is a current loading task running for this gap
@@ -32,7 +32,7 @@ public struct Gap: Hashable, Sendable, Identifiable {
 	init(
 		id: UUID,
 		range: Range<Date>,
-		serviceIDs: Set<SocialServiceID>,
+		serviceIDs: Set<SocialAccountID>,
 		loadedRanges: LoadedRanges = [:],
 		isLoading: Bool = false,
 		readStatus: ReadStatus = .unknown
@@ -78,7 +78,7 @@ public struct Gap: Hashable, Sendable, Identifiable {
 	}
 	
 	public enum Error: LocalizedError, Hashable, Sendable {
-		case noSocialServiceMatching(id: SocialServiceID)
+		case noSocialServiceMatching(id: SocialAccountID)
 		case noGapMatching(id: Gap.ID)
 		case gapAlreadyExists(id: Gap.ID)
 		case unloadedGapCannotBeRemoved(id: Gap.ID)
@@ -245,7 +245,7 @@ public extension Gap {
 	static func example(
 		id: UUID = UUID(),
 		range: Range<Date> = (Date().addingTimeInterval(.hours(-2)))..<Date(),
-		serviceIDs: Set<SocialServiceID> = [],
+		serviceIDs: Set<SocialAccountID> = [],
 		loadedRanges: LoadedRanges = [:],
 		isLoading: Bool = false,
 		readStatus: ReadStatus = .unknown,
@@ -268,7 +268,7 @@ public extension Gap {
 
 public extension [Gap] {
 	/// Inserts a new gap into an array adjusting others accordingly
-	mutating func insertNewGap(range: Range<Date>, serviceIDs: Set<SocialServiceID>) -> Gap.ID {
+	mutating func insertNewGap(range: Range<Date>, serviceIDs: Set<SocialAccountID>) -> Gap.ID {
 		let newGap = Gap(id: UUID(), range: range, serviceIDs: serviceIDs)
 		let adjustedGaps: [Gap] = reduce(into: [Gap]()) { partialResult, gap in
 			if gap.overlaps(newGap) {

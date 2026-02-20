@@ -9,7 +9,7 @@ public struct CompositeTimeline: Hashable, Sendable {
 		case gap(Gap)
 	}
 	
-	public var serviceIDs: Set<SocialServiceID>
+	public var serviceIDs: Set<SocialAccountID>
 	
 	/// Posts sorted from newest to oldest
 	public var posts: [Post]
@@ -22,7 +22,7 @@ public struct CompositeTimeline: Hashable, Sendable {
 	
 	
 	public init(
-		serviceIDs: Set<SocialServiceID> = [],
+		serviceIDs: Set<SocialAccountID> = [],
 		posts: [Post] = [],
 		gaps: [Gap] = [],
 		timelineRange: Range<Date>? = nil
