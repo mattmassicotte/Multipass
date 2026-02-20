@@ -1,12 +1,10 @@
 import Foundation
 
-import Storage
-
 public protocol SocialAccount: Identifiable {
 	associatedtype TimelineSequence: AsyncSequence<TimelineFragment, Error>
 	
 	var id: SocialAccountID { get }
-	var platform: SocialPlatform { get }
+	var platform: SocialService { get }
 
 	func timeline(within range: Range<Date>, gapID: UUID, isolation: isolated (any Actor)) -> TimelineSequence
 	

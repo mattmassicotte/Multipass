@@ -1,8 +1,8 @@
 public struct SocialAccounts {
-	let services: [SocialPlatform: any SocialAccount]
+	let services: [SocialService: any SocialAccount]
 
 	public init(services: [any SocialAccount]) {
-		var serviceDict: [SocialPlatform: any SocialAccount] = [:]
+		var serviceDict: [SocialService: any SocialAccount] = [:]
 
 		for service in services {
 			if serviceDict[service.platform] != nil { continue }
@@ -13,7 +13,7 @@ public struct SocialAccounts {
 		self.services = serviceDict
 	}
 
-	public func service(for platform: SocialPlatform) -> (any SocialAccount)? {
+	public func service(for platform: SocialService) -> (any SocialAccount)? {
 		services[platform]
 	}
 }

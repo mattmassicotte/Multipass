@@ -1,8 +1,6 @@
 import Foundation
 import CoreGraphics
 
-import Storage
-
 public enum Attachment: Hashable, Sendable {
 	public struct ImageSpecifier: Hashable, Sendable {
 		public let url: URL
@@ -64,7 +62,7 @@ public struct PostStatus: Hashable, Sendable {
 
 public struct Post: Hashable, Sendable {
 	public let content: AttributedString?
-	public let source: DataSource
+	public let source: SocialService
 	public let date: Date
 	public let author: Author
 	public let repostingAuthor: Author?
@@ -87,7 +85,7 @@ public struct Post: Hashable, Sendable {
 	
 	public init(
 		content: AttributedString?,
-		source: DataSource,
+		source: SocialService,
 		date: Date,
 		author: Author,
 		repostingAuthor: Author?,

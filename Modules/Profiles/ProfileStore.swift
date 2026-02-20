@@ -3,7 +3,7 @@ import SocialModels
 import Utility
 
 enum AuthorResolverError: Error {
-	case noServiceForPlatform(SocialPlatform)
+	case noServiceForPlatform(SocialService)
 	case unexpectedGitHubResponse
 }
 
@@ -19,7 +19,7 @@ public final class ProfileStore {
 	}
 
 	public func prefetch(authors: [Author]) async throws {
-		var byPlatform: [SocialPlatform: Set<String>] = [:]
+		var byPlatform: [SocialService: Set<String>] = [:]
 
 		for author in authors {
 			var set = byPlatform[author.handle.platform] ?? Set()
@@ -38,7 +38,7 @@ public final class ProfileStore {
 		}
 	}
 
-	private func prefetch(profiles ids: Set<String>, for platform: SocialPlatform) async throws {
+	private func prefetch(profiles ids: Set<String>, for platform: SocialService) async throws {
 		guard let account = self.accounts.service(for: platform) else {
 			throw AuthorResolverError.noServiceForPlatform(platform)
 		}
@@ -58,7 +58,7 @@ public final class ProfileStore {
 		return githubProfiles.compactMap { $0.handle }
 	}
 
-	private func profile(for id: String, on platform: SocialPlatform) async throws -> Profile {
+	private func profile(for id: String, on platform: SocialService) async throws -> Profile {
 		guard let service = self.accounts.service(for: platform) else {
 			throw AuthorResolverError.noServiceForPlatform(platform)
 		}

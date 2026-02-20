@@ -1,5 +1,7 @@
 import Foundation
 
+import SocialModels
+
 /// This might need to be further customized at some point
 public struct UserAccountDetails: Codable, Hashable, Sendable {
 	public var host: String
@@ -12,10 +14,10 @@ public struct UserAccountDetails: Codable, Hashable, Sendable {
 }
 
 public struct UserAccount: Codable, Sendable, Hashable {
-	public var source: DataSource
+	public var source: SocialService
 	public var details: UserAccountDetails
 
-	public init(source: DataSource, details: UserAccountDetails) {
+	public init(source: SocialService, details: UserAccountDetails) {
 		self.source = source
 		self.details = details
 	}

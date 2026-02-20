@@ -1,9 +1,5 @@
 import Foundation
 
-import Storage
-
-public typealias SocialPlatform = DataSource
-
 public struct Profile: Hashable, Sendable {
 	public struct Reference: Hashable, Sendable {
 		public enum Value: Hashable, Sendable {

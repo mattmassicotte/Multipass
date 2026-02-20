@@ -1,9 +1,9 @@
 public struct Handle: Hashable, Sendable {
 	public let host: String
 	public let name: String
-	public let platform: SocialPlatform
+	public let platform: SocialService
 
-	public init(host: String, name: String, platform: SocialPlatform) {
+	public init(host: String, name: String, platform: SocialService) {
 		self.host = host
 		self.name = name
 		self.platform = platform

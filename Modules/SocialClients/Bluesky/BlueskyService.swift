@@ -147,7 +147,7 @@ extension BlueskyService: SocialAccount {
 		clientParams.account
 	}
 
-	public var platform: SocialPlatform {
+	public var platform: SocialService {
 		.bluesky
 	}
 

@@ -18,7 +18,7 @@ public struct Author: Hashable, Sendable {
 		platformId: String,
 		handle: String,
 		host: String,
-		platform: SocialPlatform,
+		platform: SocialService,
 		avatarURL: URL? = nil
 	) {
 		self.init(

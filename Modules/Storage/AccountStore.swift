@@ -1,7 +1,9 @@
 import Foundation
 
+import SocialModels
+
 public struct ServiceAccount: Sendable {
-	public let source: DataSource
+	public let source: SocialService
 	public let handle: String
 	public let displayName: String
 	public let url: String

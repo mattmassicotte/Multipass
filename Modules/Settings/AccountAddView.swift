@@ -1,6 +1,7 @@
 import SwiftUI
 
 import SocialClients
+import SocialModels
 import Storage
 import UIUtility
 
@@ -9,9 +10,9 @@ struct AccountAddView: View {
 	@Environment(\.dismiss) private var dismiss
 	@State private var details: UserAccountDetails
 	@State private var adding = false
-	let source: DataSource
-	
-	init(source: DataSource) {
+	let source: SocialService
+
+	init(source: SocialService) {
 		self.source = source
 		
 		let defaultHost = switch source {

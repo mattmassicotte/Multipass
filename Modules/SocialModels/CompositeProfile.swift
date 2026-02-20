@@ -33,7 +33,7 @@ extension CompositeProfile {
 		case same
 	}
 
-	public func compare(to author: Author, on platform: SocialPlatform) -> Similarity {
+	public func compare(to author: Author, on platform: SocialService) -> Similarity {
 		var similar = false
 
 		for handle in handles {

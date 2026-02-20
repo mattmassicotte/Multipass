@@ -109,7 +109,7 @@ extension MastodonService: SocialAccount {
 		host
 	}
 
-	public var platform: SocialPlatform {
+	public var platform: SocialService {
 		.mastodon
 	}
 

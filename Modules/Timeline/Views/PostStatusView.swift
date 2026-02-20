@@ -5,7 +5,7 @@ import Storage
 
 public struct PostStatusView: View {
 	public let postID: Post.ID
-	public let source: DataSource
+	public let source: SocialService
 	public let status: PostStatus
 	public let action: (Post.Action) -> Void
 	
