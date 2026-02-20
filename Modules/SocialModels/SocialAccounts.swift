@@ -1,5 +1,3 @@
-import SocialModels
-
 public struct SocialAccounts {
 	let services: [SocialPlatform: any SocialAccount]
 

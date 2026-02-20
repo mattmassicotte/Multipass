@@ -138,6 +138,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		C904ADAF2F48DD2C0068AC3A /* SocialModels */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = SocialModels;
+			sourceTree = "<group>";
+		};
 		C9416F152D58B91D009079D3 /* UIUtility */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = UIUtility;
@@ -166,11 +171,6 @@
 		C948D2042F3A6B1300F497C6 /* Profiles */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Profiles;
-			sourceTree = "<group>";
-		};
-		C948D8762F48C32900F497C6 /* SocialModels */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = SocialModels;
 			sourceTree = "<group>";
 		};
 		C95FC5722CE50FF30093AB32 /* Multipass */ = {
@@ -335,7 +335,7 @@
 				C9416F572D58BC6F009079D3 /* SocialClients */,
 				C948D2042F3A6B1300F497C6 /* Profiles */,
 				C9416F3D2D58BA72009079D3 /* Settings */,
-				C948D8762F48C32900F497C6 /* SocialModels */,
+				C904ADAF2F48DD2C0068AC3A /* SocialModels */,
 				C9B0E0C12DBC13E5008F2A2D /* Storage */,
 				C9416F2D2D58B9FC009079D3 /* Timeline */,
 				C9416F152D58B91D009079D3 /* UIUtility */,
@@ -538,7 +538,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				C948D8762F48C32900F497C6 /* SocialModels */,
+				C904ADAF2F48DD2C0068AC3A /* SocialModels */,
 			);
 			name = SocialModels;
 			packageProductDependencies = (

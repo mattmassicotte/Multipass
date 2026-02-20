@@ -1,10 +1,6 @@
 import Foundation
 
-import OAuthenticator
-import SocialModels
 import Storage
-
-public typealias URLResponseProvider = OAuthenticator.URLResponseProvider
 
 public protocol SocialAccount: Identifiable {
 	associatedtype TimelineSequence: AsyncSequence<TimelineFragment, Error>
