@@ -1,20 +1,22 @@
 import Foundation
 
-import SocialClients
+import SocialModels
 
 final class MockService: SocialAccount {
 	let fragments: [TimelineFragment]
 	let profiles: [Profile]
 	let id: String
+	let platform: SocialService
 
-	init(id: String, fragments: [TimelineFragment], profiles: [Profile] = []) {
+	init(id: String, service: SocialService, fragments: [TimelineFragment], profiles: [Profile] = []) {
 		self.id = id
 		self.fragments = fragments
 		self.profiles = profiles
+		self.platform = service
 	}
 
-	convenience init(id: String, fragment: TimelineFragment) {
-		self.init(id: id, fragments: [fragment])
+	convenience init(id: String, service: SocialService, fragment: TimelineFragment) {
+		self.init(id: id, service: service, fragments: [fragment])
 	}
 
 	public func timeline(
@@ -34,7 +36,7 @@ final class MockService: SocialAccount {
 	func likePost(_ post: Post) async throws {
 	}
 
-	func profiles(for identifiers: [String]) async throws -> [CompositeSocialService.Profile] {
+	func profiles(for identifiers: [String]) async throws -> [Profile] {
 		profiles
 	}
 }

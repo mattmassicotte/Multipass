@@ -6,13 +6,13 @@ import SocialModels
 extension Reblog.Account {
 	func resolveHandle(with local: String) -> Handle {
 		if username == fullUsername {
-			return Handle(host: local, name: username, platform: .mastodon)
+			return Handle(host: local, name: username, service: .mastodon)
 		}
 
 		let prefixLength = username.count + 1
 		let host = fullUsername.suffix(fullUsername.count - prefixLength)
 
-		return Handle(host: String(host), name: username, platform: .mastodon)
+		return Handle(host: String(host), name: username, service: .mastodon)
 	}
 }
 

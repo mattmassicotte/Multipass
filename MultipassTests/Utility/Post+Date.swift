@@ -1,13 +1,12 @@
 import Foundation
 
-import SocialClients
-import Storage
+import SocialModels
 
 extension Post {
-	init(id: String, source: DataSource = .mastodon, time: TimeInterval) {
+	init(id: String, service: SocialService = .mastodon, time: TimeInterval) {
 		self.init(
 			content: nil,
-			source: source,
+			source: service,
 			date: Date(timeIntervalSince1970: time),
 			author: .placeholder,
 			repostingAuthor: nil,

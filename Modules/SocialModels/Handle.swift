@@ -3,17 +3,17 @@ public struct Handle: Hashable, Sendable {
 	public let name: String
 	public let platform: SocialService
 
-	public init(host: String, name: String, platform: SocialService) {
+	public init(host: String, name: String, service: SocialService) {
 		self.host = host
 		self.name = name
-		self.platform = platform
+		self.platform = service
 	}
 
 	public var displayString: String {
 		"\(name)@\(host)"
 	}
 
-	public static let placeholder = Handle(host: "placeholder.com", name: "placeholder", platform: .mastodon)
+	public static let placeholder = Handle(host: "placeholder.com", name: "placeholder", service: .mastodon)
 }
 
 extension Handle: CustomStringConvertible {

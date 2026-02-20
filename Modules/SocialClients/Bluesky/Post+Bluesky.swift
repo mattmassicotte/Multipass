@@ -58,10 +58,10 @@ extension Handle {
 			self.init(
 				host: components.suffix(2).joined(separator: "."),
 				name: components.prefix(components.count - 2).joined(separator: "."),
-				platform: .bluesky
+				service: .bluesky
 			)
 		} else {
-			self.init(host: atProtoHandle, name: "", platform: .bluesky)
+			self.init(host: atProtoHandle, name: "", service: .bluesky)
 		}
 	}
 }

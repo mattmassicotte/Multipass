@@ -1,7 +1,7 @@
 import Testing
 import Foundation
 
-import MastodonAPI
+import SocialClients
 import Reblog
 
 struct MastodonAPITests {
@@ -10,7 +10,7 @@ struct MastodonAPITests {
 {"home":{"last_read_id":"112327167530043732","version":425,"updated_at":"2024-04-24T16:38:07.000Z"},"notifications":{"last_read_id":"339514663","version":12806,"updated_at":"2024-11-15T18:16:35.000Z"}}
 """
 		
-		let client = MastodonAPI.Client(host: "abc", provider: { _ in
+		let client = MastodonClient(host: "abc", provider: { _ in
 			return (Data(data.utf8), URLResponse())
 		})
 		

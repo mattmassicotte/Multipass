@@ -24,7 +24,7 @@ public struct Author: Hashable, Sendable {
 		self.init(
 			name: name,
 			platformId: platformId,
-			handle: Handle(host: host, name: handle, platform: platform),
+			handle: Handle(host: host, name: handle, service: platform),
 			avatarURL: avatarURL,
 		)
 	}

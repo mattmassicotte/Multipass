@@ -21,9 +21,9 @@ struct GithubSocialProfile: Sendable, Codable {
 
 		switch provider {
 		case "mastodon":
-			return Handle(host: host, name: String(url.lastPathComponent.dropFirst()), platform: .mastodon)
+			return Handle(host: host, name: String(url.lastPathComponent.dropFirst()), service: .mastodon)
 		case "bluesky":
-			return Handle(host: host, name: url.lastPathComponent, platform: .bluesky)
+			return Handle(host: host, name: url.lastPathComponent, service: .bluesky)
 		default:
 			return nil
 		}
