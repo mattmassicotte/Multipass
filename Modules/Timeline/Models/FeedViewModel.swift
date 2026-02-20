@@ -3,7 +3,6 @@ import SwiftUI
 import SocialClients
 import SocialModels
 import Storage
-import StableView
 
 @MainActor
 @Observable
@@ -22,14 +21,7 @@ final class FeedViewModel {
 	private let timelineStore: TimelineStore
 
 	private(set) var accountsIdentifier: Int
-	var positionAnchor: AnchoredListPosition<Post>? {
-		didSet {
-			if let pos = positionAnchor {
-				updateServicePosition(for: pos.item)
-			}
-		}
-	}
-	
+
 	public var services: [any SocialAccount] = []
 	
 	public var timeline = CompositeTimeline()
