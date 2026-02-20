@@ -1,6 +1,7 @@
 import Foundation
 
 import ATAT
+import SocialModels
 
 extension Post {
 	init(_ feedViewPost: App.Bsky.Feed.Defs.FeedViewPost) {
@@ -88,10 +89,12 @@ extension App.Bsky.Feed.Defs.FeedViewPost {
 
 extension Profile {
 	init(_ profile: App.Bsky.Actor.Defs.ProfileViewDetailed) {
-		self.handle = Handle(atProtoHandle: profile.handle)
-		self.avatarURL = profile.avatarURL
-		self.displayName = profile.displayName ?? ""
-		self.references = []
-		self.platformId = profile.did
+		self.init(
+			avatarURL: profile.avatarURL,
+			references: [],
+			handle: Handle(atProtoHandle: profile.handle),
+			displayName: profile.displayName ?? "",
+			platformId: profile.did
+		)
 	}
 }

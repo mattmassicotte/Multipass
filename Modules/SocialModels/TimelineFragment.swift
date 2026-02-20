@@ -16,6 +16,13 @@ public struct TimelineFragment: Hashable, Sendable {
 	public let posts: [Post]
 	/// Date range used to download posts. May extend beyond lower and upper bounds of post dates.
 	public let range: Range<Date>
+
+	public init(serviceID: SocialAccountID, gapID: UUID, posts: [Post], range: Range<Date>) {
+		self.serviceID = serviceID
+		self.gapID = gapID
+		self.posts = posts
+		self.range = range
+	}
 }
 
 extension TimelineFragment: Comparable {

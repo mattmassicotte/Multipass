@@ -1,4 +1,5 @@
 import CompositeSocialService
+import SocialModels
 import Utility
 
 enum AuthorResolverError: Error {

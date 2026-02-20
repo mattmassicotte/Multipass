@@ -7,6 +7,7 @@
 
 import CompositeSocialService
 import Foundation
+import SocialModels
 
 public struct Gap: Hashable, Sendable, Identifiable {
 	public typealias LoadedRanges = [SocialAccountID : Array<Range<Date>>]

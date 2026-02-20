@@ -1,6 +1,7 @@
 import Foundation
 
 import CompositeSocialService
+import SocialModels
 
 struct GithubSocialProfile: Sendable, Codable {
 	let provider: String

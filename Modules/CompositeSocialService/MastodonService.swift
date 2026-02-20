@@ -3,6 +3,7 @@ import Foundation
 import MastodonAPI
 import OAuthenticator
 import Reblog
+import SocialModels
 import Storage
 
 public struct MastodonAccountDetails: Codable, Hashable, Sendable {

@@ -4,6 +4,7 @@ import Foundation
 import ATResolve
 import BlueskyAPI
 import OAuthenticator
+import SocialModels
 import Storage
 
 public struct BlueskyAccountDetails: Codable, Hashable, Sendable {

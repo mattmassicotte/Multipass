@@ -27,6 +27,14 @@ public struct Profile: Hashable, Sendable {
 	public let displayName: String
 	public let platformId: String
 
+	public init(avatarURL: URL?, references: [Reference], handle: Handle, displayName: String, platformId: String) {
+		self.avatarURL = avatarURL
+		self.references = references
+		self.handle = handle
+		self.displayName = displayName
+		self.platformId = platformId
+	}
+	
 	public var author: Author {
 		Author(name: displayName, platformId: platformId, handle: handle, avatarURL: avatarURL)
 	}

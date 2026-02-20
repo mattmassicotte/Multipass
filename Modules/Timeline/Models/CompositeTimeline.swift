@@ -1,7 +1,8 @@
+import Algorithms
 import Foundation
 
 import CompositeSocialService
-import Algorithms
+import SocialModels
 
 public struct CompositeTimeline: Hashable, Sendable {
 	public enum Element: Hashable, Sendable {

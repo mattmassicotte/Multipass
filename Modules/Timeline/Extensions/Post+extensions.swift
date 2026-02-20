@@ -5,9 +5,9 @@
 //  Created by Ryan Lintott on 2026-02-18.
 //
 
-import CompositeSocialService
-
 import Foundation
+
+import SocialModels
 
 extension Post {
 	public enum Action {

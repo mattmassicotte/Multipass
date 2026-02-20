@@ -1,8 +1,8 @@
 import SwiftUI
 
 import CompositeSocialService
+import SocialModels
 import Storage
-
 
 public struct PostStatusView: View {
 	public let postID: Post.ID

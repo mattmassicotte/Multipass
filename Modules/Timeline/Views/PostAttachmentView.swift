@@ -1,6 +1,7 @@
 import SwiftUI
 
 import CompositeSocialService
+import SocialModels
 
 struct PostAttachmentView: View {
 	let attachments: [Attachment]

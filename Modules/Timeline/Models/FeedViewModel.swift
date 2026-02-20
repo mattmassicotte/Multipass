@@ -1,6 +1,7 @@
 import SwiftUI
 
 import CompositeSocialService
+import SocialModels
 import Storage
 import StableView
 

@@ -8,6 +8,12 @@ public enum Attachment: Hashable, Sendable {
 		public let url: URL
 		public let size: CGSize?
 		public let focus: CGPoint?
+
+		public init(url: URL, size: CGSize?, focus: CGPoint?) {
+			self.url = url
+			self.size = size
+			self.focus = focus
+		}
 	}
 	
 	public struct Image: Hashable, Sendable {

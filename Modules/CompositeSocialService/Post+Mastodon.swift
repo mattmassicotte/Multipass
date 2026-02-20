@@ -1,6 +1,7 @@
 import Foundation
 
 import Reblog
+import SocialModels
 
 extension Reblog.Account {
 	func resolveHandle(with local: String) -> Handle {
@@ -125,15 +126,13 @@ extension Profile.Reference.Value {
 
 extension Profile.Reference {
 	init(field: Account.Field, parser: ContentParser) {
-		self.name = field.name
-
 		let htmlComponents: [HTMLComponent]
 
 		do {
 			htmlComponents = try parser.parse(field.value)
 		} catch {
 			print("failed to parse field: ", error, field)
-			self.value = .text(field.value)
+			self.init(name: field.name, value: .text(field.value))
 			return
 		}
 
@@ -141,7 +140,7 @@ extension Profile.Reference {
 			htmlComponents.count == 1,
 			case .link(let url, _) = htmlComponents.first
 		else {
-			self.value = .text(field.value)
+			self.init(name: field.name, value: .text(field.value))
 			return
 		}
 
@@ -152,23 +151,25 @@ extension Profile.Reference {
 				url.pathComponents.count == 2,
 				let name = url.pathComponents.last
 			else {
-				self.value = .link(url, false)
+				self.init(name: field.name, value: .link(url, false))
 				return
 			}
 
-			self.value = .githubProfile(name)
+			self.init(name: field.name, value: .githubProfile(name))
 		default:
-			self.value = .link(url, field.verifiedAt != nil)
+			self.init(name: field.name, value: .link(url, field.verifiedAt != nil))
 		}
 	}
 }
 
 extension Profile {
 	init(_ account: Account, host: String, parser: ContentParser) {
-		self.displayName = account.displayName
-		self.avatarURL = URL(string: account.avatarStatic)
-		self.handle = account.resolveHandle(with: host)
-		self.references = account.fields.map { Profile.Reference(field: $0, parser: parser) }
-		self.platformId = account.id
+		self.init(
+			avatarURL: URL(string: account.avatarStatic),
+			references: account.fields.map { Profile.Reference(field: $0, parser: parser) },
+			handle: account.resolveHandle(with: host),
+			displayName: account.displayName,
+			platformId: account.id
+		)
 	}
 }
