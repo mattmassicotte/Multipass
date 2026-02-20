@@ -7,7 +7,7 @@ public typealias URLResponseProvider = OAuthenticator.URLResponseProvider
 
 public typealias SocialServiceID = String
 
-public protocol SocialService: Identifiable {
+public protocol SocialAccount: Identifiable {
 	associatedtype TimelineSequence: AsyncSequence<TimelineFragment, Error>
 	
 	var id: SocialServiceID { get }
@@ -20,7 +20,7 @@ public protocol SocialService: Identifiable {
 	func profiles(for identifiers: [String]) async throws -> [Profile]
 }
 
-extension SocialService {
+extension SocialAccount {
 	public func profile(for identifier: String) async throws -> Profile {
 		try await profiles(for: [identifier]).first!
 	}

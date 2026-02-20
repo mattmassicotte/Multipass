@@ -103,7 +103,7 @@ public struct MastodonService {
 
 }
 
-extension MastodonService: SocialService {
+extension MastodonService: SocialAccount {
 	public var id: String {
 		// this is insufficient
 		host

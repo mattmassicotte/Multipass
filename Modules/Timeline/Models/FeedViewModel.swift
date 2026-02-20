@@ -29,7 +29,7 @@ final class FeedViewModel {
 		}
 	}
 	
-	public var services: [any SocialService] = []
+	public var services: [any SocialAccount] = []
 	
 	public var timeline = CompositeTimeline()
 	
@@ -174,7 +174,7 @@ final class FeedViewModel {
 
 	func updateAccounts(_ accounts: [UserAccount]) {
 		services = accounts
-			.map { (account) -> any SocialService in
+			.map { (account) -> any SocialAccount in
 				switch account.source {
 				case .mastodon:
 					MastodonService(

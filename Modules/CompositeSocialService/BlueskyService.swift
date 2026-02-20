@@ -142,7 +142,7 @@ public class BlueskyService {
 	}
 }
 
-extension BlueskyService: SocialService {
+extension BlueskyService: SocialAccount {
 	public var id: String {
 		clientParams.account
 	}

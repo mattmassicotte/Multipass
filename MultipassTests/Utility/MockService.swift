@@ -2,7 +2,7 @@ import Foundation
 
 import CompositeSocialService
 
-final class MockService: SocialService {
+final class MockService: SocialAccount {
 	let fragments: [TimelineFragment]
 	let profiles: [Profile]
 	let id: String
