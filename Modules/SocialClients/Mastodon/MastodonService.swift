@@ -1,6 +1,5 @@
 import Foundation
 
-import MastodonAPI
 import OAuthenticator
 import Reblog
 import SocialModels
@@ -14,7 +13,7 @@ public struct MastodonAccountDetails: Codable, Hashable, Sendable {
 public struct MastodonService {
 	private static let appRegistrationKey = "Mastodon App Registration"
 
-	let clientTask: Task<MastodonAPI.Client, any Error>
+	let clientTask: Task<MastodonClient, any Error>
 	let host: String
 	private let provider: URLResponseProvider
 	
@@ -49,7 +48,7 @@ public struct MastodonService {
 
 			let authenticator = Authenticator(config: config, urlLoader: provider)
 
-			return MastodonAPI.Client(host: params.host, provider: authenticator.responseProvider)
+			return MastodonClient(host: params.host, provider: authenticator.responseProvider)
 		}
 	}
 
@@ -75,7 +74,7 @@ public struct MastodonService {
 		return appRegistration
 	}
 	
-	private var client: MastodonAPI.Client {
+	private var client: MastodonClient {
 		get async throws {
 			try await clientTask.value
 		}

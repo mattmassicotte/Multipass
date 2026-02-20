@@ -3,14 +3,7 @@ import Foundation
 
 import ATAT
 
-enum ClientError: Error {
-	case malformedURL(URLComponents)
-	case unexpectedResponse(URLResponse)
-	case requestFailed
-	case invalidArguments
-}
-
-public struct Client: Sendable {
+public struct BlueskyClient: Sendable {
 	public typealias ResponseProvider = @Sendable (URLRequest) async throws -> (Data, URLResponse)
 	
 	private let provider: ResponseProvider
@@ -98,7 +91,7 @@ public struct CreateSessionResponse: Decodable, Hashable, Sendable {
 	public let status: AccountStatus?
 }
 
-extension Client {
+extension BlueskyClient {
 	public func createSession(with login: Credentials) async throws -> CreateSessionResponse {
 		var components = baseComponents
 		

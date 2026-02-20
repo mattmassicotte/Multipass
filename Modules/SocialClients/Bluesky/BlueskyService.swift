@@ -2,7 +2,6 @@ import CryptoKit
 import Foundation
 
 import ATResolve
-import BlueskyAPI
 import OAuthenticator
 import SocialModels
 import Storage
@@ -30,7 +29,7 @@ public class BlueskyService {
 	private static let dpopKey = "Bluesky DPoP Key"
 	public static let clientMetadataEndpoint = "https://downloads.chimehq.com/com.chimehq.Multipass/client-metadata.json"
 
-	private var clientResult: Result<BlueskyAPI.Client, any Error>?
+	private var clientResult: Result<BlueskyClient, any Error>?
 	let clientParams: ClientParams
 
 	public init(
@@ -66,7 +65,7 @@ public class BlueskyService {
 		return host
 	}
 
-	private static func createClient(with params: ClientParams) async throws -> BlueskyAPI.Client {
+	private static func createClient(with params: ClientParams) async throws -> BlueskyClient {
 		let loginStore = params.secretStore.loginStore(for: "Bluesky OAuth")
 
 		let key = try await Self.loadDPoPKey(with: params.secretStore)
@@ -98,7 +97,7 @@ public class BlueskyService {
 
 		let authenticator = Authenticator(config: config)
 
-		return BlueskyAPI.Client(host: resolvedPDS, account: params.account, provider: authenticator.responseProvider)
+		return BlueskyClient(host: resolvedPDS, account: params.account, provider: authenticator.responseProvider)
 	}
 
 	private static func loadDPoPKey(with store: SecretStore) async throws -> DPoPKey {
@@ -119,7 +118,7 @@ public class BlueskyService {
 		return key
 	}
 
-	private var client: BlueskyAPI.Client {
+	private var client: BlueskyClient {
 		get async throws {
 			if let result = clientResult {
 				return try result.get()

@@ -4,12 +4,7 @@ import Foundation
 import OAuthenticator
 import Reblog
 
-enum ClientError: Error {
-	case unexpectedResponse(URLResponse)
-	case malformedURL(URLComponents)
-}
-
-public struct Client: Sendable {
+public struct MastodonClient: Sendable {
 	public typealias ResponseProvider = @Sendable (URLRequest) async throws -> (Data, URLResponse)
 	
 	private let provider: ResponseProvider
@@ -75,7 +70,7 @@ public struct Client: Sendable {
 	}
 }
 
-extension Client {
+extension MastodonClient {
 	public func markers(timelines: Set<Marker.Timeline> = [.home, .notifications]) async throws -> MarkerResponse {
 		var urlBuilder = baseComponents
 		urlBuilder.path = "/api/v1/markers"
