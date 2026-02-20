@@ -10,6 +10,8 @@
 		C904AD8B2F48C64A0068AC3A /* libSocialModels.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C948D8752F48C32900F497C6 /* libSocialModels.a */; };
 		C904AD8E2F48D9740068AC3A /* libStorage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9AB8EE82D5628C300B1462F /* libStorage.a */; };
 		C904ADA02F48DB0E0068AC3A /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = C904AD9F2F48DB0E0068AC3A /* Algorithms */; };
+		C904ADBB2F48E5010068AC3A /* libUtility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C95FC5BC2CE540980093AB32 /* libUtility.a */; };
+		C904ADBC2F48E5100068AC3A /* libUtility.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C95FC5BC2CE540980093AB32 /* libUtility.a */; };
 		C91D81A12D01F06E007D1E82 /* libSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C91D81922D01EFFF007D1E82 /* libSettings.a */; };
 		C92CD7432DB143DE00964B90 /* Jot in Frameworks */ = {isa = PBXBuildFile; productRef = C92CD7422DB143DE00964B90 /* Jot */; };
 		C92CD7482DB1483900964B90 /* Jot in Frameworks */ = {isa = PBXBuildFile; productRef = C92CD7472DB1483900964B90 /* Jot */; };
@@ -215,6 +217,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C904ADBC2F48E5100068AC3A /* libUtility.a in Frameworks */,
 				C948D8802F48C3B600F497C6 /* libSocialModels.a in Frameworks */,
 				CFF0BFD72F2D191B00E437FF /* ATAT in Frameworks */,
 				CFF0BFD92F2D1B8000E437FF /* Reblog in Frameworks */,
@@ -239,6 +242,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C904ADBB2F48E5010068AC3A /* libUtility.a in Frameworks */,
 				C904AD8E2F48D9740068AC3A /* libStorage.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
