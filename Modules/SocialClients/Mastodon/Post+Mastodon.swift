@@ -113,7 +113,7 @@ extension Profile.Reference.Value {
 
 		guard
 			htmlComponents.count == 1,
-			case .link(let url, let text) = htmlComponents.first
+			case .link = htmlComponents.first
 		else {
 			self = .text(field)
 			return
