@@ -53,13 +53,23 @@ final class GitHubSocialClient {
 			return []
 		}
 
-		return try await socialProfiles(for: username)
+		do {
+			return try await socialProfiles(for: username)
+		} catch AuthorResolverError.unexpectedGitHubResponse {
+			print("probably getting rate-limited right now")
+			return []
+		} catch {
+			throw error
+		}
 	}
 
 	public func socialProfiles(for username: String) async throws -> [GithubSocialProfile] {
 		guard let url = URL(string: "https://api.github.com/users/\(username)/social_accounts") else {
 			fatalError()
 		}
+
+		// pretty easy to get rate-limited here
+		// https://docs.github.com/en/rest/using-the-rest-api/rate-limits-for-the-rest-api?apiVersion=2022-11-28#checking-the-status-of-your-rate-limit
 
 		var request = URLRequest(url: url)
 

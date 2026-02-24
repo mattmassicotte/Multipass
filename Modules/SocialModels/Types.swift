@@ -88,11 +88,11 @@ public struct Post: Hashable, Sendable {
 		source: SocialService,
 		date: Date,
 		author: Author,
-		repostingAuthor: Author?,
+		repostingAuthor: Author? = nil,
 		identifier: String,
 		url: URL?,
 		uri: String? = nil,
-		attachments: [Attachment],
+		attachments: [Attachment] = [],
 		status: PostStatus,
 		blueskyCursor: String? = nil
 	) {
@@ -108,7 +108,18 @@ public struct Post: Hashable, Sendable {
 		self.status = status
 		self.blueskyCursor = blueskyCursor
 	}
-	
+
+	public var links: [Attachment.Link] {
+		attachments.compactMap {
+			switch $0 {
+			case .link(let link):
+				link
+			default:
+				nil
+			}
+		}
+	}
+
 	public static let placeholder = Post(
 		content: "hello",
 		source: .mastodon,
@@ -135,12 +146,5 @@ extension Post: Comparable {
 	
 	public static func < (lhs: Post, rhs: Post) -> Bool {
 		lhs.sortValue < rhs.sortValue
-	}
-}
-
-public extension Array<Post> {
-	mutating func update(with newPosts: [Post]) {
-		#warning("Deduplication logic here")
-		self = (self + newPosts).sorted(by: >)
 	}
 }

@@ -3,7 +3,7 @@ import Testing
 import SocialModels
 import Storage
 
-struct ProfileIdentityTests {
+struct CompositeProfileTests {
 	@Test
 	func dissimilar() async throws {
 		let identity = CompositeProfile(

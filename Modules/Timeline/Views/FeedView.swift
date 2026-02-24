@@ -64,7 +64,7 @@ public struct FeedView: View {
 						switch scrollPositionItem {
 						case .post(let post):
 							Text("Post")
-							if let content = post.content {
+							if let content = post.posts.first!.content {
 								Text(content)
 									.lineLimit(1)
 							}

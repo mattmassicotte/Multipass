@@ -6,14 +6,14 @@ import SocialModels
 
 public struct CompositeTimeline: Hashable, Sendable {
 	public enum Element: Hashable, Sendable {
-		case post(Post)
+		case post(CompositePost)
 		case gap(Gap)
 	}
 	
 	public var serviceIDs: Set<SocialAccountID>
 	
 	/// Posts sorted from newest to oldest
-	public var posts: [Post]
+	public var posts: [CompositePost]
 	/// Gaps sorted from oldest to newest
 	public var gaps: [Gap]
 	/// Posts and gaps sorted from newest to oldest
@@ -24,7 +24,7 @@ public struct CompositeTimeline: Hashable, Sendable {
 	
 	public init(
 		serviceIDs: Set<SocialAccountID> = [],
-		posts: [Post] = [],
+		posts: [CompositePost] = [],
 		gaps: [Gap] = [],
 		timelineRange: Range<Date>? = nil
 	) {
@@ -69,8 +69,7 @@ extension CompositeTimeline {
 		return id
 	}
 	
-	public mutating func update(with fragment: TimelineFragment) throws {
-		posts.update(with: fragment.posts)
+	public mutating func encorporateGaps(in fragment: TimelineFragment) throws {
 		try gaps.fill(with: fragment)
 		updateElements()
 	}
@@ -150,7 +149,7 @@ extension CompositeTimeline.Element: Comparable {
 			(
 				upperBound: post.date,
 				lowerBound: post.date,
-				id: post.id
+				id: post.id.uuidString
 			)
 		case let .gap(gap):
 			(
@@ -175,7 +174,7 @@ extension CompositeTimeline.Element: Identifiable {
 	
 	public var id: ElementID {
 		switch self {
-		case let .post(post): .post(post.id)
+		case let .post(post): .post(post.id.uuidString)
 		case let .gap(gap): .gap(gap.id)
 		}
 	}
@@ -185,7 +184,7 @@ extension CompositeTimeline.Element {
 	var post: Post? {
 		switch self {
 		case let .post(post):
-			return post
+			return post.posts.first
 		case .gap:
 			return nil
 		}

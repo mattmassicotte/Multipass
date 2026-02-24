@@ -2,10 +2,10 @@ import Foundation
 
 import Utility
 
-public struct CompositeProfile: Sendable {
-	public let avatarURL: URL?
-	public let handles: Set<Handle>
-	public let name: String
+public struct CompositeProfile: Hashable, Sendable {
+	public var avatarURL: URL?
+	public var handles: Set<Handle>
+	public var name: String
 
 	public init(name: String, handles: Set<Handle>, avatarURL: URL? = nil) {
 		self.avatarURL = avatarURL
@@ -23,6 +23,10 @@ public struct CompositeProfile: Sendable {
 		self.avatarURL = author.avatarURL
 		self.name = author.name
 		self.handles = [author.handle]
+	}
+
+	public mutating func merge(_ handle: Handle) {
+		self.handles.insert(handle)
 	}
 }
 

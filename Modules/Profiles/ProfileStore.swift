@@ -8,7 +8,7 @@ enum AuthorResolverError: Error {
 }
 
 public final class ProfileStore {
-	let accounts: SocialAccounts
+	public var accounts: SocialAccounts
 	private var profileCache: [String: Profile] = [:]
 	private var compositeProfiles: [Handle: CompositeProfile] = [:]
 	let githubClient: GitHubSocialClient

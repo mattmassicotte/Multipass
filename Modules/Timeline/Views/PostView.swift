@@ -3,7 +3,7 @@ import SwiftUI
 import SocialModels
 
 struct PostView: View {
-	let post: Post
+	let post: CompositePost
 	let action: (Post.Action) -> Void
 	
 	let formatter: RelativeDateTimeFormatter = {
@@ -15,17 +15,36 @@ struct PostView: View {
 
 		return formatter
 	}()
-	
+
+	init(post: CompositePost, action: @escaping (Post.Action) -> Void) {
+		self.post = post
+		self.action = action
+	}
+
+#if DEBUG
+	init(post: Post) {
+		self.post = CompositePost(post: post)
+		self.action = { _ in }
+	}
+#endif
+
+	private var rootPost: Post {
+		post.posts.first!
+	}
+
 	var originalAuthor: Author {
-		post.repostingAuthor ?? post.author
+		rootPost.repostingAuthor ?? rootPost.author
 	}
 	
 	var repostAuthor: Author? {
-		if post.repostingAuthor == nil { return nil }
-		return post.author
+		if rootPost.repostingAuthor == nil { return nil }
+		return rootPost.author
 	}
-	
-	
+
+	var services: [SocialService] {
+		post.posts.map { $0.source }
+	}
+
 	var emptyGridCell: some View {
 		Color.clear
 			.frame(maxWidth: 0, maxHeight: 0)
@@ -63,11 +82,12 @@ struct PostView: View {
 						.cornerRadius(5)
 					
 					HStack {
-						/// Could put more sources here for merged posts
-						Image(post.source.imageName)
-							.resizable()
-							.scaledToFit()
-							.frame(maxWidth: 12)
+						ForEach(services, id: \.self) { service in
+							Image(service.imageName)
+								.resizable()
+								.scaledToFit()
+								.frame(maxWidth: 12)
+						}
 					}
 				}
 				
@@ -86,12 +106,12 @@ struct PostView: View {
 							.font(.caption)
 					}
 					
-					if let content = post.content {
+					if let content = rootPost.content {
 						PostContentView(content: content)
 					}
 					
-					if !post.attachments.isEmpty {
-						PostAttachmentView(attachments: post.attachments)
+					if !rootPost.attachments.isEmpty {
+						PostAttachmentView(attachments: rootPost.attachments)
 					}
 				}
 				.gridColumnAlignment(.leading)
@@ -99,9 +119,9 @@ struct PostView: View {
 			
 			GridRow {
 				PostStatusView(
-					postID: post.id,
-					source: post.source,
-					status: post.status,
+					postID: rootPost.id,
+					source: rootPost.source,
+					status: rootPost.status,
 					action: action
 				)
 				#if os(macOS)
@@ -131,7 +151,7 @@ struct PostView: View {
 			url: URL(string: "https://example.com")!,
 			attachments: [],
 			status: .placeholder
-		), action: { _ in })
+		))
 		
 		Divider()
 		
@@ -145,7 +165,7 @@ struct PostView: View {
 			url: URL(string: "https://example.com")!,
 			attachments: [],
 			status: .init(likeCount: 0, liked: false, repostCount: 0, reposted: false)
-		), action: { _ in })
+		))
 		
 		Divider()
 		
@@ -159,7 +179,7 @@ struct PostView: View {
 			url: URL(string: "https://example.com")!,
 			attachments: [],
 			status: .init(likeCount: 3, liked: true, repostCount: 999, reposted: false)
-		), action: { _ in })
+		))
 		
 		Divider()
 	}

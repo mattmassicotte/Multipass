@@ -1,5 +1,6 @@
 import SwiftUI
 
+import Profiles
 import SocialClients
 import SocialModels
 import Storage
@@ -19,6 +20,10 @@ final class FeedViewModel {
 	private let secretStore: SecretStore
 	@ObservationIgnored
 	private let timelineStore: TimelineStore
+	@ObservationIgnored
+	private let profileStore: ProfileStore
+	@ObservationIgnored
+	private let fragmentProcessor: FragmentProcessor
 
 	private(set) var accountsIdentifier: Int
 
@@ -31,7 +36,12 @@ final class FeedViewModel {
 	init(secretStore: SecretStore, timelineStore: TimelineStore) {
 		self.secretStore = secretStore
 		self.timelineStore = timelineStore
-		
+		self.profileStore = ProfileStore(
+			accounts: SocialAccounts(services: []),
+			provider: responseProvider
+		)
+		self.fragmentProcessor = FragmentProcessor(authorResolver: profileStore.compositeProfile(for:))
+
 		self.accountsIdentifier = 0
 	}
 	
@@ -119,8 +129,18 @@ final class FeedViewModel {
 		}
 	}
 	
-	public func updateTimeline(with fragment: TimelineFragment) throws {
-		try timeline.update(with: fragment)
+	public func updateTimeline(with fragment: TimelineFragment) async throws {
+		// temporarily wrap
+		let existing = timeline.posts
+
+		try await profileStore.prefetch(authors: fragment.authors)
+
+		// this is racy, but we'll deal with that later
+		let mergedPosts = try await fragmentProcessor.merge(fragment: fragment, with: existing)
+
+		// and then temporarily unwrap
+		timeline.posts = mergedPosts
+		try timeline.encorporateGaps(in: fragment)
 	}
 	
 	public func updateTimelineElements() {
@@ -148,7 +168,7 @@ final class FeedViewModel {
 					
 					for try await fragment in serviceTimeline {
 						try Task.checkCancellation()
-						try timeline.update(with: fragment)
+						try await updateTimeline(with: fragment)
 					}
 				}
 			} catch let error as Gap.Error {
@@ -185,6 +205,7 @@ final class FeedViewModel {
 				}
 			}
 		timeline.serviceIDs = Set(services.map(\.id))
+
+		profileStore.accounts = SocialAccounts(services: services)
 	}
 }
-

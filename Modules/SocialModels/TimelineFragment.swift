@@ -16,6 +16,20 @@ public struct TimelineFragment: Hashable, Sendable {
 		self.posts = posts
 		self.range = range
 	}
+
+	public var authors: [Author] {
+		var authors: [Author] = []
+
+		for post in posts {
+			authors.append(post.author)
+
+			if let repostingAuthor = post.repostingAuthor {
+				authors.append(repostingAuthor)
+			}
+		}
+
+		return authors
+	}
 }
 
 extension TimelineFragment: Comparable {

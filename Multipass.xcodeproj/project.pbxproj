@@ -42,6 +42,7 @@
 		C9CDBBCA2D5779500000E010 /* ATAT in Frameworks */ = {isa = PBXBuildFile; productRef = C9CDBBC92D5779500000E010 /* ATAT */; };
 		C9CDBBE02D577C230000E010 /* libTimeline.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C9CDBBCF2D577BC60000E010 /* libTimeline.a */; };
 		C9CDBBE52D577C6B0000E010 /* ATResolve in Frameworks */ = {isa = PBXBuildFile; productRef = C9CDBBE42D577C6B0000E010 /* ATResolve */; };
+		C9EA9A4F2F4CC868005DFF19 /* libProfiles.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C948D20B2F3A6B4E00F497C6 /* libProfiles.a */; };
 		CF9EC9502F2D0A61000F86B0 /* Empire in Frameworks */ = {isa = PBXBuildFile; productRef = CF9EC94F2F2D0A61000F86B0 /* Empire */; };
 		CF9EC9582F2D10A2000F86B0 /* OAuthenticator in Frameworks */ = {isa = PBXBuildFile; productRef = CF9EC9572F2D10A2000F86B0 /* OAuthenticator */; };
 		CF9EC95A2F2D10A2000F86B0 /* Jot in Frameworks */ = {isa = PBXBuildFile; productRef = CF9EC9592F2D10A2000F86B0 /* Jot */; };
@@ -113,6 +114,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = C92217D72CED1C80006C34BC;
 			remoteInfo = CompositeSocialService;
+		};
+		C9EA9A502F4CC868005DFF19 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C95FC5682CE50FF30093AB32 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C948D20A2F3A6B4E00F497C6;
+			remoteInfo = Profiles;
 		};
 		CFF0BFEE2F2D1D0000E437FF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -323,6 +331,7 @@
 				C948CDC82F2914A900F497C6 /* Algorithms in Frameworks */,
 				C9CDBBE52D577C6B0000E010 /* ATResolve in Frameworks */,
 				CFF0BFE72F2D1C3E00E437FF /* libStorage.a in Frameworks */,
+				C9EA9A4F2F4CC868005DFF19 /* libProfiles.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -711,6 +720,7 @@
 				C9416F052D58B84F009079D3 /* PBXTargetDependency */,
 				C9CDBBDF2D577C0E0000E010 /* PBXTargetDependency */,
 				CFF0BFEF2F2D1D0000E437FF /* PBXTargetDependency */,
+				C9EA9A512F4CC868005DFF19 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				C9416F2D2D58B9FC009079D3 /* Timeline */,
@@ -972,6 +982,11 @@
 			isa = PBXTargetDependency;
 			target = C92217D72CED1C80006C34BC /* SocialClients */;
 			targetProxy = C9CDBBDE2D577C0E0000E010 /* PBXContainerItemProxy */;
+		};
+		C9EA9A512F4CC868005DFF19 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C948D20A2F3A6B4E00F497C6 /* Profiles */;
+			targetProxy = C9EA9A502F4CC868005DFF19 /* PBXContainerItemProxy */;
 		};
 		CFF0BFEF2F2D1D0000E437FF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
