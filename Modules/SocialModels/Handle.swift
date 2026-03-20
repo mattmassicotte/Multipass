@@ -1,4 +1,4 @@
-public struct Handle: Hashable, Sendable {
+public struct Handle: Hashable, Sendable, Codable {
 	public let host: String
 	public let name: String
 	public let platform: SocialService

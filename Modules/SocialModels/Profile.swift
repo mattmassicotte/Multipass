@@ -1,8 +1,8 @@
 import Foundation
 
-public struct Profile: Hashable, Sendable {
-	public struct Reference: Hashable, Sendable {
-		public enum Value: Hashable, Sendable {
+public struct Profile: Hashable, Sendable, Codable {
+	public struct Reference: Hashable, Sendable, Codable {
+		public enum Value: Hashable, Sendable, Codable {
 			case link(URL, Bool)
 			case text(String)
 			case githubProfile(String)

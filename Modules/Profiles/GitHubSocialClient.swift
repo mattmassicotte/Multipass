@@ -2,6 +2,7 @@ import Foundation
 
 import SocialClients
 import SocialModels
+import Utility
 
 struct GithubSocialProfile: Sendable, Codable {
 	let provider: String
@@ -38,9 +39,11 @@ extension GithubSocialProfile: CustomDebugStringConvertible {
 
 final class GitHubSocialClient {
 	let provider: URLResponseProvider
+	private let cache: Cache<String, [GithubSocialProfile]>
 
 	init(provider: @escaping URLResponseProvider) {
 		self.provider = provider
+		self.cache = Cache(cachePath: "github-social-profiles")
 	}
 
 	public func socialProfiles(for profile: Profile) async throws -> [GithubSocialProfile] {
@@ -63,7 +66,7 @@ final class GitHubSocialClient {
 		}
 	}
 
-	public func socialProfiles(for username: String) async throws -> [GithubSocialProfile] {
+	func loadSocialProfiles(for username: String) async throws -> [GithubSocialProfile] {
 		guard let url = URL(string: "https://api.github.com/users/\(username)/social_accounts") else {
 			fatalError()
 		}
@@ -89,5 +92,11 @@ final class GitHubSocialClient {
 		}
 
 		return try JSONDecoder().decode([GithubSocialProfile].self, from: data)
+	}
+
+	public func socialProfiles(for username: String) async throws -> [GithubSocialProfile] {
+		try await cache.readOrFill(username) {
+			try await loadSocialProfiles(for: username)
+		}
 	}
 }

@@ -1,5 +1,5 @@
 {
-  "originHash" : "2e23bb0f1d175a147b2187453e6a8912b28bb29b74becbbbc2438be9d9b831b6",
+  "originHash" : "2fad7320aa8046f11b9ae10f854e34a9528f2c74682b7023383c7169068f1d1c",
   "pins" : [
     {
       "identity" : "atat",
@@ -8,6 +8,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "85a1e4dcb181eb3ebba5b4e13043d2b75752dc77"
+      }
+    },
+    {
+      "identity" : "atm",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattmassicotte/ATM",
+      "state" : {
+        "branch" : "main",
+        "revision" : "b6cc6e5ce227401772f483e5fd526da40d51b939"
       }
     },
     {
@@ -35,6 +44,15 @@
       "state" : {
         "branch" : "main",
         "revision" : "0826782b0489dc76249b5def7d69f38684e5cb7f"
+      }
+    },
+    {
+      "identity" : "lrucache",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/nicklockwood/LRUCache",
+      "state" : {
+        "revision" : "cb5b2bd0da83ad29c0bec762d39f41c8ad0eaf3e",
+        "version" : "1.2.1"
       }
     },
     {
@@ -110,12 +128,21 @@
       }
     },
     {
+      "identity" : "taskgate",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattmassicotte/TaskGate.git",
+      "state" : {
+        "revision" : "4c7adbc19cda6d999c5c13f874884ddd4d3616d1",
+        "version" : "0.3.0"
+      }
+    },
+    {
       "identity" : "valet",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/square/Valet",
       "state" : {
-        "revision" : "05c9e514fbd352a6866877ca31326b4e0b7d6d01",
-        "version" : "5.0.0"
+        "revision" : "246baf6be3f9e3ff116dc05251a08f69dd7c7b9d",
+        "version" : "5.1.0"
       }
     }
   ],

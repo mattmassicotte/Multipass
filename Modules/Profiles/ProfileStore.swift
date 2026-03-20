@@ -9,13 +9,16 @@ enum AuthorResolverError: Error {
 
 public final class ProfileStore {
 	public var accounts: SocialAccounts
-	private var profileCache: [String: Profile] = [:]
-	private var compositeProfiles: [Handle: CompositeProfile] = [:]
+	private var profileCache: Cache<String, Profile>
+	private var compositeProfileCache: Cache<Handle, CompositeProfile>
 	let githubClient: GitHubSocialClient
 
 	public init(accounts: SocialAccounts, provider: @escaping URLResponseProvider) {
 		self.accounts = accounts
 		self.githubClient = GitHubSocialClient(provider: provider)
+
+		self.profileCache = Cache(cachePath: "profiles")
+		self.compositeProfileCache = Cache()
 	}
 
 	public func prefetch(authors: [Author]) async throws {
@@ -63,20 +66,14 @@ public final class ProfileStore {
 			throw AuthorResolverError.noServiceForPlatform(platform)
 		}
 
-		// intentionally racy, I'm being lazy right now
-		if let profile = profileCache[id] {
-			return profile
+		return try await profileCache.readOrFill(id) {
+			try await service.profile(for: id)
 		}
-
-		let profile = try await service.profile(for: id)
-
-		self.profileCache[id] = profile
-
-		return profile
 	}
 
 	public func compositeProfile(for author: Author) async throws -> CompositeProfile {
-		if let profile = self.compositeProfiles[author.handle] {
+		if let profile = self.compositeProfileCache[author.handle] {
+			print("profile cache hit:", author.handle)
 			return profile
 		}
 
@@ -97,7 +94,7 @@ public final class ProfileStore {
 		)
 
 		for handle in handles {
-			self.compositeProfiles[handle] = composite
+			compositeProfileCache.write(handle, composite)
 		}
 
 		if handles.count > 1 {

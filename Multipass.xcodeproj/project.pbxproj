@@ -15,6 +15,9 @@
 		C91D81A12D01F06E007D1E82 /* libSettings.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C91D81922D01EFFF007D1E82 /* libSettings.a */; };
 		C92CD7432DB143DE00964B90 /* Jot in Frameworks */ = {isa = PBXBuildFile; productRef = C92CD7422DB143DE00964B90 /* Jot */; };
 		C92CD7482DB1483900964B90 /* Jot in Frameworks */ = {isa = PBXBuildFile; productRef = C92CD7472DB1483900964B90 /* Jot */; };
+		C92E3D362F6C3A4B00A18F14 /* ATM in Frameworks */ = {isa = PBXBuildFile; productRef = C92E3D352F6C3A4B00A18F14 /* ATM */; };
+		C92E3D3C2F6C3B0100A18F14 /* LRUCache in Frameworks */ = {isa = PBXBuildFile; productRef = C92E3D3B2F6C3B0100A18F14 /* LRUCache */; };
+		C92E3D3F2F6C43AF00A18F14 /* TaskGate in Frameworks */ = {isa = PBXBuildFile; productRef = C92E3D3E2F6C43AF00A18F14 /* TaskGate */; };
 		C941713A2D5A2081009079D3 /* Reblog in Frameworks */ = {isa = PBXBuildFile; productRef = C94171392D5A2081009079D3 /* Reblog */; };
 		C941713D2D5A2313009079D3 /* Reblog in Frameworks */ = {isa = PBXBuildFile; productRef = C941713C2D5A2313009079D3 /* Reblog */; };
 		C948CDC12F2520A300F497C6 /* libSocialClients.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C92217D82CED1C80006C34BC /* libSocialClients.a */; };
@@ -302,6 +305,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C92E3D3F2F6C43AF00A18F14 /* TaskGate in Frameworks */,
+				C92E3D362F6C3A4B00A18F14 /* ATM in Frameworks */,
+				C92E3D3C2F6C3B0100A18F14 /* LRUCache in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -655,6 +661,9 @@
 			);
 			name = Utility;
 			packageProductDependencies = (
+				C92E3D352F6C3A4B00A18F14 /* ATM */,
+				C92E3D3B2F6C3B0100A18F14 /* LRUCache */,
+				C92E3D3E2F6C43AF00A18F14 /* TaskGate */,
 			);
 			productName = Utility;
 			productReference = C95FC5BC2CE540980093AB32 /* libUtility.a */;
@@ -801,6 +810,9 @@
 				C9B0E0552DBC11CC008F2A2D /* XCRemoteSwiftPackageReference "Empire" */,
 				C992AF5D2F1FFB9E00145BC9 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 				C948CDC22F27FBA300F497C6 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+				C92E3D342F6C3A4B00A18F14 /* XCRemoteSwiftPackageReference "ATM" */,
+				C92E3D3A2F6C3B0100A18F14 /* XCRemoteSwiftPackageReference "LRUCache" */,
+				C92E3D3D2F6C43AF00A18F14 /* XCRemoteSwiftPackageReference "TaskGate" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = C95FC5712CE50FF30093AB32 /* Products */;
@@ -1473,6 +1485,30 @@
 				kind = branch;
 			};
 		};
+		C92E3D342F6C3A4B00A18F14 /* XCRemoteSwiftPackageReference "ATM" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattmassicotte/ATM";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		C92E3D3A2F6C3B0100A18F14 /* XCRemoteSwiftPackageReference "LRUCache" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/nicklockwood/LRUCache";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+		C92E3D3D2F6C43AF00A18F14 /* XCRemoteSwiftPackageReference "TaskGate" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mattmassicotte/TaskGate.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
+			};
+		};
 		C941713B2D5A2313009079D3 /* XCRemoteSwiftPackageReference "Reblog" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mattmassicotte/Reblog";
@@ -1557,6 +1593,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = C92CD7462DB1483900964B90 /* XCRemoteSwiftPackageReference "Jot" */;
 			productName = Jot;
+		};
+		C92E3D352F6C3A4B00A18F14 /* ATM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C92E3D342F6C3A4B00A18F14 /* XCRemoteSwiftPackageReference "ATM" */;
+			productName = ATM;
+		};
+		C92E3D3B2F6C3B0100A18F14 /* LRUCache */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C92E3D3A2F6C3B0100A18F14 /* XCRemoteSwiftPackageReference "LRUCache" */;
+			productName = LRUCache;
+		};
+		C92E3D3E2F6C43AF00A18F14 /* TaskGate */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = C92E3D3D2F6C43AF00A18F14 /* XCRemoteSwiftPackageReference "TaskGate" */;
+			productName = TaskGate;
 		};
 		C94171392D5A2081009079D3 /* Reblog */ = {
 			isa = XCSwiftPackageProductDependency;
